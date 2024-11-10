@@ -1,10 +1,10 @@
 import styles from '../styles/Button.module.css';
 
-const Button = ({ inputValue }) => {
+const Button = ({ inputValue, onClick }) => {
     return (
         <div 
         className={styles.button}
-        onClick={() => alert(inputValue)}>Alertez moi 🚨
+        onClick={onClick}>
            Execute
         </div>
     )

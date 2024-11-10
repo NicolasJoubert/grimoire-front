@@ -1,15 +1,11 @@
 import styles from '../styles/CodeCompiler.module.css';
-import { useState } from 'react'
 import Button from './Button'
 
 
-const CodeCompiler = () => {
-
-    const [inputValue, setInputValue] = useState('Entre du code frère')
-
+const CodeCompiler = ({ inputValue, setInputValue, result }) => {
+    console.log("result:", result)
     return (
         <div className={styles.main}>
-            
             <textarea
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
@@ -17,8 +13,8 @@ const CodeCompiler = () => {
             />
             
             <div className={styles.console}>
+                <p>{result}</p>
             </div>        
-            <Button  inputValue={inputValue}/>
         </div>
     )
 }
