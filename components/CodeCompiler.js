@@ -1,13 +1,21 @@
 import styles from '../styles/CodeCompiler.module.css';
-import Button from './Button'
+import hljs from 'highlight.js';
+
+// import Button from './Button'
 
 
 const CodeCompiler = ({ inputValue, setInputValue, result }) => {
     console.log("result:", result)
+
+    const highlightedCode = hljs.highlight(
+        inputValue,
+        { language: 'javascript' }
+      ).value
+    console.log(highlightedCode)
     return (
         <div className={styles.main}>
             <textarea
-                value={inputValue}
+                value={highlightedCode}
                 onChange={(e) => setInputValue(e.target.value)}
                 className={styles.script}
             />

@@ -15,10 +15,9 @@ function Home() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({script: inputValue})
     })
-    const data = await response.json()
-    console.log("data :", data)
-    console.log("data.output :", data.data.output)
-    setResult(data.data.output)
+    const apiResponse = await response.json()
+    console.log(apiResponse.data)
+    setResult(apiResponse.data.output)
   }
 
   return (

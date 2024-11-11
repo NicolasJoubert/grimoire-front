@@ -1,0 +1,20 @@
+.bloc {
+    width: 100%;
+    height: 30px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    border: 0px solid white;
+
+}
+
+.bloc:hover {
+    background-color: aliceblue;
+    transition-duration: 0.5s;
+    border: 1px solid white;
+}
+
+/* .textarea {
+    width: 100%;
+    height: 100%;
+    border: 0px solid white;
+} */
