@@ -14,25 +14,45 @@ const Note = () => {
         ]);
       };
 
+    const deleteBlock = () => {
+        // setBlocs((blocs) => blocs.filter())
+        console.log("delete bloc")
+      };
+
     useEffect(() => {
         // Add an initial block manually when the component mounts
         addBlock();
     }, []);
+
+    const handleKeyDown = (event) => {
+        // add Bloc
+        if (event.key === "Enter") {
+          console.log("Enter key was pressed");
+          addBlock()
+        }
+        // remove bloc
+        if ((event.key === "Delete") || (event.key === "Backspace")) {
+            console.log(`${event.key} was pressed`)
+            deleteBlock()
+          }
+    }
 
     return (
         <div>
             <main className={styles.main}>
                 <div className={styles.note}>
                     <h1 
-                    className={styles.title}
-                    onClick={addBlock}>findOne()</h1>
+                    className={styles.title}>findOne()</h1>
                         <div className={styles.tag_container}>
                             <Tag>bdd</Tag>
                             <Tag>méthode</Tag>
                         </div>
                         <div className={styles.content}>
                             {blocs.map((bloc, index) => (
-                                <Bloc key={index + 1} onClick={addBlock}/>
+                                <Bloc 
+                                key={index + 1} 
+                                id={index + 1} 
+                                handleKeyDown={(e) => handleKeyDown(e)}/>
                             ))}
                         </div>
                 </div>
