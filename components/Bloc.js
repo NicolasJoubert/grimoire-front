@@ -1,7 +1,7 @@
 import styles from '../styles/Bloc.module.css';
 import { useState } from 'react'
 
-const Bloc = ({ handleKeyDown }) => {
+const Bloc = ({ handleKeyDown, id }) => {
     // TO DO : 
     //- gérer la suppression de bloc
     //- gérer le passage à la ligne en cliquant sur Entrée
@@ -9,14 +9,9 @@ const Bloc = ({ handleKeyDown }) => {
 
     const [inputValue, setInputValue] = useState('') 
 
-    const addBlock = (event) => {
-        handleKeyDown(event)
+    const onKeyDown = (event) => {
+        handleKeyDown(event, id)
     }
-
-    const handleChange = (event) => {
-        setInputValue(event.target.value)
-    }
-
     
 
     return (
@@ -25,7 +20,7 @@ const Bloc = ({ handleKeyDown }) => {
                 className={styles.bloc}
                 type="text"
                 value={inputValue}
-                onKeyDown={addBlock}
+                onKeyDown={onKeyDown}
                 onChange={(e) => setInputValue(e.target.value)}>
             </input>
         </div>

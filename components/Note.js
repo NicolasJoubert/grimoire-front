@@ -10,13 +10,14 @@ const Note = () => {
     const addBlock = () => {
         setBlocs((prevBlocs) => [
           ...prevBlocs,
-          { id: prevBlocs.length + 1, onClick: addBlock }, // assign a unique id to each block
+          { id: prevBlocs.length + 1 }, // assign a unique id to each block
         ]);
       };
 
-    const deleteBlock = () => {
-        // setBlocs((blocs) => blocs.filter())
-        console.log("delete bloc")
+    const deleteBlock = (id) => {
+        console.log(id)
+        console.log("bloc:", blocs)
+        setBlocs(blocs.filter(bloc => bloc.id != id))
       };
 
     useEffect(() => {
@@ -24,7 +25,7 @@ const Note = () => {
         addBlock();
     }, []);
 
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event, id) => {
         // add Bloc
         if (event.key === "Enter") {
           console.log("Enter key was pressed");
@@ -33,7 +34,7 @@ const Note = () => {
         // remove bloc
         if ((event.key === "Delete") || (event.key === "Backspace")) {
             console.log(`${event.key} was pressed`)
-            deleteBlock()
+            deleteBlock(id)
           }
     }
 
@@ -52,7 +53,7 @@ const Note = () => {
                                 <Bloc 
                                 key={index + 1} 
                                 id={index + 1} 
-                                handleKeyDown={(e) => handleKeyDown(e)}/>
+                                handleKeyDown={(e, i) => handleKeyDown(e, i)}/>
                             ))}
                         </div>
                 </div>
