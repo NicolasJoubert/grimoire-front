@@ -14,7 +14,7 @@ export default function Home() {
     return (
         <div className="text-white p-4 flex flex-row space-x h-screen p-0 m-0">
             {isSidebarLeftVisible && <SidebarLeft /> }
-            <div className="h-full flex-1 flex flex-col space-y">
+            <div className="h-full flex-1 flex flex-col">
                 <Searchbar />
                 {isNoteVisible ? <Note /> : <Placeholder />}
             </div>
