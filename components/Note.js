@@ -40,22 +40,21 @@ const Note = () => {
 
     return (
         <div>
-            <main className={styles.main}>
+            <main className={styles.container}>
                 <div className={styles.note}>
-                    <h1 
-                    className={styles.title}>findOne()</h1>
-                        <div className={styles.tag_container}>
-                            <Tag>bdd</Tag>
-                            <Tag>méthode</Tag>
-                        </div>
-                        <div className={styles.content}>
-                            {blocs.map((bloc, index) => (
-                                <Bloc 
-                                key={index + 1} 
-                                id={index + 1} 
-                                handleKeyDown={(e, i) => handleKeyDown(e, i)}/>
-                            ))}
-                        </div>
+                    <h1 className={styles.title}>findOne()</h1>
+                    <div className={styles.tag_container}>
+                        <Tag>bdd</Tag>
+                        <Tag>méthode</Tag>
+                    </div>
+                    <div className={styles.content}>
+                        {blocs.map((bloc, index) => (
+                            <Bloc 
+                            key={index + 1} 
+                            id={index + 1} 
+                            handleKeyDown={(e, i) => handleKeyDown(e, i)}/>
+                        ))}
+                    </div>
                 </div>
             </main>
         </div>

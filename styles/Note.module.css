@@ -1,10 +1,11 @@
-.main {
+.container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    height: 100vh;
-    width: 100vw;
+    margin-top: 20px;
+    height: 100%;
+    width: 100%;
   }
 
 .note {
@@ -13,12 +14,13 @@
     justify-content: flex-start;
     align-items: flex-start;
     padding: 20px;
-    width: 40vw;
+    width: 90%;
     min-height: 20vh;
     max-height: 80vh;
     border: 0px solid black;
     border-radius: 20px;
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.5);
+    color: black
 }
 
 .title {
