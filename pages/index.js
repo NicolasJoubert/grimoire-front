@@ -1,9 +1,10 @@
+import CodeExecutionPlayground from '../components/CodeExecutionPlayground';
 import Home from '../components/Home';
 import Note from '../components/Note';
 
 function Index() {
-  // return <Home />;
-  return <Note />
+  // return <CodeExecutionPlayground />;
+  return <Home />
 }
 
 export default Index;
