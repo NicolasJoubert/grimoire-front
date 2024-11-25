@@ -6,6 +6,30 @@ import Bloc from './Bloc';
 const Note = () => {
     // const [item, setItem] = useState(0) 
     const [blocs, setBlocs] = useState([])
+    /* Idea for blocs data model -> an array object :
+    bloc = {
+        id/position,
+        type: (default: text),
+        langage: (default: null),
+        value,
+    }
+    
+    When saving a note, the blocs content is sent to DB with JSON.stringify(array).
+    When getting a note, the blocs content is retrieve with JSON.parse(string)
+
+    Changing a bloc position equals to changing its index in the blocs array
+
+    In the map function, we have a switch case that renders differents components based on type : 
+        - CodeBlock
+        - TextBlock
+        - InternalLinkBlock
+        - ExternalLinkBloc
+
+    => To DIG : a main Bloc component with HOC blocs to manage differences
+
+    Question : How to manage a started blocs type swicth ? (eg: switching a title to a text, a text to a code block...)
+
+    */
 
     const addBlock = () => {
         setBlocs((prevBlocs) => [
