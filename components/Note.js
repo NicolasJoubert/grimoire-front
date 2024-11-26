@@ -73,6 +73,7 @@ const Note = () => {
         if ((event.key === "Delete") || (event.key === "Backspace")) {
             console.log(`${event.key} was pressed`)
             deleteBlock(id)
+            
           }
     }
 
