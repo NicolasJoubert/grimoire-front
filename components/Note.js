@@ -1,7 +1,8 @@
 import styles from '../styles/Note.module.css';
 import { useState, useEffect } from 'react'
 import Tag from './Tag';
-import Bloc from './Bloc';
+import TextBloc from './Blocs/TextBloc';
+import RadioBloc from './Blocs/RadioBloc';
 
 const Note = () => {
     // const [item, setItem] = useState(0) 
@@ -34,15 +35,28 @@ const Note = () => {
     const addBlock = () => {
         setBlocs((prevBlocs) => [
           ...prevBlocs,
-          { id: prevBlocs.length + 1 }, // assign a unique id to each block
+          { id: prevBlocs.length,
+            value: "",
+            type: "radio",
+            langage: null,
+           }, // assign a unique id to each block
         ]);
       };
 
     const deleteBlock = (id) => {
         console.log(id)
-        console.log("bloc:", blocs)
         setBlocs(blocs.filter(bloc => bloc.id != id))
       };
+
+    const setBlocValue = (blocId, value) => {
+        const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, value: value } : bloc)
+        setBlocs(updatedBlocs)
+    }
+
+    const setBlocType = (blocId, type) => {
+        const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, type: type } : bloc)
+        setBlocs(updatedBlocs)
+    }
 
     useEffect(() => {
         // Add an initial block manually when the component mounts
@@ -62,6 +76,38 @@ const Note = () => {
           }
     }
 
+    const changeType = (type, id) => {
+
+    }
+
+    const renderedBlocs = blocs.map((bloc, i) => {
+
+        let blocComponent = null
+
+        if (bloc.type === "text") {
+            blocComponent = <TextBloc 
+                            key={i} 
+                            id={i}
+                            value={bloc.value}
+                            handleKeyDown={(e, i) => handleKeyDown(e, i)}
+                            setBlocValue={setBlocValue}/>
+        } else if (bloc.type === "radio"){
+            blocComponent = <RadioBloc 
+                            key={i} 
+                            id={i}
+                            value={bloc.value}
+                            handleKeyDown={(e, i) => handleKeyDown(e, i)}
+                            setBlocValue={setBlocValue}/>
+        }
+
+        return (
+            <div className={styles.blocContainer}>
+                <button onClick={(i, type) => setBlocType(bloc.id, "text")} className={styles.buttonType}>Text</button>
+                <button onClick={(i, type) => setBlocType(bloc.id, "radio")}className={styles.buttonType}>Radio</button>
+                {blocComponent}
+            </div>
+        )})
+
     return (
         <div>
             <main className={styles.container}>
@@ -71,13 +117,8 @@ const Note = () => {
                         <Tag>bdd</Tag>
                         <Tag>méthode</Tag>
                     </div>
-                    <div className={styles.content}>
-                        {blocs.map((bloc, index) => (
-                            <Bloc 
-                            key={index + 1} 
-                            id={index + 1} 
-                            handleKeyDown={(e, i) => handleKeyDown(e, i)}/>
-                        ))}
+                    <div className={styles.blocsContainer}>
+                        {renderedBlocs}
                     </div>
                 </div>
             </main>

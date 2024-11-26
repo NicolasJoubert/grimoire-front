@@ -35,7 +35,7 @@
     align-items: center;
 }
 
-.content {
+.blocsContainer {
     /* border: 1px solid black; */
     width: 100%;
     max-height: 60vh;
@@ -46,4 +46,26 @@
     align-items: center;
     margin-top: 5px;
     margin-bottom: 10px;
+}
+
+.blocContainer {
+    /* border: 1px solid black; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.buttonType {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid grey;
+    cursor: pointer;
+    font-size: 11px;
+    border-radius: 3px;
+    width: 30px;
+    height: 20px;
+    margin-left: 3px;
+    margin-right: 3px;
 }
