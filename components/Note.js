@@ -1,4 +1,6 @@
 import styles from '../styles/Note.module.css';
+import 'antd/dist/antd.css';
+import { Popover, Button } from 'antd';
 import { useState, useEffect } from 'react'
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
@@ -37,7 +39,7 @@ const Note = () => {
           ...prevBlocs,
           { id: prevBlocs.length,
             value: "",
-            type: "radio",
+            type: "text",
             langage: null,
            }, // assign a unique id to each block
         ]);
@@ -77,24 +79,24 @@ const Note = () => {
           }
     }
 
-    const changeType = (type, id) => {
-
-    }
+    const popoverContent = (
+        <div className="flex flex-col">
+          <span>Text</span>
+          <span>Radio button</span>
+        </div>
+      );
 
     const renderedBlocs = blocs.map((bloc, i) => {
-
         let blocComponent = null
 
         if (bloc.type === "text") {
             blocComponent = <TextBloc 
-                            key={i} 
                             id={i}
                             value={bloc.value}
                             handleKeyDown={(e, i) => handleKeyDown(e, i)}
                             setBlocValue={setBlocValue}/>
         } else if (bloc.type === "radio"){
-            blocComponent = <RadioBloc 
-                            key={i} 
+            blocComponent = <RadioBloc  
                             id={i}
                             value={bloc.value}
                             handleKeyDown={(e, i) => handleKeyDown(e, i)}
@@ -102,7 +104,10 @@ const Note = () => {
         }
 
         return (
-            <div className={styles.blocContainer}>
+            <div key={i} className={styles.blocContainer}>
+                <Popover title="Bloc types" content={popoverContent} className={styles.popover} trigger="hover">
+                    <Button className={styles.buttonType}>+</Button>
+                </Popover>
                 <button onClick={(i, type) => setBlocType(bloc.id, "text")} className={styles.buttonType}>Text</button>
                 <button onClick={(i, type) => setBlocType(bloc.id, "radio")}className={styles.buttonType}>Radio</button>
                 {blocComponent}
