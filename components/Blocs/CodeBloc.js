@@ -1,22 +1,22 @@
 import styles from '../../styles/Bloc.module.css';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
         Editor, 
         EditorState, 
         ContentState, 
         convertFromRaw,
+        getDefaultKeyBinding,
         RichUtils, 
-        getDefaultKeyBinding  
     } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 
-const TextBloc = ({ 
+const CodeBloc = ({ 
     handleKeyDown, 
     id,
     textContent, 
-    rawContent, 
-    setBlocValue,
-    addBlock }) => {
+    rawContent,
+    addBlock, 
+    setBlocValue }) => {
     // TO DO : 
     //- gérer la suppression de bloc
     //- gérer le passage à la ligne en cliquant sur Entrée
@@ -26,8 +26,10 @@ const TextBloc = ({
     const [editorState, setEditorState] = useState(
         // () => EditorState.createEmpty()
         textContent ? EditorState.createWithContent(ContentState.createFromText(textContent)) : EditorState.createEmpty()
-        // rawContent  ? EditorState.createWithContent(convertFromRaw(rawContent)) : EditorState.createEmpty()
     )
+    useEffect(() => {
+        setEditorState(RichUtils.toggleBlockType(editorState, 'code-block'))
+    }, [])
 
     const onKeyDown = (e) => {
         handleKeyDown(e, id)
@@ -43,41 +45,25 @@ const TextBloc = ({
         // console.log(JSON.parse(raw))
     }
 
-    // Custom key binding function
     const keyBindingFn = (e) => {
-        if (e.ctrlKey && e.key === 'b') {
-            return 'bold'; // Return a custom command for Ctrl+B
-        } else if (e.key === 'Enter') {
+        if (e.key === 'Enter') {
             addBlock()
             return
         }
         return getDefaultKeyBinding(e); // Use default bindings for other keys
     };
 
-    // Handle custom key commands
-    const handleKeyCommand = (command, editorState) => {
-        if (command === 'bold') {
-            const newState = RichUtils.toggleInlineStyle(editorState, 'BOLD');
-            setEditorState(newState);
-            return 'handled'; // Indicate the command was handled
-        }
-        return 'not-handled'; // Allow Draft.js to handle other commands
-    };
-    
 
     return (
         <div className={styles.bloc}>
             <Editor 
                 editorState={editorState}
                 className={styles.bloc}
-                onKeyDown={onKeyDown}
-                spellCheck={true}
                 keyBindingFn={keyBindingFn}
-                handleKeyCommand={handleKeyCommand}
                 onChange={handleChange}>
             </Editor>
         </div>
     )
 }
 
-export default TextBloc
+export default CodeBloc
