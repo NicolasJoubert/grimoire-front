@@ -15,8 +15,7 @@ const Note = () => {
         setBlocs((prevBlocs) => [
             ...prevBlocs,
             { id: prevBlocs.length,
-                textContent: "",
-                rawContent: null,
+                value: "",
                 type: "text",
                 langage: null,
             }, // assign a unique id to each block
@@ -28,8 +27,8 @@ const Note = () => {
         setBlocs(blocs.filter(bloc => bloc.id != id))
     };
     
-    const setBlocValue = (blocId, textContent, rawContent) => {
-        const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, textContent: textContent, rawContent: rawContent } : bloc)
+    const setBlocValue = (blocId, value) => {
+        const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, value: value } : bloc)
         setBlocs(updatedBlocs)
     }
     
@@ -70,20 +69,16 @@ const Note = () => {
           if (bloc.type === "text") {
               blocComponent = <TextBloc 
               id={i}
-              textContent={bloc.textContent}
-              rawContent={bloc.rawContent}
+              value={bloc.value}
               handleKeyDown={(e, i) => handleKeyDown(e, i)}
-              setBlocValue={setBlocValue}
-              addBlock={addBlock}/>
+              setBlocValue={setBlocValue}/>
 
             } else if (bloc.type === "code"){
                 blocComponent = <CodeBloc  
                 id={i}
-                textContent={bloc.textContent}
-                rawContent={bloc.rawContent}
+                value={bloc.value}
                 handleKeyDown={(e, i) => handleKeyDown(e, i)}
-                setBlocValue={setBlocValue}
-                addBlock={addBlock}/>
+                setBlocValue={setBlocValue}/>
             }
             
             return (
