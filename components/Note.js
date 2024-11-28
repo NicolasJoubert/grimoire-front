@@ -28,12 +28,12 @@ const Note = () => {
     };
     
     const setBlocValue = (blocId, value) => {
-        const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, value: value } : bloc)
+        const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, value } : bloc)
         setBlocs(updatedBlocs)
     }
     
     const setBlocType = (blocId, type) => {
-        const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, type: type } : bloc)
+        const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, type } : bloc)
         setBlocs(updatedBlocs)
     }
     

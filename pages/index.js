@@ -6,7 +6,8 @@ import Tiptap from '../components/Tiptap'
 
 function Index() {
   // return <CodeExecutionPlayground />;
-  return <Tiptap />
+  // return <Tiptap />
+  return <Home />
 }
 
 export default Index;
