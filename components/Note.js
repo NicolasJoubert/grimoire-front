@@ -1,10 +1,8 @@
-import styles from '../styles/Note.module.css';
 import 'antd/dist/antd.css';
 import { Popover, Button } from 'antd';
 import { useState, useEffect } from 'react'
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
-import RadioBloc from './Blocs/RadioBloc';
 import CodeBloc from './Blocs/CodeBloc';
 
 const Note = () => {
@@ -82,26 +80,26 @@ const Note = () => {
             }
             
             return (
-                <div key={i} className={styles.blocContainer}>
+                <div key={i} className="">
                 {/* <Popover title="Bloc types" content={popoverContent} className={styles.popover} trigger="hover">
                     <Button className={styles.buttonType}>+</Button>
                 </Popover> */}
-                <button onClick={(i, type) => setBlocType(bloc.id, "text")} className={styles.buttonType}>Text</button>
-                <button onClick={(i, type) => setBlocType(bloc.id, "code")}className={styles.buttonType}>Code</button>
+                <button onClick={(i, type) => setBlocType(bloc.id, "text")} className="">Text</button>
+                <button onClick={(i, type) => setBlocType(bloc.id, "code")}className="">Code</button>
                 {blocComponent}
             </div>
         )})
         
         return (
             <div>
-            <main className={styles.container}>
-                <div className={styles.note}>
-                    <h1 className={styles.title}>findOne()</h1>
-                    <div className={styles.tag_container}>
+            <main className="">
+                <div className="">
+                    <h1 className="">findOne()</h1>
+                    <div className="">
                         <Tag>bdd</Tag>
                         <Tag>méthode</Tag>
                     </div>
-                    <div className={styles.blocsContainer}>
+                    <div className="">
                         {renderedBlocs}
                     </div>
                 </div>

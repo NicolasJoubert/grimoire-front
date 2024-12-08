@@ -1,4 +1,3 @@
-import styles from '../../styles/Bloc.module.css';
 import { useState, useEffect } from 'react'
 
 const CodeBloc = ({ 
@@ -6,9 +5,6 @@ const CodeBloc = ({
     id,
     value,
     setBlocValue }) => {
-    // TO DO : 
-    //- gérer la suppression de bloc
-    //- gérer le passage à la ligne en cliquant sur Entrée
 
     const [inputValue, setInputValue] = useState(value) 
 
@@ -25,7 +21,7 @@ const CodeBloc = ({
     return (
         <div className={styles.bloc}>
             <input 
-                className={styles.bloc}
+                className=""
                 onKeyDown={onKeyDown}
                 type="text"
                 value={inputValue}
