@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: { 
-    id: null, 
- },
+  value: "6756da2dd6533cabe3cf6871", 
 };
 
 export const userSlice = createSlice({
@@ -11,7 +9,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     replaceCurrentNote: (state, action) => {
-      state.value.id = action.payload;
+      state.value = action.payload;
     },
   },
 });

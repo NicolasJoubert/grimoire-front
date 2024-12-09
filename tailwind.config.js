@@ -21,6 +21,7 @@ module.exports = {
         lightPurple: '#C5CAE3',
         white: '#F8FAFA',
         black: '#272727',
+        grey: '#A7A7A7',
       },
     },
   },
