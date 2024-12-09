@@ -13,9 +13,10 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 export default function Home() {
     const [isSidebarLeftVisible, setIsSidebarLeftVisible] = useState(true)
     const [isSidebarRightVisible, setIsSidebarRightVisible] = useState(true)
-    const [isNoteVisible, setIsNoteVisible] = useState(true)
+    // const [isNoteVisible, setIsNoteVisible] = useState(true)
 
     const user = useSelector(state => state.user.value)
+    const noteId = useSelector(state => state.currentNote.value)
     const dispatch = useDispatch()
 
     const toggleSidebarLeft = () => {
@@ -38,7 +39,7 @@ export default function Home() {
             {isSidebarLeftVisible && <SidebarLeft toggleSidebarLeft={toggleSidebarLeft} createNote={createNote}/> }
             <div className="h-full flex-1 flex flex-col">
                 <Searchbar createNote={createNote}/>
-                {isNoteVisible ? <Note /> : <Placeholder />}
+                {noteId ? <Note /> : <Placeholder />}
             </div>
             {isSidebarRightVisible && <SidebarRight /> }
         </div>

@@ -6,9 +6,9 @@ const TextBloc = ({
     // handleKeyDownYo, 
     deleteBlock,
     addBlock,
-    id,
+    position,
     value, 
-    setBlocValue,
+    setBlocsValue,
     }) => {
 
     const [userInput, setUserInput] = useState(value); // Initial content
@@ -18,7 +18,7 @@ const TextBloc = ({
         content: userInput, // Initialize editor with userInput
         onUpdate({ editor }) {
             setUserInput(editor.getHTML()); // Update user input when editor content changes
-            setBlocValue(id, editor.getHTML()) 
+            setBlocsValue(position, editor.getHTML()) 
         },
         editorProps: {
             handleKeyDown: ({ event }) => {
@@ -56,10 +56,15 @@ const TextBloc = ({
         return false; // Allow other keydown events
     };
 
+    const container = "flex justify-between items-center"
+    const buttonStyle = "rounded-full border-solid border border-black w-6 h-6 text-center"
+    const inputStyle = "bg-blue-200 w-full h-full ml-2.5 border-solid border border-black rounded-lg text-black"
     return (
-        <div className="">
+        <div className={container}>
+            <div className={buttonStyle}>+</div>
             <EditorContent 
-                editor={editor}/>
+                editor={editor}
+                className={inputStyle}/>
         </div>
     )
 }
