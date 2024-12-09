@@ -1,13 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NoteLink from './NoteLink.js';
 
 export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const [selectFavoris, setFavoris] = useState('');
-  const [notes, setNote] = useState([]);
+  const [notes, setNotes] = useState([]);
+  const [selectedNote, setSelectedNote] = useState('');
 
   const favoris = ['Note 1', 'Note 2'];
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const response = await fetch(backendUrl + '/notes');
+
+        const data = await response.json();
+        console.log(data);
+
+        if (data.result) {
+          setNotes(data.notes);
+        } else {
+          console.error('Erreur lors de la récupération des notes', data.error);
+        }
+      } catch (err) {
+        console.error('Erreur lors de la récupération des notes', err.message);
+      }
+    };
+
+    fetchNotes();
+  }, []);
 
   const notesTab = [
     'Note 1',
@@ -67,14 +89,13 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
         </button>
       </div>
       <div className='border-b-2 border-solid border-gray p-4'>
-        {notes.map((note, index) => (
-          <p
-            key={index}
-            onClick={() => setNote(notesTab)}
+        {notes.map((note) => (
+          <NoteLink
+            key={note.id}
+            title={note.title}
+            onClick={() => setNotes(note.title)}
             className='text-xs text-black ml-9 cursor-pointer hover:underline'
-          >
-            {note}
-          </p>
+          />
         ))}
       </div>
       <div className='flex justify-between items-center mt-4'>
