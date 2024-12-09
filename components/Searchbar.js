@@ -2,15 +2,18 @@ import { useState } from 'react';
 import NoteLink from '../components/NoteLink'
 import styles from '../styles/Search.module.css'
 import Image from 'next/image';
+import { useSelector, useDispatch } from "react-redux"
+import { replaceCurrentNote } from '../reducers/currentNote';
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export default function Searchbar() {
-
-    
-
       const [search, setSearch] = useState('')
       const [dataNote, setDataNote] = useState([])
       const [tag, setTag] = useState([])
+
+      const user = useSelector(state => state.user.value)
+      const dispatch = useDispatch()
   
       const handleSubmit = () => {
         console.log(search);
@@ -41,17 +44,31 @@ export default function Searchbar() {
       let tags= tag.map((hastag,i) =>{
         return <p key={i} className='border-4 border-black text-gray-900'>{hastag}</p>
       })
+
+    const createNote = async() => {
+      const token = user.token
+      const response = await fetch(`${backendUrl}/notes/`, {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+      const data = await response.json()
+      // console.log(data)
+      data.result && dispatch(replaceCurrentNote(data.note._id))
+    }
   
     return (
-        <div className='text-gray-900 flex flex-row justify-center justify-items-center bg-gray-600'>
+        <div className='text-gray-900 flex flex-row justify-center justify-items-center bg-backgroundColor'>
         <Image 
                 src="/../public/assets/icon_new_note.png"
                 width={50} 
                 height={50}
                 alt="icon of filter"
+                className="cursor-pointer"
+                onClick={() => createNote()}
         />
 
-        <div className='bg-gray-400'>
+        <div className=''>
           <input onChange={(e) => changeInput(e.target.value)}  value={search} className='border-4 border-black text-gray-900'/>
           <button onClick={() => handleSubmit()}>
             <Image 
