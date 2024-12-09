@@ -46,7 +46,7 @@ export default function Searchbar({ createNote }) {
                 height={50}
                 alt="icon of filter"
                 className="cursor-pointer"
-                onClick={() => createNote()}
+                onClick={() => createNote()} 
         />
 
         <div className=''>
