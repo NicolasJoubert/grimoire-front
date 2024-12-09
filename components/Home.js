@@ -8,7 +8,7 @@ import Placeholder from "./Placeholder"
 export default function Home() {
 
     const [isSidebarLeftVisible, setIsSidebarLeftVisible] = useState(true)
-    const [isSidebarRightVisible, setIsSidebarRightVisible] = useState(false)
+    const [isSidebarRightVisible, setIsSidebarRightVisible] = useState(true)
     const [isNoteVisible, setIsNoteVisible] = useState(true)
 
     return (

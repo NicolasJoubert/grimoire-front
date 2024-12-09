@@ -1,13 +1,47 @@
 import 'antd/dist/antd.css';
 import { Popover, Button } from 'antd';
+import moment from 'moment';
 import { useState, useEffect } from 'react'
+import { useSelector } from "react-redux"
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
 
-const Note = () => {
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
+const Note = () => {
+    const [noteData, setNoteData] = useState({})
     const [blocs, setBlocs] = useState([])
+
+    const noteId = useSelector(state => state.currentNote.value)
+
+    useEffect(() => {
+        /** Fetch note in database based on ID in currentNote reducer */
+        (async () => {
+            try {
+                const response = await fetch(`${backendUrl}/notes/${noteId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // const createdAt = new Date(data.note.createdAt)
+                const data = await response.json();
+                data.result && setNoteData({
+                    title: data.note.title,
+                    createdAt: moment(data.note.createdAt).format('DD-MM-YYYY'),
+                    updatedAt: moment(data.note.updatedAt).format('DD-MM-YYYY'),
+                    content: data.note.content,
+                    forwardNotes: data.note.forwardNotes,
+                    backwardNotes: data.note.backwardNotes,
+                    isBookmarded: data.note.isBookmarked,
+                    isPrivate: data.note.isPrivate
+                    //user => on l'inclue ?
+                })
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        })();
+    }, [noteId])
     
     const addBlock = () => {
         setBlocs((prevBlocs) => [
@@ -34,93 +68,52 @@ const Note = () => {
         const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, type } : bloc)
         setBlocs(updatedBlocs)
     }
-    
-    useEffect(() => {
-        // Add an initial block manually when the component mounts
-        addBlock();
-    }, []);
-    
-    const handleKeyDown = (event, id) => {
-        // add Bloc
-        if (event.key === "Enter") {
-            console.log("Enter key was pressed");
-            addBlock()
-        }
-        // remove bloc
-        if ((event.key === "Delete") || (event.key === "Backspace")) {
-            console.log(`${event.key} was pressed`)
-            deleteBlock(id)
-            
-        }
-    }
-    
-    const popoverContent = (
-        <div className="flex flex-col">
-          <span>Text</span>
-          <span>Code</span>
-        </div>
-      );
-      
-      const renderedBlocs = blocs.map((bloc, i) => {
-          let blocComponent = null
-          
-          if (bloc.type === "text") {
-              blocComponent = <TextBloc 
-              id={i}
-              value={bloc.value}
-              handleKeyDown={(e, i) => handleKeyDown(e, i)}
-              setBlocValue={setBlocValue}/>
 
-            } else if (bloc.type === "code"){
-                blocComponent = <CodeBloc  
-                id={i}
-                value={bloc.value}
-                handleKeyDown={(e, i) => handleKeyDown(e, i)}
-                setBlocValue={setBlocValue}/>
-            }
-            
-            return (
-                <div key={i} className="">
-                {/* <Popover title="Bloc types" content={popoverContent} className={styles.popover} trigger="hover">
-                    <Button className={styles.buttonType}>+</Button>
-                </Popover> */}
-                <button onClick={(i, type) => setBlocType(bloc.id, "text")} className="">Text</button>
-                <button onClick={(i, type) => setBlocType(bloc.id, "code")}className="">Code</button>
-                {blocComponent}
-            </div>
-        )})
+    const renderedBlocs = blocs.map((bloc, i) => {
+        let blocComponent =  <TextBloc 
+          id={i}
+          value={bloc.value}
+          setBlocValue={setBlocValue}/>
+
+          return (
+              <div key={i} className="bg-red-500">
+              <button onClick={(i, type) => setBlocType(bloc.id, "text")} className="">Text</button>
+              {blocComponent}
+          </div>
+      )})
+
+    const container = "flex flex-1 flex-col flex-start border-solid border border-black m-3 p-3 text-black"
+    const topContainer = "flex justify-between items-center w-full h-12"
+    const title="text-2xl"
+    const icons=""
+    const metadataContainer = "flex flex-row justify-between items-center w-full h-12"
+    const tagsContainer = "flex justify-start"
+    const dates = "flex flex-col justify-center items-end"
+    const blocsContainer = ""
+
+    const createdAt = moment(noteData.createdAt).format('DD-MM-YYYY');
         
-        return (
-            <div>
-            <main className="">
-                <div className="">
-                    <h1 className="">findOne()</h1>
-                    <div className="">
-                        <Tag>bdd</Tag>
-                        <Tag>méthode</Tag>
-                    </div>
-                    <div className="">
-                        {renderedBlocs}
-                    </div>
+    return (
+        <div className={container}>
+            <div className={topContainer}>
+                <h1 className={title}>{noteData.title}</h1>
+                <div className={icons}>ICONS</div>
+            </div>
+            <div className={metadataContainer}>
+                <div className={tagsContainer}>
+                    <Tag>bdd</Tag>
+                    <Tag>méthode</Tag>
                 </div>
-            </main>
+                <div className={dates}>
+                    <span>Créée le {createdAt}</span>
+                    <span>Modifiée le {noteData.updatedAt}</span>
+                </div>
+            </div>
+            <div className={blocsContainer}>
+                {renderedBlocs}
+            </div>
         </div>
     )
 }
 
 export default Note
-
-
-/* Idea for blocs data model -> an array object :
-
-When saving a note, the blocs content is sent to DB with JSON.stringify(array).
-When getting a note, the blocs content is retrieve with JSON.parse(string)
-
-Changing a bloc position equals to changing its index in the blocs array
-
-In the map function, we have a switch case that renders differents components based on type : 
-    - CodeBlock
-    - TextBlock
-    - InternalLinkBlock
-    - ExternalLinkBloc
-*/

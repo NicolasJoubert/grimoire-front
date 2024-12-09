@@ -1,5 +1,5 @@
 const Tag = ({children}) => {
-    return <div className=""><span>#{children}</span></div>
+    return <div className="mr-3"><span>#{children}</span></div>
 }
 
 

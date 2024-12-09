@@ -3,7 +3,9 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 const TextBloc = ({ 
-    handleKeyDown, 
+    // handleKeyDownYo, 
+    deleteBlock,
+    addBlock,
     id,
     value, 
     setBlocValue,
@@ -25,6 +27,17 @@ const TextBloc = ({
                 }
                 // Detect Ctrl+B or Cmd+B
                 handleBold(event)// Allow other keydown events
+                // remove bloc
+                // if ((event.key === "Delete") || (event.key === "Backspace")) {
+                //     console.log(`${event.key} was pressed`)
+                //     deleteBlock(id)
+                // }
+                // // add Bloc
+                // if (event.key === "Enter") {
+                //     console.log("Enter key was pressed");
+                //     addBlock()
+                // }
+                // handleKeyDownYo(event, id)
             },
         },
     });
