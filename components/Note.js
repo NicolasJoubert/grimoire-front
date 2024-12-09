@@ -15,10 +15,16 @@ const Note = () => {
     const [blocs, setBlocs] = useState([])
 
     const noteId = useSelector(state => state.currentNote.value)
+    const user = useSelector(state => state.user.value)
 
+    /** Fetch note in database based on ID in currentNote reducer */
     useEffect(() => {
-        /** Fetch note in database based on ID in currentNote reducer */
         (async () => {
+            if (!noteId) {
+                console.log("coucou")
+                getLastUpdateNote()
+                return
+            }
             try {
                 const response = await fetch(`${backendUrl}/notes/${noteId}`);
                 if (!response.ok) {
@@ -46,7 +52,37 @@ const Note = () => {
             }
         })();
     }, [noteId])
+
+    const getLastUpdateNote = async () => {
+        try {
+            const response = await fetch(`${backendUrl}/notes/last/${user.token}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.result) {
+                setNoteData({
+                // title: data.note.title,
+                createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
+                updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
+                content: data.note.content,
+                forwardNotes: data.note.forwardNotes,
+                backwardNotes: data.note.backwardNotes,
+                isBookmarded: data.note.isBookmarked,
+                isPrivate: data.note.isPrivate
+                //user => on l'inclue ?
+                })
+                setTitleInput(data.note.title)
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+
+    }
     
+
+
     const addBlock = () => {
         setBlocs((prevBlocs) => [
             ...prevBlocs,

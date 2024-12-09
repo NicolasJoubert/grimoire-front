@@ -37,7 +37,7 @@ function Signup() {
 		}).then(response => response.json())
 			.then(data => {
 				if(data.token) {
-					dispatch(login({ username: data.username,  token: data.token }));
+					dispatch(login({ username: data.username, token: data.token }));
 					setEmail('');
                     setUsername('');
 					setPassword('');
