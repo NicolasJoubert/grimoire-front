@@ -11,11 +11,9 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const Note = () => {
     const [noteData, setNoteData] = useState({})
-    const [titleInput, setTitleInput] = useState(noteData.title)
-    const [blocs, setBlocs] = useState([])
+    const [blocs, setBlocs] = useState([noteData.blocs])
 
     const noteId = useSelector(state => state.currentNote.value)
-    const user = useSelector(state => state.user.value)
 
     /** Fetch note in database based on ID in currentNote reducer */
     useEffect(() => {
@@ -33,14 +31,13 @@ const Note = () => {
                     title: data.note.title,
                     createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
                     updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
-                    content: data.note.content,
+                    blocs: data.note.blocs,
                     forwardNotes: data.note.forwardNotes,
                     backwardNotes: data.note.backwardNotes,
                     isBookmarded: data.note.isBookmarked,
                     isPrivate: data.note.isPrivate
                     //user => on l'inclue ?
                     })
-                    setTitleInput(data.note.title)
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -48,6 +45,32 @@ const Note = () => {
         })();
     }, [noteId])
 
+    /** Updates note in database when noteData is changed */
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await fetch(`${backendUrl}/notes/`, {
+                    method: "PUT",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ noteId, noteData })
+                  });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.result) {
+                    console.log("saved")
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        })();
+    }, [noteData])
+
+    // /** Add bloc when Note mounts */
+    // useEffect()
+
+    /** Change title value in noteData state when changed */
     const handleTitleChange = (event) => {
         setNoteData((prevData) => ({
           ...prevData, // Copy all other properties
@@ -58,7 +81,8 @@ const Note = () => {
     const addBlock = () => {
         setBlocs((prevBlocs) => [
             ...prevBlocs,
-            { id: prevBlocs.length,
+            { 
+                position: prevBlocs.length,
                 value: "",
                 type: "text",
                 langage: null,
@@ -66,32 +90,34 @@ const Note = () => {
         ]);
     };
     
-    const deleteBlock = (id) => {
-        console.log(id)
-        setBlocs(blocs.filter(bloc => bloc.id != id))
+    const deleteBlock = (position) => {
+        console.log(position)
+        setBlocs(blocs.filter(bloc => bloc.position != position))
     };
     
-    const setBlocValue = (blocId, value) => {
-        const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, value } : bloc)
+    const setBlocsValue = (blocPosition, value) => {
+        const updatedBlocs = blocs.map(bloc => bloc.position == blocPosition ? { ...bloc, value } : bloc)
         setBlocs(updatedBlocs)
     }
     
-    const setBlocType = (blocId, type) => {
-        const updatedBlocs = blocs.map(bloc => bloc.id == blocId ? { ...bloc, type } : bloc)
+    const setBlocsType = (blocPosition, type) => {
+        const updatedBlocs = blocs.map(bloc => bloc.position == blocPosition ? { ...bloc, type } : bloc)
         setBlocs(updatedBlocs)
     }
 
-    const renderedBlocs = blocs.map((bloc, i) => {
+    const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
         let blocComponent =  <TextBloc 
-          id={i}
-          value={bloc.value}
-          setBlocValue={setBlocValue}/>
+            key={i}
+            position={i}
+            value={bloc.value}
+            setBlocsValue={setBlocsValue}/>
 
           return (
-              <div key={i} className="bg-red-500">
-              <button onClick={(i, type) => setBlocType(bloc.id, "text")} className="">Text</button>
-              {blocComponent}
-          </div>
+            <div key={i}>{blocComponent}</div>
+        //       <div key={i} className="bg-blue-500">
+        //       <button onClick={(i, type) => setBlocsType(bloc.position, "text")} className="">Text</button>
+        //       {blocComponent}
+        //   </div>
       )})
 
     const container = "flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black"
@@ -101,7 +127,7 @@ const Note = () => {
     const metadataContainer = "flex flex-row justify-between items-center w-full h-12"
     const tagsContainer = "flex justify-start"
     const dates = "flex flex-col justify-center items-end"
-    const blocsContainer = ""
+    const blocsContainer = "flex-1 flex-col justify-start items start py-3"
 
     return (
         <div className={container}>
@@ -115,7 +141,7 @@ const Note = () => {
             </div>
             <div className={metadataContainer}>
                 <div className={tagsContainer}>
-                    <Tag>bdd</Tag>
+                    <div onClick={() => console.log("blocs =>", blocs)}><Tag>bdd</Tag></div>
                     <Tag>méthode</Tag>
                 </div>
                 <div className={dates}>
