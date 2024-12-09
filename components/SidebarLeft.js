@@ -13,7 +13,7 @@ export default function SidebarLeft() {
     'Note 3',
     'Note 4',
     'Note 5',
-    'Note 6',
+    'Note 64',
     'Note 7',
   ];
 
