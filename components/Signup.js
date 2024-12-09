@@ -33,9 +33,10 @@ function Signup() {
 		fetch(`${backendUrl}/users/signup`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ user: user, email: email, username: username, password: password }),
+			body: JSON.stringify({ email: email, username: username, password: password }),
 		}).then(response => response.json())
 			.then(data => {
+               
 				if(data.token) {
 					dispatch(login({ username: data.username,  token: data.token }));
 					setEmail('');
@@ -60,19 +61,19 @@ function Signup() {
         </div>
 
         <div className="flex flex-col justify-around items-center w-3/12 bg-backgroundColor">
-            <img src="/assets/logofinal.png" alt="Description" className='' />
+            <img src="/assets/logofinal.png" alt="logo" className='' />
                 <div className='flex justify-around w-full'>
-                    <img src="/assets/git.png" alt="Description" className='' />
-                    <img src="/assets/apple.png" alt="Description" className='' />
-                    <img src="/assets/google.png" alt="Description" className='' />
+                    <img src="/assets/git.png" alt="gitImg" className='' />
+                    <img src="/assets/apple.png" alt="appleImg" className='' />
+                    <img src="/assets/google.png" alt="googleImg" className='' />
                 </div>
-                <img src="/assets/plus.png" alt="Description" className='' />
-               <div className='flex flex-col'> 
-            <input type="text" placeholder='Mail' onChange={(e) => setEmail(e.target.value)} value={email}/>
-            <input type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} value={username}/>
-            <input type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/>
-            <input type="password" placeholder='Confirm password' onChange={(e) => setConfirmPassword(e.target.value)} value={confirmpassword}/>
-            <button className='bg-darkPurple text-white' onClick={() => handleSubmit()}>Inscription</button>
+                <img src="/assets/plus.png" alt="plusImg" className='' />
+               <div className='flex flex-col w-full items-center'> 
+            <input className='w-8/12 rounded-md' type="text" placeholder='Mail' onChange={(e) => setEmail(e.target.value)} value={email}/>
+            <input className='mt-4 w-8/12 rounded-md' type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} value={username}/>
+            <input className='mt-4 w-8/12 rounded-md' type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/>
+            <input className='mt-4 w-8/12 rounded-md' type="password" placeholder='Confirm password' onChange={(e) => setConfirmPassword(e.target.value)} value={confirmpassword}/>
+            <button className='bg-darkPurple text-white mt-6 w-2/5 rounded-md ' onClick={() => handleSubmit()}>Inscription</button>
             </div>   
         </div>
      </div>
