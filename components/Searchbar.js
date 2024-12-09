@@ -40,37 +40,37 @@ export default function Searchbar({ createNote }) {
   
     return (
         <div className='text-gray-900 flex flex-row justify-center justify-items-center bg-gray-600'>
-        <Image 
-                src="/../public/assets/icon_new_note.png"
-                width={50} 
-                height={50}
-                alt="icon of filter"
-        />
+          <Image 
+                  src="/../public/assets/icon_new_note.png"
+                  width={50} 
+                  height={50}
+                  alt="icon of filter"
+          />
 
-        <div className='bg-gray-400'>
-          <input onChange={(e) => changeInput(e.target.value)}  value={search} className='border-4 border-black text-gray-900'/>
-          <button onClick={() => handleSubmit()}>
-            <Image 
-                src="/../public/assets/icon_search.png"
-                width={50} 
-                height={50}
-                alt="icon of filter"
-            />
-          </button>
-          <button onClick={() => handleSubmit()}>
-            <Image 
-                src="/../public/assets/icon_filter.png"
-                width={30} 
-                height={30}
-                alt="icon of filter"
-            />
-          </button>
+          <div className='bg-gray-400'>
+            <input onChange={(e) => changeInput(e.target.value)}  value={search} className='border-4 border-black text-gray-900'/>
+            <button onClick={() => handleSubmit()}>
+              <Image 
+                  src="/../public/assets/icon_search.png"
+                  width={50} 
+                  height={50}
+                  alt="icon of filter"
+              />
+            </button>
+            <button onClick={() => handleSubmit()}>
+              <Image 
+                  src="/../public/assets/icon_filter.png"
+                  width={30} 
+                  height={30}
+                  alt="icon of filter"
+              />
+            </button>
 
-        </div>
+          </div>
 
           <div>{tags}</div>
           <div>{notes}</div>
-      </>
+      </div>
     );
   
 }
