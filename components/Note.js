@@ -30,8 +30,8 @@ const Note = () => {
                 if (data.result) {
                     setNoteData({
                     // title: data.note.title,
-                    createdAt: moment(data.note.createdAt).format('DD-MM-YYYY'),
-                    updatedAt: moment(data.note.updatedAt).format('DD-MM-YYYY'),
+                    createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
+                    updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
                     content: data.note.content,
                     forwardNotes: data.note.forwardNotes,
                     backwardNotes: data.note.backwardNotes,
@@ -95,8 +95,6 @@ const Note = () => {
     const dates = "flex flex-col justify-center items-end"
     const blocsContainer = ""
 
-    const createdAt = moment(noteData.createdAt).format('DD-MM-YYYY');
-        
     return (
         <div className={container}>
             <div className={topContainer}>
@@ -113,7 +111,7 @@ const Note = () => {
                     <Tag>méthode</Tag>
                 </div>
                 <div className={dates}>
-                    <span>Créée le {createdAt}</span>
+                    <span>Créée le {noteData.createdAt}</span>
                     <span>Modifiée le {noteData.updatedAt}</span>
                 </div>
             </div>
