@@ -3,11 +3,7 @@ import NoteLink from '../components/NoteLink'
 import styles from '../styles/Search.module.css'
 import Image from 'next/image';
 
-
-export default function Searchbar() {
-
-    
-
+export default function Searchbar({ createNote }) {
       const [search, setSearch] = useState('')
       const [dataNote, setDataNote] = useState([])
       const [tag, setTag] = useState([])
@@ -43,31 +39,25 @@ export default function Searchbar() {
       })
   
     return (
-      <>
-        <div className='text-gray-900 flex flex-row justify-around justify-items-center bg-backgroundColor sticky top-0'>
-          
-          <button onClick={() => handleSubmit()} className='h-10'>
+        <div className='text-gray-900 flex flex-row justify-center justify-items-center bg-gray-600'>
+        <Image 
+                src="/../public/assets/icon_new_note.png"
+                width={50} 
+                height={50}
+                alt="icon of filter"
+        />
+
+        <div className='bg-gray-400'>
+          <input onChange={(e) => changeInput(e.target.value)}  value={search} className='border-4 border-black text-gray-900'/>
+          <button onClick={() => handleSubmit()}>
             <Image 
-                    src="/../public/assets/icon_new_note.png"
-                    width={35} 
-                    height={35}
-                    alt="icon of filter"
+                src="/../public/assets/icon_search.png"
+                width={50} 
+                height={50}
+                alt="icon of filter"
             />
           </button>
-
-          <div className='flex justify-end justify-items-end border-b-2 border-darkPurple w-96 block h-10'>
-            <input onChange={(e) => changeInput(e.target.value)}  value={search} className='border-black text-gray-900 w-full focus:outline-none bg-backgroundColor'/>
-            <button onClick={() => handleSubmit()}>
-              <Image 
-                  src="/../public/assets/icon_search.png"
-                  width={25} 
-                  height={25}
-                  alt="icon of filter"
-              />
-            </button>
-          </div>
-
-          <button onClick={() => handleSubmit()} className='h-10'>
+          <button onClick={() => handleSubmit()}>
             <Image 
                 src="/../public/assets/icon_filter.png"
                 width={30} 

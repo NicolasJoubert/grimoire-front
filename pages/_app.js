@@ -7,20 +7,21 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import currentNote from '../reducers/currentNote';
 import user from '../reducers/user';
 
-import { persistStore, persistReducer } from "redux-persist";
-import { PersistGate } from "redux-persist/integration/react";
-import storage from "redux-persist/lib/storage";
+import { persistStore, persistReducer } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
+import storage from 'redux-persist/lib/storage';
 
-const reducers = combineReducers({ currentNote, user});
-const persistConfig = { 
-  key: "grimoire", 
+const reducers = combineReducers({ currentNote, user });
+const persistConfig = {
+  key: 'grimoire',
   storage,
-  blacklist: ["currentNote", "user"] 
-}
+  blacklist: ['currentNote'],
+};
 
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false })
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 });
 
 const persistor = persistStore(store);
