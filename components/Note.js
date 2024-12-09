@@ -11,6 +11,7 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const Note = () => {
     const [noteData, setNoteData] = useState({})
+    const [titleInput, setTitleInput] = useState(noteData.title)
     const [blocs, setBlocs] = useState([])
 
     const noteId = useSelector(state => state.currentNote.value)
@@ -26,8 +27,9 @@ const Note = () => {
 
                 // const createdAt = new Date(data.note.createdAt)
                 const data = await response.json();
-                data.result && setNoteData({
-                    title: data.note.title,
+                if (data.result) {
+                    setNoteData({
+                    // title: data.note.title,
                     createdAt: moment(data.note.createdAt).format('DD-MM-YYYY'),
                     updatedAt: moment(data.note.updatedAt).format('DD-MM-YYYY'),
                     content: data.note.content,
@@ -36,7 +38,9 @@ const Note = () => {
                     isBookmarded: data.note.isBookmarked,
                     isPrivate: data.note.isPrivate
                     //user => on l'inclue ?
-                })
+                    })
+                    setTitleInput(data.note.title)
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -82,7 +86,7 @@ const Note = () => {
           </div>
       )})
 
-    const container = "flex flex-1 flex-col flex-start border-solid border border-black m-3 p-3 text-black"
+    const container = "flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black"
     const topContainer = "flex justify-between items-center w-full h-12"
     const title="text-2xl"
     const icons=""
@@ -96,7 +100,11 @@ const Note = () => {
     return (
         <div className={container}>
             <div className={topContainer}>
-                <h1 className={title}>{noteData.title}</h1>
+                <input 
+                    className={title}
+                    type="text"
+                    value={titleInput}
+                    onChange={e => setTitleInput(e.target.value)} />
                 <div className={icons}>ICONS</div>
             </div>
             <div className={metadataContainer}>
