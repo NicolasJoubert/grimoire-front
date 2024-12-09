@@ -30,7 +30,7 @@ const Note = () => {
                 const data = await response.json();
                 if (data.result) {
                     setNoteData({
-                    // title: data.note.title,
+                    title: data.note.title,
                     createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
                     updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
                     content: data.note.content,
@@ -48,33 +48,12 @@ const Note = () => {
         })();
     }, [noteId])
 
-    // const getLastUpdateNote = async () => {
-    //     try {
-    //         const response = await fetch(`${backendUrl}/notes/last/${user.token}`);
-    //         if (!response.ok) {
-    //             throw new Error(`HTTP error! status: ${response.status}`);
-    //         }
-
-    //         const data = await response.json();
-    //         if (data.result) {
-    //             setNoteData({
-    //             // title: data.note.title,
-    //             createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
-    //             updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
-    //             content: data.note.content,
-    //             forwardNotes: data.note.forwardNotes,
-    //             backwardNotes: data.note.backwardNotes,
-    //             isBookmarded: data.note.isBookmarked,
-    //             isPrivate: data.note.isPrivate
-    //             //user => on l'inclue ?
-    //             })
-    //             setTitleInput(data.note.title)
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching data:', error);
-    //     }
-
-    // }
+    const handleTitleChange = (event) => {
+        setNoteData((prevData) => ({
+          ...prevData, // Copy all other properties
+          title: event.target.value, // Update only the title
+        }));
+    };
 
     const addBlock = () => {
         setBlocs((prevBlocs) => [
@@ -130,8 +109,8 @@ const Note = () => {
                 <input 
                     className={title}
                     type="text"
-                    value={titleInput}
-                    onChange={e => setTitleInput(e.target.value)} />
+                    value={noteData.title}
+                    onChange={e => handleTitleChange(e)} />
                 <div className={icons}>ICONS</div>
             </div>
             <div className={metadataContainer}>
