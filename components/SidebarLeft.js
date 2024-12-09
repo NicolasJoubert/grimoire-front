@@ -2,12 +2,14 @@ import { useState } from 'react';
 import NoteLink from './NoteLink.js';
 
 export default function SidebarLeft() {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
   const [selectFavoris, setFavoris] = useState('');
-  const [selectedNote, setSelectedNote] = useState('');
+  const [notes, setNote] = useState([]);
 
   const favoris = ['Note 1', 'Note 2'];
 
-  const notes = [
+  const notesTab = [
     'Note 1',
     'Note 2',
     'Note 3',
@@ -67,7 +69,7 @@ export default function SidebarLeft() {
         {notes.map((note, index) => (
           <p
             key={index}
-            onClick={() => setSelectedNote(note)}
+            onClick={() => setNote(notesTab)}
             className='text-xs text-black ml-9 cursor-pointer hover:underline'
           >
             {note}
