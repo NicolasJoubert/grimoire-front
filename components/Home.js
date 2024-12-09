@@ -1,21 +1,43 @@
 import { useState } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import { replaceCurrentNote } from '../reducers/currentNote';
+
 import SidebarLeft from "./SidebarLeft"
 import SidebarRight from "./SidebarRight"
 import Searchbar from "./Searchbar"
 import Note from "./Note"
 import Placeholder from "./Placeholder"
 
-export default function Home() {
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
+export default function Home() {
     const [isSidebarLeftVisible, setIsSidebarLeftVisible] = useState(true)
-    const [isSidebarRightVisible, setIsSidebarRightVisible] = useState(false)
+    const [isSidebarRightVisible, setIsSidebarRightVisible] = useState(true)
     const [isNoteVisible, setIsNoteVisible] = useState(true)
 
+    const user = useSelector(state => state.user.value)
+    const dispatch = useDispatch()
+
+    const toggleSidebarLeft = () => {
+        setIsSidebarLeftVisible(!isSidebarLeftVisible)
+    }
+
+    const createNote = async() => {
+        const token = user.token
+        const response = await fetch(`${backendUrl}/notes/`, {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        });
+        const data = await response.json()
+        data.result && dispatch(replaceCurrentNote(data.note._id))
+      }
+    
     return (
         <div className="text-white p-4 flex flex-row space-x h-screen p-0 m-0">
-            {isSidebarLeftVisible && <SidebarLeft /> }
+            {isSidebarLeftVisible && <SidebarLeft toggleSidebarLeft={toggleSidebarLeft} createNote={createNote}/> }
             <div className="h-full flex-1 flex flex-col">
-                <Searchbar />
+                <Searchbar createNote={createNote}/>
                 {isNoteVisible ? <Note /> : <Placeholder />}
             </div>
             {isSidebarRightVisible && <SidebarRight /> }

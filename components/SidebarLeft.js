@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import NoteLink from './NoteLink.js';
 
-export default function SidebarLeft() {
+export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const [selectFavoris, setFavoris] = useState('');
@@ -59,6 +59,7 @@ export default function SidebarLeft() {
             src='addNoteSideBar.png'
             alt='showSideBar'
             className='p-4  '
+            onClick={() => createNote()}
           ></img>
         </button>
         <button>
