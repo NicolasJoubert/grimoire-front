@@ -59,7 +59,8 @@ const Note = () => {
                 }
                 const data = await response.json();
                 if (data.result) {
-                    console.log("saved")
+                    // for now, only log success
+                    console.log(`Note ${noteId} saved in database`)
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -78,7 +79,7 @@ const Note = () => {
         }));
     };
 
-    const addBlock = () => {
+    const addBloc = () => {
         // create new bloc and update noteData blocs array
         const newBloc = createTextBloc(noteData, "text")
         const blocs = noteData.blocs
@@ -91,9 +92,14 @@ const Note = () => {
         }));
     };
     
-    const deleteBlock = (position) => {
-        console.log(position)
-        setBlocs(blocs.filter(bloc => bloc.position != position))
+    const deleteBloc = (blocPosition) => {
+        console.log("position: ", blocPosition)
+        // Deleling a bloc means filtering current notedData blocs with blocs whose position is different than the function argument
+        const updatedBlocs = noteData.blocs.filter(data => data.position != blocPosition)
+        setNoteData((prevData) => ({
+            ...prevData,
+            blocs: updatedBlocs,
+        }));
     };
     
     const setBlocsValue = (blocPosition, value) => {
@@ -111,7 +117,8 @@ const Note = () => {
             key={i}
             position={i}
             value={bloc.value}
-            addBlock={addBlock}
+            addBloc={addBloc}
+            deleteBloc={deleteBloc}
             setBlocsValue={setBlocsValue}/>
 
           return (

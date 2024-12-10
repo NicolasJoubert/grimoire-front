@@ -4,8 +4,8 @@ import StarterKit from '@tiptap/starter-kit'
 
 const TextBloc = ({ 
     // handleKeyDownYo, 
-    deleteBlock,
-    addBlock,
+    deleteBloc,
+    addBloc,
     position,
     value, 
     setBlocsValue,
@@ -63,7 +63,10 @@ const TextBloc = ({
         <div className={container}>
             <div 
                 className={buttonStyle}
-                onClick={() => addBlock()}>+</div>
+                onClick={() => addBloc()}>+</div>
+            <div 
+                className={buttonStyle}
+                onClick={() => deleteBloc(position)}>-</div>
             <EditorContent 
                 editor={editor}
                 className={inputStyle}/>
