@@ -6,12 +6,12 @@ import { useSelector } from "react-redux"
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
+import { createTextBloc } from '../modules/blocsFormatter';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const Note = () => {
     const [noteData, setNoteData] = useState({})
-    const [blocs, setBlocs] = useState([noteData.blocs])
 
     const noteId = useSelector(state => state.currentNote.value)
 
@@ -79,15 +79,16 @@ const Note = () => {
     };
 
     const addBlock = () => {
-        setBlocs((prevBlocs) => [
-            ...prevBlocs,
-            { 
-                position: prevBlocs.length,
-                value: "",
-                type: "text",
-                langage: null,
-            }, // assign a unique id to each block
-        ]);
+        // create new bloc and update noteData blocs array
+        const newBloc = createTextBloc(noteData, "text")
+        const blocs = noteData.blocs
+        blocs.push(newBloc)
+
+        // update noteData with updated blocs
+        setNoteData((prevData) => ({
+            ...prevData,
+            blocs,
+        }));
     };
     
     const deleteBlock = (position) => {
@@ -110,6 +111,7 @@ const Note = () => {
             key={i}
             position={i}
             value={bloc.value}
+            addBlock={addBlock}
             setBlocsValue={setBlocsValue}/>
 
           return (

@@ -57,11 +57,13 @@ const TextBloc = ({
     };
 
     const container = "flex justify-between items-center"
-    const buttonStyle = "rounded-full border-solid border border-black w-6 h-6 text-center"
-    const inputStyle = "bg-blue-200 w-full h-full ml-2.5 border-solid border border-black rounded-lg text-black"
+    const buttonStyle = "rounded-full border-solid border border-black w-6 h-6 text-center cursor-pointer"
+    const inputStyle = "bg-backgroundColor w-full h-full ml-2.5 border-solid border border-black rounded-lg text-black"
     return (
         <div className={container}>
-            <div className={buttonStyle}>+</div>
+            <div 
+                className={buttonStyle}
+                onClick={() => addBlock()}>+</div>
             <EditorContent 
                 editor={editor}
                 className={inputStyle}/>
