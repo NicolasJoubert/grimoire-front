@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import NoteLink from './NoteLink'
-import styles from '../styles/Search.module.css'
 import Image from 'next/image';
 
 
@@ -79,7 +78,7 @@ export default function Searchbar({ createNote }) {
         <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
           {tags}
         </div>
-        <div className='w-full flex flex-col bg-lightPurple'>
+        <div className='w-full flex flex-col bg-lightPurple py-4'>
           {notes}
         </div>
       </div>
