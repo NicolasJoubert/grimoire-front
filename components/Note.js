@@ -12,6 +12,7 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const Note = () => {
     const [noteData, setNoteData] = useState({})
+    const [blocsLength, setBlocsLength] = useState(0)
 
     const noteId = useSelector(state => state.currentNote.value)
 
@@ -28,16 +29,17 @@ const Note = () => {
                 const data = await response.json();
                 if (data.result) {
                     setNoteData({
-                    title: data.note.title,
-                    createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
-                    updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
-                    blocs: data.note.blocs,
-                    forwardNotes: data.note.forwardNotes,
-                    backwardNotes: data.note.backwardNotes,
-                    isBookmarded: data.note.isBookmarked,
-                    isPrivate: data.note.isPrivate
-                    //user => on l'inclue ?
-                    })
+                        title: data.note.title,
+                        createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
+                        updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
+                        blocs: data.note.blocs,
+                        forwardNotes: data.note.forwardNotes,
+                        backwardNotes: data.note.backwardNotes,
+                        isBookmarded: data.note.isBookmarked,
+                        isPrivate: data.note.isPrivate
+                        //user => on l'inclue ?
+                    });
+                    setBlocsLength(data.note.blocs.length)
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -68,8 +70,20 @@ const Note = () => {
         })();
     }, [noteData])
 
-    // /** Add bloc when Note mounts */
-    // useEffect()
+    /** Update blocs position when numbered of blocs are changed*/
+    useEffect(() => {
+        const blocs = noteData?.blocs?.map((data, i) => {
+            return { 
+                ...data, 
+                position: i
+            }
+        })
+        // update noteData with updated blocs positions
+        setNoteData((prevData) => ({
+            ...prevData,
+            blocs,
+        }));
+    }, [blocsLength])
 
     /** Change title value in noteData state when changed */
     const handleTitleChange = (event) => {
@@ -90,6 +104,8 @@ const Note = () => {
             ...prevData,
             blocs,
         }));
+
+        setBlocsLength(blocsLength += 1)
     };
     
     const deleteBloc = (blocPosition) => {
@@ -100,6 +116,8 @@ const Note = () => {
             ...prevData,
             blocs: updatedBlocs,
         }));
+        // Update blocLength only if there are still blocs in note
+        if (blocsLength > 0) { setBlocsLength(blocsLength -= 1) }
     };
     
     const setBlocsValue = (blocPosition, value) => {
