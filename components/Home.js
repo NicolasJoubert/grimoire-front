@@ -26,6 +26,10 @@ export default function Home() {
     setIsSidebarLeftVisible(!isSidebarLeftVisible);
   };
 
+  const toggleSidebarRight = () => {
+    setIsSidebarRightVisible(!isSidebarRightVisible);
+  };
+
   const router = useRouter();
 
   // REDIRECTION UTILISATEUR SI NON SIGNE SUR LE PAGE DE CONNEXION
@@ -59,10 +63,16 @@ export default function Home() {
           createNote={createNote}
           toggleSidebarLeft={toggleSidebarLeft}
           isSidebarLeftVisible={isSidebarLeftVisible}
+          toggleSidebarRight={toggleSidebarRight}
+          isSidebarRightVisible={isSidebarRightVisible}
         />
         {noteId ? <Note /> : <Placeholder />}
       </div>
-      {isSidebarRightVisible && <SidebarRight />}
+      {isSidebarRightVisible && (
+        <SidebarRight
+          toggleSidebarRight={toggleSidebarRight}
+          createNote={createNote}
+        />)}
     </div>
   );
 }

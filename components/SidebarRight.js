@@ -1,6 +1,9 @@
 
 import React, { useState } from "react";
-export default function SidebarRight() {
+import NoteLink from './NoteLink.js';
+import { TbLayoutSidebarRightCollapseFilled } from 'react-icons/tb';
+
+export default function SidebarRight({toggleSidebarRight}) {
 
       // Initialisation de la date sélectionnée (6 Septembre 2025 par défaut)
       const [selectedDate, setSelectedDate] = useState(new Date());
@@ -55,15 +58,15 @@ export default function SidebarRight() {
     
       return (
         <div className="h-full w-64 bg-backgroundColor flex flex-col">
-            <div className='flex justify-start'>
-                <button>
-                <img
-                    src='show_sidebar_icon.png'
-                    alt='showSideBar'
-                    className='p-4'
-                ></img>
-                </button>
-            </div>
+          <div className='flex justify-start'>
+            <button className='pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
+              <TbLayoutSidebarRightCollapseFilled
+                size={24}
+                onClick={toggleSidebarRight}
+              />
+            </button>
+          </div>
+
           {/* Header avec navigation entre les jours */}
           <div className="flex items-center justify-between mb-4">
             {/* Bouton pour le jour précédent */}

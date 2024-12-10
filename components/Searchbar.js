@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import NoteLink from './NoteLink'
 import Image from 'next/image';
-import { TbLayoutSidebarLeftExpandFilled } from 'react-icons/tb';
+import { TbLayoutSidebarLeftExpandFilled, TbLayoutSidebarRightExpandFilled } from 'react-icons/tb';
 
 export default function Searchbar({
   createNote,
   toggleSidebarLeft,
+  toggleSidebarRight,
   isSidebarLeftVisible,
+  isSidebarRightVisible,
 }) {
   const [search, setSearch] = useState('');
   const [dataNote, setDataNote] = useState([]);
@@ -93,6 +95,16 @@ export default function Searchbar({
           alt='icon of filter'
         />
       </button>
+      
+        {/* Bouton pour afficher la Sidebar uniquement si elle est cachée */}
+      {!isSidebarRightVisible && (
+        <button className='p-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
+          <TbLayoutSidebarRightExpandFilled
+            size={24}
+            onClick={toggleSidebarRight}
+          />
+        </button>
+      )}
 
       <div className='absolute top-10 w-full max-w-screen-sm flex flex-col'>
         <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
