@@ -56,19 +56,19 @@ function Signup() {
         }
   };
     return(
-     <div className=" flex flex-1">
-        <div className="bg-backImg-signup bg-cover bg-center h-screen w-9/12">
+     <div className=" flex flex-1"> {/* div qui contient tout l'écran */}
+        <div className="bg-backImg-signup bg-cover bg-center h-screen w-9/12">  {/* image de fond */}
         </div>
 
-        <div className="flex flex-col justify-around items-center w-3/12 bg-backgroundColor">
-            <img src="/assets/logofinal.png" alt="logo" className='' />
-                <div className='flex justify-around w-full'>
-                    <img src="/assets/git.png" alt="gitImg" className='' />
-                    <img src="/assets/apple.png" alt="appleImg" className='' />
-                    <img src="/assets/google.png" alt="googleImg" className='' />
+        <div className="flex flex-col justify-around items-center w-3/12 bg-backgroundColor"> {/*div qui contient tout l'élément de droite */}
+            <img src="/assets/logofinal.png" alt="logo"  />
+                <div className='flex justify-around w-full'> {/*div qui contient les logo de connexion externe */}
+                    <img src="/assets/git.png" alt="gitImg"  />
+                    <img src="/assets/apple.png" alt="appleImg"  />
+                    <img src="/assets/google.png" alt="googleImg"  />
                 </div>
-                <img src="/assets/plus.png" alt="plusImg" className='' />
-               <div className='flex flex-col w-full items-center'> 
+                <img src="/assets/plus.png" alt="plusImg" />
+               <div className='flex flex-col w-full items-center'> {/*div qui contient tout les input et bouttons*/}
             <input className='w-8/12 rounded-md' type="text" placeholder='Mail' onChange={(e) => setEmail(e.target.value)} value={email}/>
             <input className='mt-4 w-8/12 rounded-md' type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} value={username}/>
             <input className='mt-4 w-8/12 rounded-md' type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/>

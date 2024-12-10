@@ -34,22 +34,22 @@ function Signin() {
                 console.log('connexion')
         }
     return(
-        <div className=" flex flex-1">
-            <div className="bg-backImg-signin bg-cover bg-center h-screen w-9/12">
+        <div className=" flex flex-1"> {/* div qui contient tout l'écran */}
+            <div className="bg-backImg-signin bg-cover bg-center h-screen w-9/12"> {/*image de fond */}
             </div>
-            <div className="flex flex-col justify-around items-center w-3/12 bg-backgroundColor">
-            <img src="/assets/logofinal.png" alt="logo" className='' />
-                <div className='flex justify-around w-full'>
-                    <img src="/assets/git.png" alt="gitImg" className='' />
-                    <img src="/assets/apple.png" alt="appleImg" className='' />
-                    <img src="/assets/google.png" alt="googleImg" className='' />
+            <div className="flex flex-col justify-around items-center w-3/12 bg-backgroundColor"> {/*div qui contient tout l'élément de droite */}
+            <img src="/assets/logofinal.png" alt="logo" />
+                <div className='flex justify-around w-full'> {/* div qui contient les logo de connexion externe */}
+                    <img src="/assets/git.png" alt="gitImg"  />
+                    <img src="/assets/apple.png" alt="appleImg"  />
+                    <img src="/assets/google.png" alt="googleImg"  />
                 </div>
-            <div className='flex flex-col'>
+            <div className='flex flex-col'> {/* div qui contient les input et boutton sign in */}
             <input className='rounded-md' type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} value={username}/>
             <input className='mt-4 rounded-md' type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/>
             <button className='bg-darkPurple text-white mt-6 rounded-md' onClick={() => handleSubmit()}>Connexion</button>
                 </div>
-                <div className=' flex flex-col items-center w-full'>
+                <div className=' flex flex-col items-center w-full'> {/*div qui contient les éléments signup */}
                 <p>Pas encore inscrit</p>
                 <button className='bg-darkPurple text-white w-2/6 rounded-md' onClick={() => router.push('/signup')}>Inscription</button>
                 </div>
