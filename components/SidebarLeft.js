@@ -21,6 +21,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   // REDUCER
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
+  const currentNote = useSelector((state) => state.currentNote.value);
 
   const favoris = ['Note 1', 'Note 2'];
 
@@ -43,7 +44,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       }
     };
     fetchNotes();
-  }, []);
+  }, [currentNote]);
 
   // FONCTION TO DISCONNECT USERS
   const handleLogout = () => {

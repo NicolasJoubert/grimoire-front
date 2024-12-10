@@ -30,13 +30,13 @@ const TextBloc = ({
         window.addEventListener("keydown", function (e) {
             console.log("userInput =>", editorInput);
             e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
-            e.key === "Enter" && addBloc()
+            // e.key === "Enter" && addBloc()
         });
 
         return (() => {
             window.removeEventListener("keydown", function (e) {
                 e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
-                e.key === "Enter" && addBloc()
+                // e.key === "Enter" && addBloc()
             }); 
         })
     }, [editorInput])
