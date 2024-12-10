@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import user from '../reducers/user';
 import { login, logout } from '../reducers/user';
 import { useRouter } from "next/router";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub, faGoogle, faApple } from '@fortawesome/free-solid-svg-icons';
 function Signup() {
     const dispatch = useDispatch();
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
@@ -36,6 +37,7 @@ function Signup() {
 			body: JSON.stringify({ email: email, username: username, password: password }),
 		}).then(response => response.json())
 			.then(data => {
+               
 				if(data.token) {
 					dispatch(login({ username: data.username, token: data.token }));
 					setEmail('');
@@ -55,24 +57,25 @@ function Signup() {
         }
   };
     return(
-     <div className=" flex flex-1">
-        <div className="bg-backImg-signup bg-cover bg-center h-screen w-9/12">
+     <div className=" flex flex-1"> {/* div qui contient tout l'écran */}
+        <div className="bg-backImg-signup bg-cover bg-center h-screen w-9/12">  {/* image de fond */}
         </div>
 
-        <div className="flex flex-col justify-around items-center w-3/12 bg-backgroundColor">
-            <img src="/assets/logofinal.png" alt="Description" className='' />
-                <div className='flex justify-around w-full'>
-                    <img src="/assets/git.png" alt="Description" className='' />
-                    <img src="/assets/apple.png" alt="Description" className='' />
-                    <img src="/assets/google.png" alt="Description" className='' />
+        <div className="flex flex-col justify-around items-center w-3/12 bg-backgroundColor"> {/*div qui contient tout l'élément de droite */}
+            <img src="/assets/logofinal.png" alt="logo"  />
+                <div className='flex justify-around w-full'> {/*div qui contient les logo de connexion externe */}
+                    <img src="/assets/git.png" alt="gitImg"  />
+                    <img src="/assets/apple.png" alt="appleImg"  />
+                    <FontAwesomeIcon icon={faApple} />
+                    <img src="/assets/google.png" alt="googleImg"  />
                 </div>
-                <img src="/assets/plus.png" alt="Description" className='' />
-               <div className='flex flex-col'> 
-            <input type="text" placeholder='Mail' onChange={(e) => setEmail(e.target.value)} value={email}/>
-            <input type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} value={username}/>
-            <input type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/>
-            <input type="password" placeholder='Confirm password' onChange={(e) => setConfirmPassword(e.target.value)} value={confirmpassword}/>
-            <button className='bg-darkPurple text-white' onClick={() => handleSubmit()}>Inscription</button>
+                <img src="/assets/plus.png" alt="plusImg" />
+               <div className='flex flex-col w-full items-center'> {/*div qui contient tout les input et bouttons*/}
+            <input className='w-8/12 rounded-md' type="text" placeholder='Mail' onChange={(e) => setEmail(e.target.value)} value={email}/>
+            <input className='mt-4 w-8/12 rounded-md' type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} value={username}/>
+            <input className='mt-4 w-8/12 rounded-md' type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/>
+            <input className='mt-4 w-8/12 rounded-md' type="password" placeholder='Confirm password' onChange={(e) => setConfirmPassword(e.target.value)} value={confirmpassword}/>
+            <button className='bg-darkPurple text-white mt-6 w-2/5 rounded-md ' onClick={() => handleSubmit()}>Inscription</button>
             </div>   
         </div>
      </div>

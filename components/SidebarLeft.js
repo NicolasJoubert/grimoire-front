@@ -1,19 +1,31 @@
 import { useState, useEffect } from 'react';
 import NoteLink from './NoteLink.js';
-import { useSelector } from 'react-redux';
+// REDUCER
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../reducers/user';
+
+import { useRouter } from 'next/router';
+
+//ICONES FONTAWESOME
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const [selectFavoris, setFavoris] = useState('');
   const [notes, setNotes] = useState([]);
-  const [selectedNote, setSelectedNote] = useState('');
 
+  const router = useRouter();
+
+  // REDUCER
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
+  const currentNote = useSelector((state) => state.currentNote.value);
 
   const favoris = ['Note 1', 'Note 2'];
 
-  // FETCH NOTE TITLE
+  // FETCH NOTE TITLE WITH USER TOKEN
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -32,7 +44,13 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       }
     };
     fetchNotes();
-  }, []);
+  }, [currentNote]);
+
+  // FONCTION TO DISCONNECT USERS
+  const handleLogout = () => {
+    router.push('/');
+    dispatch(logout());
+  };
 
   return (
     <div className='h-full w-64 bg-backgroundColor flex flex-col'>
@@ -89,7 +107,9 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
 
       {/* NOTES TITLE */}
       <div className='flex-1 overflow-y-auto'>
-        <NoteLink notes={notes} />
+        {notes.map((note, i) => (
+          <NoteLink key={i} title={note.title} noteId={note.id} />
+        ))}
       </div>
 
       {/* FOOTER SIDEBAR */}
@@ -99,9 +119,18 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
             src='hat-wizard-solid.png'
             className='rounded-full bg-white'
           ></img>
-          <p className='text-xs text-black mb-0 ml-2'>Benji le magicien</p>
+          <p className='text-xs text-black mb-0 ml-2'>{user.username}</p>
         </div>
-        <img src='moon-solid.png' className='mr-6'></img>
+        <div className='flex justify-normal items-center'>
+          <img src='moon-solid.png' className='mr-2'></img>
+          <button>
+            <FontAwesomeIcon
+              icon={faRightFromBracket}
+              className='text-darkPurple'
+              onClick={handleLogout}
+            />
+          </button>
+        </div>
       </div>
     </div>
   );

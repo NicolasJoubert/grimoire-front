@@ -14,13 +14,13 @@ const Note = () => {
     const [noteData, setNoteData] = useState({})
     const [blocsLength, setBlocsLength] = useState(0)
 
-    const noteId = useSelector(state => state.currentNote.value)
+    const currentNote = useSelector(state => state.currentNote.value)
 
     /** Fetch note in database based on ID in currentNote reducer */
     useEffect(() => {
         (async () => {
             try {
-                const response = await fetch(`${backendUrl}/notes/${noteId}`);
+                const response = await fetch(`${backendUrl}/notes/${currentNote}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -45,7 +45,7 @@ const Note = () => {
                 console.error('Error fetching data:', error);
             }
         })();
-    }, [noteId])
+    }, [currentNote])
 
     /** Updates note in database when noteData is changed */
     useEffect(() => {
@@ -54,7 +54,7 @@ const Note = () => {
                 const response = await fetch(`${backendUrl}/notes/`, {
                     method: "PUT",
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ noteId, noteData })
+                    body: JSON.stringify({ noteId: currentNote, noteData })
                   });
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -62,7 +62,7 @@ const Note = () => {
                 const data = await response.json();
                 if (data.result) {
                     // for now, only log success
-                    console.log(`Note ${noteId} saved in database`)
+                    console.log(`Note ${currentNote} saved in database`)
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -177,7 +177,7 @@ const Note = () => {
             </div>
             <div className={metadataContainer}>
                 <div className={tagsContainer}>
-                    <div onClick={() => console.log("blocs =>", blocs)}><Tag>bdd</Tag></div>
+                    <Tag>bdd</Tag>
                     <Tag>méthode</Tag>
                 </div>
                 <div className={dates}>
