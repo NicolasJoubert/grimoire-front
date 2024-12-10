@@ -27,18 +27,20 @@ const TextBloc = ({
     // })
 
     useEffect(() => {
-        window.addEventListener("keydown", function (e) {
-            console.log("userInput =>", editorInput);
-            e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
-            e.key === "Enter" && addBloc()
+        if (!editor) {
+            console.log("No editor");
+            return;
+        }
+        
+        editor.on("update", ({editor}) => {
+            console.log("coucou")
         });
 
-        return (() => {
-            window.removeEventListener("keydown", function (e) {
-                e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
-                e.key === "Enter" && addBloc()
-            }); 
-        })
+        // window.addEventListener("keydown", function (e) {
+        //     console.log("userInput =>", editorInput);
+        //     e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
+        //     e.key === "Enter" && addBloc()
+        // });
     }, [editorInput])
 
     const editor = useEditor({
