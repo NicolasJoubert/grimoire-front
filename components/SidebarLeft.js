@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 import NoteLink from './NoteLink.js';
-import { useSelector } from 'react-redux';
+// REDUCER
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../reducers/user';
+
+import { useRouter } from 'next/router';
+
+//ICONES FONTAWESOME
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -8,11 +16,15 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const [selectFavoris, setFavoris] = useState('');
   const [notes, setNotes] = useState([]);
 
+  const router = useRouter();
+
+  // REDUCER
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
 
   const favoris = ['Note 1', 'Note 2'];
 
-  // FETCH NOTE TITLE
+  // FETCH NOTE TITLE WITH USER TOKEN
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -32,6 +44,12 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
     };
     fetchNotes();
   }, []);
+
+  // FONCTION TO DISCONNECT USERS
+  const handleLogout = () => {
+    router.push('/');
+    dispatch(logout());
+  };
 
   return (
     <div className='h-full w-64 bg-backgroundColor flex flex-col'>
@@ -102,7 +120,16 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
           ></img>
           <p className='text-xs text-black mb-0 ml-2'>{user.username}</p>
         </div>
-        <img src='moon-solid.png' className='mr-6'></img>
+        <div className='flex justify-normal items-center'>
+          <img src='moon-solid.png' className='mr-2'></img>
+          <button>
+            <FontAwesomeIcon
+              icon={faRightFromBracket}
+              className='text-darkPurple'
+              onClick={handleLogout}
+            />
+          </button>
+        </div>
       </div>
     </div>
   );
