@@ -6,12 +6,13 @@ import { useSelector } from "react-redux"
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
+import { createTextBloc } from '../modules/blocsFormatter';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const Note = () => {
     const [noteData, setNoteData] = useState({})
-    const [blocs, setBlocs] = useState([noteData.blocs])
+    const [blocsLength, setBlocsLength] = useState(0)
 
     const noteId = useSelector(state => state.currentNote.value)
 
@@ -28,16 +29,17 @@ const Note = () => {
                 const data = await response.json();
                 if (data.result) {
                     setNoteData({
-                    title: data.note.title,
-                    createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
-                    updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
-                    blocs: data.note.blocs,
-                    forwardNotes: data.note.forwardNotes,
-                    backwardNotes: data.note.backwardNotes,
-                    isBookmarded: data.note.isBookmarked,
-                    isPrivate: data.note.isPrivate
-                    //user => on l'inclue ?
-                    })
+                        title: data.note.title,
+                        createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
+                        updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
+                        blocs: data.note.blocs,
+                        forwardNotes: data.note.forwardNotes,
+                        backwardNotes: data.note.backwardNotes,
+                        isBookmarded: data.note.isBookmarked,
+                        isPrivate: data.note.isPrivate
+                        //user => on l'inclue ?
+                    });
+                    setBlocsLength(data.note.blocs.length)
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -59,7 +61,8 @@ const Note = () => {
                 }
                 const data = await response.json();
                 if (data.result) {
-                    console.log("saved")
+                    // for now, only log success
+                    console.log(`Note ${noteId} saved in database`)
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -67,8 +70,20 @@ const Note = () => {
         })();
     }, [noteData])
 
-    // /** Add bloc when Note mounts */
-    // useEffect()
+    /** Update blocs position when numbered of blocs are changed*/
+    useEffect(() => {
+        const blocs = noteData?.blocs?.map((data, i) => {
+            return { 
+                ...data, 
+                position: i
+            }
+        })
+        // update noteData with updated blocs positions
+        setNoteData((prevData) => ({
+            ...prevData,
+            blocs,
+        }));
+    }, [blocsLength])
 
     /** Change title value in noteData state when changed */
     const handleTitleChange = (event) => {
@@ -78,31 +93,50 @@ const Note = () => {
         }));
     };
 
-    const addBlock = () => {
-        setBlocs((prevBlocs) => [
-            ...prevBlocs,
-            { 
-                position: prevBlocs.length,
-                value: "",
-                type: "text",
-                langage: null,
-            }, // assign a unique id to each block
-        ]);
+    const addBloc = () => {
+        // create new bloc and update noteData blocs array
+        const newBloc = createTextBloc(noteData, "text")
+        const blocs = noteData.blocs
+        blocs.push(newBloc)
+
+        // update noteData with updated blocs
+        setNoteData((prevData) => ({
+            ...prevData,
+            blocs,
+        }));
+
+        setBlocsLength(blocsLength += 1)
     };
     
-    const deleteBlock = (position) => {
-        console.log(position)
-        setBlocs(blocs.filter(bloc => bloc.position != position))
+    const deleteBloc = (blocPosition) => {
+        console.log("position: ", blocPosition)
+        // Deleling a bloc means filtering current notedData blocs with blocs whose position is different than the function argument
+        const updatedBlocs = noteData.blocs.filter(data => data.position != blocPosition)
+
+        // delete bloc ONLY if there are more than 1 bloc
+        if (blocsLength > 1) { 
+            setNoteData((prevData) => ({
+                ...prevData,
+                blocs: updatedBlocs,
+            }));
+            setBlocsLength(blocsLength -= 1)
+        }
     };
     
     const setBlocsValue = (blocPosition, value) => {
-        const updatedBlocs = blocs.map(bloc => bloc.position == blocPosition ? { ...bloc, value } : bloc)
-        setBlocs(updatedBlocs)
+        const updatedBlocs = noteData.blocs.map(data => data.position == blocPosition ? { ...data, value } : data)
+        setNoteData((prevData) => ({
+            ...prevData,
+            blocs: updatedBlocs,
+        }));
     }
     
     const setBlocsType = (blocPosition, type) => {
-        const updatedBlocs = blocs.map(bloc => bloc.position == blocPosition ? { ...bloc, type } : bloc)
-        setBlocs(updatedBlocs)
+        const updatedBlocs = noteData.blocs.map(data => data.position == blocPosition ? { ...data, type } : data)
+        setNoteData((prevData) => ({
+            ...prevData,
+            blocs: updatedBlocs,
+        }));
     }
 
     const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
@@ -110,6 +144,8 @@ const Note = () => {
             key={i}
             position={i}
             value={bloc.value}
+            addBloc={addBloc}
+            deleteBloc={deleteBloc}
             setBlocsValue={setBlocsValue}/>
 
           return (
