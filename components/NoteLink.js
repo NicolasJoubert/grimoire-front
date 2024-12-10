@@ -1,9 +1,17 @@
-function NoteLink(props) {
+function NoteLinks({ notes }) {
   return (
-    <div className="className='border-4 border-black" key={props.id}>
-      <p className='text-gray-900'>{props.title}</p>
+    <div>
+      {notes.map((note) => (
+        <p
+          className='text-gray-900 mb-0 cursor-pointer hover:underline pl-4'
+          onClick={() => console.log('cliqué sur ' + note.id)}
+          key={note.id}
+        >
+          {note.title}
+        </p>
+      ))}
     </div>
   );
 }
 
-export default NoteLink;
+export default NoteLinks;
