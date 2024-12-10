@@ -44,10 +44,10 @@ function Signin() {
                     <img src="/assets/apple.png" alt="appleImg"  />
                     <img src="/assets/google.png" alt="googleImg"  />
                 </div>
-            <div className='flex flex-col'> {/* div qui contient les input et boutton sign in */}
-            <input className='rounded-md' type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} value={username}/>
-            <input className='mt-4 rounded-md' type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/>
-            <button className='bg-darkPurple text-white mt-6 rounded-md' onClick={() => handleSubmit()}>Connexion</button>
+            <div className='flex flex-col w-full h-1/5 items-center justify-center '> {/* div qui contient les input et boutton sign in */}
+            <input className='rounded-md w-4/5 h-1/5' type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} value={username}/>
+            <input className='mt-4 rounded-md w-4/5 h-1/5' type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/>
+            <button className='bg-darkPurple text-white mt-6 rounded-md w-3/5 h-1/5' onClick={() => handleSubmit()}>Connexion</button>
                 </div>
                 <div className=' flex flex-col items-center w-full'> {/*div qui contient les éléments signup */}
                 <p>Pas encore inscrit</p>

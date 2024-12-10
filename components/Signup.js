@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import user from '../reducers/user';
 import { login, logout } from '../reducers/user';
 import { useRouter } from "next/router";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub, faGoogle, faApple } from '@fortawesome/free-solid-svg-icons';
 function Signup() {
     const dispatch = useDispatch();
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
@@ -65,6 +66,7 @@ function Signup() {
                 <div className='flex justify-around w-full'> {/*div qui contient les logo de connexion externe */}
                     <img src="/assets/git.png" alt="gitImg"  />
                     <img src="/assets/apple.png" alt="appleImg"  />
+                    <FontAwesomeIcon icon={faApple} />
                     <img src="/assets/google.png" alt="googleImg"  />
                 </div>
                 <img src="/assets/plus.png" alt="plusImg" />

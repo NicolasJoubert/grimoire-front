@@ -109,7 +109,7 @@ const Note = () => {
             </div>
             <div className={metadataContainer}>
                 <div className={tagsContainer}>
-                    <Tag>bdd</Tag>
+                    <Tag value="bdd"></Tag>
                     <Tag>méthode</Tag>
                 </div>
                 <div className={dates}>
