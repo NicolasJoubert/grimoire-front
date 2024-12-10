@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+
 import Code from '@tiptap/extension-code'
 import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
@@ -8,7 +9,6 @@ import Text from '@tiptap/extension-text'
 // import ManageBlocsExtension from '../TipTap/ManageBlocsExtension'
 
 const TextBloc = ({ 
-    // handleKeyDownYo, 
     deleteBloc,
     addBloc,
     position,
@@ -18,35 +18,27 @@ const TextBloc = ({
 
     const [editorInput, setEditorInput] = useState(value); // Initial content
 
-    // const CustomStarterKit = StarterKit.extend({
-    //     addKeyboardShortcuts() {
-    //         return {
-    //           'Backspace': () => console.log("ta mère"),
-    //         }
-    //       },
-    // })
-
-    useEffect(() => {
-        window.addEventListener("keydown", function (e) {
-            console.log("userInput =>", editorInput);
-            e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
-            // e.key === "Enter" && addBloc()
-        });
-
-        return (() => {
-            window.removeEventListener("keydown", function (e) {
-                e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
-                // e.key === "Enter" && addBloc()
-            }); 
-        })
-    }, [editorInput])
-
     const editor = useEditor({
-        extensions: [StarterKit],
+        extensions: [
+            StarterKit.configure({
+                bold: true, // Disable specific functionality if needed
+            }).extend({
+                addKeyboardShortcuts() {
+                    return {
+                        Enter: () => {
+                            addBloc(); // Call your custom function
+                            return true; // Suppress the default behavior
+                        },
+                    };
+                },
+            }),
+        ],
         content: editorInput, // Initialize editor with userInput
+        immediatelyRender: false,
         onUpdate({ editor }) {
             setEditorInput(editor.getHTML()); // Update user input when editor content changes
             setBlocsValue(position, editor.getHTML()) 
+            document.addEventListener('keydown', handleKeyDown);
         },
         editorProps: {
             attributes: {
@@ -54,6 +46,40 @@ const TextBloc = ({
             },
         },
     });
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Backspace' && editor.isEmpty) {
+            deleteBloc(position);
+        } else if (event.key === 'Enter') {
+            addBloc()
+            event.preventDefault()
+        }
+    };
+
+    // useEffect(() => {
+    //     if (!editor) {
+    //         console.log("No editor");
+    //         return;
+    //     }
+        
+    //     const handleKeyDown = (event) => {
+    //         if (event.key === 'Backspace' && editor.isEmpty) {
+    //             deleteBloc(position);
+    //         } else if (event.key === 'Enter') {
+    //             addBloc()
+    //             event.preventDefault()
+    //         }
+    //     };
+
+    //     editor.on("update", ({ editor }) => {
+    //         document.addEventListener('keydown', handleKeyDown);
+    //     });
+
+    //     // Cleanup
+    //     return () => {
+    //         document.removeEventListener('keydown', handleKeyDown);
+    //     };
+    // }, [editor, position, deleteBloc]);
 
     const container = "flex justify-between items-center"
     const buttonStyle = "rounded-full border-solid border border-black w-6 h-6 text-center cursor-pointer"
