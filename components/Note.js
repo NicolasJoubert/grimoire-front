@@ -112,12 +112,15 @@ const Note = () => {
         console.log("position: ", blocPosition)
         // Deleling a bloc means filtering current notedData blocs with blocs whose position is different than the function argument
         const updatedBlocs = noteData.blocs.filter(data => data.position != blocPosition)
-        setNoteData((prevData) => ({
-            ...prevData,
-            blocs: updatedBlocs,
-        }));
-        // Update blocLength only if there are still blocs in note
-        if (blocsLength > 0) { setBlocsLength(blocsLength -= 1) }
+
+        // delete bloc ONLY if there are more than 1 bloc
+        if (blocsLength > 1) { 
+            setNoteData((prevData) => ({
+                ...prevData,
+                blocs: updatedBlocs,
+            }));
+            setBlocsLength(blocsLength -= 1)
+        }
     };
     
     const setBlocsValue = (blocPosition, value) => {
