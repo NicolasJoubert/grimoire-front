@@ -141,7 +141,7 @@ const Note = () => {
             </div>
             <div className={metadataContainer}>
                 <div className={tagsContainer}>
-                    <div onClick={() => console.log("blocs =>", blocs)}><Tag>bdd</Tag></div>
+                    <Tag>bdd</Tag>
                     <Tag>méthode</Tag>
                 </div>
                 <div className={dates}>
