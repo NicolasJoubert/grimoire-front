@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Code from '@tiptap/extension-code'
@@ -16,7 +16,7 @@ const TextBloc = ({
     setBlocsValue,
     }) => {
 
-    const [userInput, setUserInput] = useState(value); // Initial content
+    const [editorInput, setEditorInput] = useState(value); // Initial content
 
     // const CustomStarterKit = StarterKit.extend({
     //     addKeyboardShortcuts() {
@@ -26,49 +26,36 @@ const TextBloc = ({
     //       },
     // })
 
+    useEffect(() => {
+        window.addEventListener("keydown", function (e) {
+            console.log("userInput =>", editorInput);
+            e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
+        });
+
+        return (() => {
+            window.removeEventListener("keydown", function (e) {
+                e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
+            }); 
+        })
+    }, [editorInput])
+
     const editor = useEditor({
         extensions: [StarterKit],
-        content: userInput, // Initialize editor with userInput
+        content: editorInput, // Initialize editor with userInput
         onUpdate({ editor }) {
-            setUserInput(editor.getHTML()); // Update user input when editor content changes
+            setEditorInput(editor.getHTML()); // Update user input when editor content changes
             setBlocsValue(position, editor.getHTML()) 
         },
         editorProps: {
-            handleKeyDown: ({ event }) => {
-                console.log("event", event)
-                if (!event) {
-                    return false
-                }
-                if ((event.key === "Backspace") && (userInput.length === 0)) {
-                    event.preventDefault();
-                    deleteBloc(position)
-                    return true;
-                }
-                return false; // Allow other keydown events
+            attributes: {
+                class: "flex-1 focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md"
             },
         },
     });
 
-    // const onKeyDown = (e) => {
-    //     // handleKeyDown(e, id)
-    //     console.log("foo")
-    // }
-
-    const removeBloc = (event) => {
-        // console.log(event)
-        // if ((event.key === "Backspace") && (editor.content.length == 0)) {
-        //     deleteBloc(position)
-        // }
-        if (event.key === "Backspace") {
-            event.preventDefault();
-            deleteBloc(position)
-            return true;
-        }
-    }
-
     const container = "flex justify-between items-center"
     const buttonStyle = "rounded-full border-solid border border-black w-6 h-6 text-center cursor-pointer"
-    const inputStyle = "bg-backgroundColor w-full h-full ml-2.5 border-solid border border-black rounded-lg text-black"
+    const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
     return (
         <div className={container}>
             <div 
