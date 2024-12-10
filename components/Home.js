@@ -47,7 +47,7 @@ export default function Home() {
   };
 
   return (
-    <div className='text-white p-4 flex flex-row space-x h-screen p-0 m-0'>
+    <div className='text-white flex flex-row space-x h-screen p-0 m-0'>
       {isSidebarLeftVisible && (
         <SidebarLeft
           toggleSidebarLeft={toggleSidebarLeft}
@@ -55,7 +55,11 @@ export default function Home() {
         />
       )}
       <div className='h-full flex-1 flex flex-col'>
-        <Searchbar createNote={createNote} />
+        <Searchbar
+          createNote={createNote}
+          toggleSidebarLeft={toggleSidebarLeft}
+          isSidebarLeftVisible={isSidebarLeftVisible}
+        />
         {noteId ? <Note /> : <Placeholder />}
       </div>
       {isSidebarRightVisible && <SidebarRight />}
