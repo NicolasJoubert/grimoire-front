@@ -7,7 +7,6 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
 
   const [selectFavoris, setFavoris] = useState('');
   const [notes, setNotes] = useState([]);
-  const [selectedNote, setSelectedNote] = useState('');
 
   const user = useSelector((state) => state.user.value);
 
@@ -17,7 +16,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const response = await fetch(backendUrl + `/notes/${user.token}`);
+        const response = await fetch(backendUrl + `/notes/user/${user.token}`);
 
         const data = await response.json();
         console.log(data);
@@ -89,7 +88,9 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
 
       {/* NOTES TITLE */}
       <div className='flex-1 overflow-y-auto'>
-        <NoteLink notes={notes} />
+        {notes.map((note, i) => (
+          <NoteLink key={i} title={note.title} noteId={note.id} />
+        ))}
       </div>
 
       {/* FOOTER SIDEBAR */}
@@ -99,7 +100,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
             src='hat-wizard-solid.png'
             className='rounded-full bg-white'
           ></img>
-          <p className='text-xs text-black mb-0 ml-2'>Benji le magicien</p>
+          <p className='text-xs text-black mb-0 ml-2'>{user.username}</p>
         </div>
         <img src='moon-solid.png' className='mr-6'></img>
       </div>
