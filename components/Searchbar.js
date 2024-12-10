@@ -41,7 +41,7 @@ export default function Searchbar({ createNote }) {
     return (
         <div className='text-gray-900 flex flex-row justify-center justify-items-center bg-backgroundColor'>
         <Image 
-                src="/../public/assets/icon_new_note.png"
+                src="/assets/icon_new_note.png"
                 width={50} 
                 height={50}
                 alt="icon of filter"
@@ -53,7 +53,7 @@ export default function Searchbar({ createNote }) {
             <input onChange={(e) => changeInput(e.target.value)}  value={search} className='border-4 border-black text-gray-900'/>
             <button onClick={() => handleSubmit()}>
               <Image 
-                  src="/../public/assets/icon_search.png"
+                  src="/assets/icon_search.png"
                   width={50} 
                   height={50}
                   alt="icon of filter"
@@ -61,7 +61,7 @@ export default function Searchbar({ createNote }) {
             </button>
             <button onClick={() => handleSubmit()}>
               <Image 
-                  src="/../public/assets/icon_filter.png"
+                  src="/assets/icon_filter.png"
                   width={30} 
                   height={30}
                   alt="icon of filter"
