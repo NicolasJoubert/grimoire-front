@@ -124,13 +124,19 @@ const Note = () => {
     };
     
     const setBlocsValue = (blocPosition, value) => {
-        const updatedBlocs = blocs.map(bloc => bloc.position == blocPosition ? { ...bloc, value } : bloc)
-        setBlocs(updatedBlocs)
+        const updatedBlocs = noteData.blocs.map(data => data.position == blocPosition ? { ...data, value } : data)
+        setNoteData((prevData) => ({
+            ...prevData,
+            blocs: updatedBlocs,
+        }));
     }
     
     const setBlocsType = (blocPosition, type) => {
-        const updatedBlocs = blocs.map(bloc => bloc.position == blocPosition ? { ...bloc, type } : bloc)
-        setBlocs(updatedBlocs)
+        const updatedBlocs = noteData.blocs.map(data => data.position == blocPosition ? { ...data, type } : data)
+        setNoteData((prevData) => ({
+            ...prevData,
+            blocs: updatedBlocs,
+        }));
     }
 
     const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
