@@ -66,13 +66,19 @@ const Note = () => {
         }
     }
 
-    /** Fetch note in database based on ID in currentNote reducer */
+    /** Fetch note in database based on ID in currentNote reducer 
+     * Automatically had a bloc on creation
+    */
     useEffect(() => {
-        // fetchNote();
-        (blocsLength === 0) && addBloc("text") // console.log("blocs length => ", noteData?.blocs?.length)
-        console.log("nouvelle note", noteData)
-        fetchNote();
-    }, [currentNote])
+        if (blocsLength === 0 && noteData?.blocs?.length === 0) { // controls that no bloc exists in note
+            addBloc("text", currentNote)
+            fetchNote();
+        } else {
+            fetchNote();
+        }
+        // console.log("blocs length => ", noteData?.blocs?.length)
+        // console.log("nouvelle note", noteData)
+    }, [currentNote, blocsLength])
 
     // /** Fetch note in database based on ID in currentNote reducer */
     // useEffect(() => {
@@ -82,7 +88,7 @@ const Note = () => {
     /** Updates note in database when noteData is changed */
     useEffect(() => {
         saveNote()
-    }, [noteData, blocsLength])
+    }, [noteData, blocsLength]) // Adding blocsLength allow to update lastmodified when bloc is added or deleted
 
     /** Update blocs position when number of blocs are changed*/
     // useEffect(() => {
@@ -107,18 +113,17 @@ const Note = () => {
         }));
     };
 
-    const addBloc = async (type) => {
+    const addBloc = async (type, noteId) => {
         // create new bloc and update noteData blocs array
         console.log("jauoute un bloc")
         const response = await fetch(`${backendUrl}/blocs/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type, noteId: currentNote }),
+            body: JSON.stringify({ type, noteId }),
         });
         const data = await response.json();
         // data.result && console.log("bloc ajouté")
-        data.result && fetchNote()
-        setBlocsLength(blocsLength += 1)
+        data.result && setBlocsLength(blocsLength += 1)
 
         // const newBloc = createTextBloc(noteData, "text")
         // const blocs = noteData.blocs
