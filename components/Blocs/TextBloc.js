@@ -10,10 +10,12 @@ import Text from '@tiptap/extension-text'
 
 const TextBloc = ({ 
     id,
+    noteId,
+    type,
+    value, 
     deleteBloc,
     addBloc,
     position,
-    value, 
     setBlocsValue,
     }) => {
 
@@ -38,7 +40,7 @@ const TextBloc = ({
                     return {
                         Enter: () => {
                             console.log("Enter (from extend)")
-                            addBloc();
+                            addBloc(id, noteId);
                             // editor.commands.blur()   TO CHECK !!!
                             return true; // Suppress the default behavior
                         },
@@ -111,7 +113,7 @@ const TextBloc = ({
         <div className={container}>
             <div 
                 className={buttonStyle}
-                onClick={() => addBloc()}>+</div>
+                onClick={() => addBloc(id, noteId)}>+</div>
             <div 
                 className={buttonStyle}
                 onClick={() => deleteBloc(id)}>-</div>

@@ -115,7 +115,6 @@ const Note = () => {
 
     const addBloc = async (type, noteId) => {
         // create new bloc and update noteData blocs array
-        console.log("jauoute un bloc")
         const response = await fetch(`${backendUrl}/blocs/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -124,61 +123,61 @@ const Note = () => {
         const data = await response.json();
         // data.result && console.log("bloc ajouté")
         data.result && setBlocsLength(blocsLength += 1)
-
-        // const newBloc = createTextBloc(noteData, "text")
-        // const blocs = noteData.blocs
-        // blocs.push(newBloc)
-
-        // update noteData with updated blocs
-        // setNoteData((prevData) => ({
-        //     ...prevData,
-        //     blocs,
-        // }));
-
     };
     
-    const deleteBloc = (id) => {
-        console.log("id: ", id)
+    const deleteBloc = async (blocId) => {
+        console.log("id: ", blocId)
         
         // delete bloc ONLY if there are more than 1 bloc
         if (blocsLength > 1) { 
+
+            const response = await fetch(`${backendUrl}/blocs/${blocId}/${currentNote}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const data = await response.json();
+            // data.result && console.log("bloc supprimé")
+            data.result && setBlocsLength(blocsLength -= 1)
             // Deleting a bloc means filtering current notedData blocs with blocs whose position is different than the function argument
-            const updatedBlocs = noteData.blocs.filter(data => data.id != id)
-            setNoteData((prevData) => ({
-                ...prevData,
-                blocs: updatedBlocs,
-            }));
-            setBlocsLength(updatedBlocs.length)
+            // const updatedBlocs = noteData.blocs.filter(data => data.id != id)
+            // setNoteData((prevData) => ({
+            //     ...prevData,
+            //     blocs: updatedBlocs,
+            // }));
+            // setBlocsLength(updatedBlocs.length)
         }
     };
     
-    const setBlocsValue = (id, value) => {
-        const updatedBlocs = noteData.blocs.map(data => data.id == id ? { ...data, value } : data)
-        setNoteData((prevData) => ({
-            ...prevData,
-            blocs: updatedBlocs,
-        }));
-    }
+    // const setBlocsValue = (id, value) => {
+    //     const updatedBlocs = noteData.blocs.map(data => data.id == id ? { ...data, value } : data)
+    //     setNoteData((prevData) => ({
+    //         ...prevData,
+    //         blocs: updatedBlocs,
+    //     }));
+    // }
     
-    const setBlocsType = (blocPosition, type) => {
-        const updatedBlocs = noteData.blocs.map(data => data.position == blocPosition ? { ...data, type } : data)
-        setNoteData((prevData) => ({
-            ...prevData,
-            blocs: updatedBlocs,
-        }));
-    }
+    // const setBlocsType = (blocPosition, type) => {
+    //     const updatedBlocs = noteData.blocs.map(data => data.position == blocPosition ? { ...data, type } : data)
+    //     setNoteData((prevData) => ({
+    //         ...prevData,
+    //         blocs: updatedBlocs,
+    //     }));
+    // }
 
     const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
         let blocComponent =  <TextBloc 
             id={bloc._id}
+            noteId={currentNote}
+            type="text"
             position={i}
             value={bloc.value}
             addBloc={addBloc}
             deleteBloc={deleteBloc}
-            setBlocsValue={setBlocsValue}/>
+            // setBlocsValue={setBlocsValue}
+            />
 
           return (
-            <div key={bloc.id}>{blocComponent}</div>
+            <div key={bloc._id}>{blocComponent}</div>
         //       <div key={i} className="bg-blue-500">
         //       <button onClick={(i, type) => setBlocsType(bloc.position, "text")} className="">Text</button>
         //       {blocComponent}
