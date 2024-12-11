@@ -26,6 +26,10 @@ export default function Home() {
     setIsSidebarLeftVisible(!isSidebarLeftVisible);
   };
 
+  const toggleSidebarRight = () => {
+    setIsSidebarRightVisible(!isSidebarRightVisible);
+  };
+
   const router = useRouter();
 
   // REDIRECTION UTILISATEUR SI NON SIGNE SUR LE PAGE DE CONNEXION
@@ -47,7 +51,7 @@ export default function Home() {
   };
 
   return (
-    <div className='text-white p-4 flex flex-row space-x h-screen p-0 m-0'>
+    <div className='text-white flex flex-row space-x h-screen p-0 m-0'>
       {isSidebarLeftVisible && (
         <SidebarLeft
           toggleSidebarLeft={toggleSidebarLeft}
@@ -55,10 +59,20 @@ export default function Home() {
         />
       )}
       <div className='h-full flex-1 flex flex-col'>
-        <Searchbar createNote={createNote} />
+        <Searchbar
+          createNote={createNote}
+          toggleSidebarLeft={toggleSidebarLeft}
+          isSidebarLeftVisible={isSidebarLeftVisible}
+          toggleSidebarRight={toggleSidebarRight}
+          isSidebarRightVisible={isSidebarRightVisible}
+        />
         {noteId ? <Note /> : <Placeholder />}
       </div>
-      {isSidebarRightVisible && <SidebarRight />}
+      {isSidebarRightVisible && (
+        <SidebarRight
+          toggleSidebarRight={toggleSidebarRight}
+          createNote={createNote}
+        />)}
     </div>
   );
 }
