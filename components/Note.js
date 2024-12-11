@@ -16,74 +16,88 @@ const Note = () => {
 
     const currentNote = useSelector(state => state.currentNote.value)
 
+    const fetchNote = async () => {
+        try {
+            const response = await fetch(`${backendUrl}/notes/${currentNote}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // const createdAt = new Date(data.note.createdAt)
+            const data = await response.json();
+            if (data.result) {
+                setNoteData({
+                    title: data.note.title,
+                    createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
+                    updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
+                    blocs: data.note.blocs,
+                    forwardNotes: data.note.forwardNotes,
+                    backwardNotes: data.note.backwardNotes,
+                    isBookmarded: data.note.isBookmarked,
+                    isPrivate: data.note.isPrivate
+                    //user => on l'inclue ?
+                });
+                console.log("bloc data", noteData.blocs)
+                setBlocsLength(data.note.blocs.length)
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    const saveNote = async () => {
+        // IMPORTANT : do not save blocs, only updated last modified and title
+        try {
+            const response = await fetch(`${backendUrl}/notes/`, {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ noteId: currentNote, noteData })
+              });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.result) {
+                // for now, only log success
+                console.log(`Note ${currentNote} saved in database`)
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
     /** Fetch note in database based on ID in currentNote reducer */
     useEffect(() => {
-        (async () => {
-            try {
-                const response = await fetch(`${backendUrl}/notes/${currentNote}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                // const createdAt = new Date(data.note.createdAt)
-                const data = await response.json();
-                if (data.result) {
-                    setNoteData({
-                        title: data.note.title,
-                        createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
-                        updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
-                        blocs: data.note.blocs,
-                        forwardNotes: data.note.forwardNotes,
-                        backwardNotes: data.note.backwardNotes,
-                        isBookmarded: data.note.isBookmarked,
-                        isPrivate: data.note.isPrivate
-                        //user => on l'inclue ?
-                    });
-                    setBlocsLength(data.note.blocs.length)
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        })();
+        // fetchNote();
+        (blocsLength === 0) && addBloc("text") // console.log("blocs length => ", noteData?.blocs?.length)
+        console.log("nouvelle note", noteData)
+        fetchNote();
     }, [currentNote])
+
+    // /** Fetch note in database based on ID in currentNote reducer */
+    // useEffect(() => {
+    //     (noteData.blocs?.length === 0) && addBloc("text") // console.log("blocs length => ", noteData?.blocs?.length)
+    // }, [])
 
     /** Updates note in database when noteData is changed */
     useEffect(() => {
-        (async () => {
-            try {
-                const response = await fetch(`${backendUrl}/notes/`, {
-                    method: "PUT",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ noteId: currentNote, noteData })
-                  });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                if (data.result) {
-                    // for now, only log success
-                    console.log(`Note ${currentNote} saved in database`)
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        })();
-    }, [noteData])
+        saveNote()
+    }, [noteData, blocsLength])
 
     /** Update blocs position when number of blocs are changed*/
-    useEffect(() => {
-        const blocs = noteData?.blocs?.map((data, i) => {
-            return { 
-                ...data, 
-                position: i
-            }
-        })
-        // update noteData with updated blocs positions
-        setNoteData((prevData) => ({
-            ...prevData,
-            blocs,
-        }));
-    }, [blocsLength])
+    // useEffect(() => {
+    //     const blocs = noteData?.blocs?.map((data, i) => {
+    //         return { 
+    //             ...data, 
+    //             position: i
+    //         }
+    //     })
+    //     // update noteData with updated blocs positions
+    //     setNoteData((prevData) => ({
+    //         ...prevData,
+    //         blocs,
+    //     }));
+    // }, [blocsLength])
 
     /** Change title value in noteData state when changed */
     const handleTitleChange = (event) => {
@@ -93,19 +107,29 @@ const Note = () => {
         }));
     };
 
-    const addBloc = () => {
+    const addBloc = async (type) => {
         // create new bloc and update noteData blocs array
-        const newBloc = createTextBloc(noteData, "text")
-        const blocs = noteData.blocs
-        blocs.push(newBloc)
+        console.log("jauoute un bloc")
+        const response = await fetch(`${backendUrl}/blocs/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type, noteId: currentNote }),
+        });
+        const data = await response.json();
+        // data.result && console.log("bloc ajouté")
+        data.result && fetchNote()
+        setBlocsLength(blocsLength += 1)
+
+        // const newBloc = createTextBloc(noteData, "text")
+        // const blocs = noteData.blocs
+        // blocs.push(newBloc)
 
         // update noteData with updated blocs
-        setNoteData((prevData) => ({
-            ...prevData,
-            blocs,
-        }));
+        // setNoteData((prevData) => ({
+        //     ...prevData,
+        //     blocs,
+        // }));
 
-        setBlocsLength(blocsLength += 1)
     };
     
     const deleteBloc = (id) => {
@@ -141,7 +165,7 @@ const Note = () => {
 
     const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
         let blocComponent =  <TextBloc 
-            id={bloc.id}
+            id={bloc._id}
             position={i}
             value={bloc.value}
             addBloc={addBloc}
