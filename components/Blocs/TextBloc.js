@@ -9,26 +9,39 @@ import Text from '@tiptap/extension-text'
 // import ManageBlocsExtension from '../TipTap/ManageBlocsExtension'
 
 const TextBloc = ({ 
-    id,
+    blocId,
     noteId,
     type,
-    value, 
+    content, 
     deleteBloc,
     addBloc,
+    blocRef,
+    switchBlocs,
     position,
-    setBlocsValue,
     }) => {
 
-    //
-    //  IMPORTANT !!!
-    //
-    //  if i delete -> is it deleted in database ?
-    //  => to check !!
-    //
-    //
+    const saveBloc = async () => {
+        try {
+            const response = await fetch(`${backendUrl}/blocs/`, {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ blocId, type })
+              });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.result) {
+                // for now, only log success
+                console.log(`Note ${currentNote} saved in database`)
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
 
 
-    const [editorInput, setEditorInput] = useState(value); // Initial content
+    const [editorInput, setEditorInput] = useState(content); // Initial content
 
     const editor = useEditor({
         extensions: [
@@ -39,10 +52,7 @@ const TextBloc = ({
                 addKeyboardShortcuts() {
                     return {
                         Enter: () => {
-                            console.log("Enter (from extend)")
-                            addBloc(id, noteId);
-                            // editor.commands.blur()   TO CHECK !!!
-                            return true; // Suppress the default behavior
+                            return true; // Prevent adding line return in current bloc
                         },
                     };
                 },
@@ -51,34 +61,39 @@ const TextBloc = ({
         content: editorInput, // Initialize editor with userInput
         immediatelyRender: false,
         onCreate({ editor }) {
-            // editor.selectAll()
             editor.commands.focus()
         },
+        // onFocus({ editor }) {
+        // },
         onUpdate({ editor }) {
-            // editor.commands.focus("end")
-            document.addEventListener('keydown', handleKeyDown);
-            console.log("editor.getHTML()", editor.getHTML());
-            
-            setEditorInput(editor.getHTML()); // Update user input when editor content changes
-            setBlocsValue(id, editor.getHTML()) 
+            setEditorInput(editor.getHTML()); // Update user input when editor content changes 
         },
         editorProps: {
             attributes: {
                 class: "flex-1 focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md"
+            },
+            handleDOMEvents: {
+                keydown: (view, e) => {
+                    handleKeyDown(e)
+                    return false; // Allow default behavior
+                },
             },
         },
     });
 
     const handleKeyDown = (event) => {
         if (event.key === 'Backspace' && editor.isEmpty) {
-            console.log("deletion baby")
-            deleteBloc(id);
+            deleteBloc(blocId);
             return
         } 
-        // if (event.key === 'Enter') {
-        //     console.log("Enter from hanleKeyDown")
-        //     addBloc()
-        // }
+        if (event.key === 'Enter') {
+            addBloc(type, noteId)
+            return
+        }
+        if (event.key === 'ArrowUp') {
+            // addBloc(type, noteId)
+            return
+        }
     };
 
     // useEffect(() => {
@@ -113,11 +128,12 @@ const TextBloc = ({
         <div className={container}>
             <div 
                 className={buttonStyle}
-                onClick={() => addBloc(id, noteId)}>+</div>
-            <div 
+                onClick={() => addBloc(type, noteId)}>+</div>
+            {/* <div 
                 className={buttonStyle}
-                onClick={() => deleteBloc(id)}>-</div>
+                onClick={() => deleteBloc(blocId)}>-</div> */}
             <EditorContent 
+                ref={blocRef}
                 editor={editor}
                 className={inputStyle}/>
         </div>
