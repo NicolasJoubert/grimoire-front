@@ -1,6 +1,24 @@
 import { useState, useEffect } from 'react';
 import NoteLink from './NoteLink.js';
-import { useSelector } from 'react-redux';
+// REDUCER
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../reducers/user';
+
+import { useRouter } from 'next/router';
+
+//ICONES FONTAWESOME
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faRightFromBracket,
+  faMoon,
+  faBookmark,
+  faFolderPlus,
+  faFileCirclePlus,
+  faFilter,
+  faHatWizard,
+} from '@fortawesome/free-solid-svg-icons';
+
+import { TbLayoutSidebarLeftCollapseFilled } from 'react-icons/tb';
 
 export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -8,11 +26,17 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const [selectFavoris, setFavoris] = useState('');
   const [notes, setNotes] = useState([]);
 
+  const router = useRouter();
+
+  // REDUCER
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
+  const currentNote = useSelector((state) => state.currentNote.value);
 
   const favoris = ['Note 1', 'Note 2'];
 
-  // FETCH NOTE TITLE
+  // TODO DYNAMISER LES FAVORIS
+  // FETCH NOTE TITLE WITH USER TOKEN
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -31,18 +55,29 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       }
     };
     fetchNotes();
-  }, []);
+  }, [currentNote]);
+
+  // FONCTION TO DISCONNECT USERS
+  const handleLogout = () => {
+    router.push('/');
+    dispatch(logout());
+  };
+
+  // TODO FAIRE LA FONCTION DARK LIGHT MODE
+  // turn on light or dark mode NOT ACTIVE
+  const darkLightMode = () => {
+    console.log('clique sur le ligth dark mode');
+  };
 
   return (
     <div className='h-full w-64 bg-backgroundColor flex flex-col'>
       {/* HEADER SIDEBAR */}
       <div className='flex justify-end'>
-        <button>
-          <img
-            src='show_sidebar_icon.png'
-            alt='showSideBar'
-            className='p-4'
-          ></img>
+        <button className='pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
+          <TbLayoutSidebarLeftCollapseFilled
+            size={24}
+            onClick={toggleSidebarLeft}
+          />
         </button>
       </div>
       <div className='flex justify-center'>
@@ -52,7 +87,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       {/* FAVORIS */}
       <div className='border-b-2 border-solid border-gray pl-4 pb-4'>
         <div className='flex items-center justify-normal ml-10'>
-          <img src='bookmark-solid.png'></img>
+          <FontAwesomeIcon icon={faBookmark} className='text-darkPurple' />
           <p className='items-center text-darkPurple m-2 font-bold'>Favoris</p>
         </div>
         <div className='ml-16'>
@@ -71,18 +106,23 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       {/* ICONES ADD AND FILTER */}
       <div className='flex justify-around'>
         <button>
-          <img src='folder.png' alt='showSideBar' className='p-4'></img>
+          <FontAwesomeIcon
+            icon={faFolderPlus}
+            className='p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
+          />
         </button>
         <button>
-          <img
-            src='addNoteSideBar.png'
-            alt='showSideBar'
-            className='p-4'
+          <FontAwesomeIcon
+            icon={faFileCirclePlus}
+            className='p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
             onClick={() => createNote()}
-          ></img>
+          />
         </button>
         <button>
-          <img src='filter.png' alt='showSideBar' className='p-4'></img>
+          <FontAwesomeIcon
+            icon={faFilter}
+            className='p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
+          />
         </button>
       </div>
 
@@ -94,15 +134,27 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       </div>
 
       {/* FOOTER SIDEBAR */}
-      <div className='flex justify-between items-center p-4 border-t border-gray-300'>
+      <div className='flex justify-between items-center p-2 border-t border-gray-300'>
         <div className='flex items-center'>
-          <img
-            src='hat-wizard-solid.png'
-            className='rounded-full bg-white'
-          ></img>
-          <p className='text-xs text-black mb-0 ml-2'>{user.username}</p>
+          <FontAwesomeIcon icon={faHatWizard} className='text-darkPurple' />
+          <p className='text-sm text-black mb-0 ml-2'>{user.username}</p>
         </div>
-        <img src='moon-solid.png' className='mr-6'></img>
+        <div className='flex justify-normal items-center'>
+          <button>
+            <FontAwesomeIcon
+              icon={faMoon}
+              className='mr-2 text-darkPurple text-base  hover:text-lightPurple transition duration-300 ease-in-out'
+              onClick={darkLightMode}
+            />
+          </button>
+          <button>
+            <FontAwesomeIcon
+              icon={faRightFromBracket}
+              className='text-darkPurple text-base  hover:text-lightPurple transition duration-300 ease-in-out'
+              onClick={handleLogout}
+            />
+          </button>
+        </div>
       </div>
     </div>
   );

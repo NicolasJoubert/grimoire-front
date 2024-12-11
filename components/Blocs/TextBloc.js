@@ -1,67 +1,71 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import Code from '@tiptap/extension-code'
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+// import ManageBlocsExtension from '../TipTap/ManageBlocsExtension'
 
 const TextBloc = ({ 
     // handleKeyDownYo, 
-    deleteBlock,
-    addBlock,
+    deleteBloc,
+    addBloc,
     position,
     value, 
     setBlocsValue,
     }) => {
 
-    const [userInput, setUserInput] = useState(value); // Initial content
+    const [editorInput, setEditorInput] = useState(value); // Initial content
+
+    // const CustomStarterKit = StarterKit.extend({
+    //     addKeyboardShortcuts() {
+    //         return {
+    //           'Backspace': () => console.log("ta mère"),
+    //         }
+    //       },
+    // })
+
+    useEffect(() => {
+        window.addEventListener("keydown", function (e) {
+            console.log("userInput =>", editorInput);
+            e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
+            // e.key === "Enter" && addBloc()
+        });
+
+        return (() => {
+            window.removeEventListener("keydown", function (e) {
+                e.key === "Backspace" && (editorInput === "<p></p>" || editorInput === "") && deleteBloc(position);
+                // e.key === "Enter" && addBloc()
+            }); 
+        })
+    }, [editorInput])
 
     const editor = useEditor({
         extensions: [StarterKit],
-        content: userInput, // Initialize editor with userInput
+        content: editorInput, // Initialize editor with userInput
         onUpdate({ editor }) {
-            setUserInput(editor.getHTML()); // Update user input when editor content changes
+            setEditorInput(editor.getHTML()); // Update user input when editor content changes
             setBlocsValue(position, editor.getHTML()) 
         },
         editorProps: {
-            handleKeyDown: ({ event }) => {
-                if (!event) {
-                    return false
-                }
-                // Detect Ctrl+B or Cmd+B
-                handleBold(event)// Allow other keydown events
-                // remove bloc
-                // if ((event.key === "Delete") || (event.key === "Backspace")) {
-                //     console.log(`${event.key} was pressed`)
-                //     deleteBlock(id)
-                // }
-                // // add Bloc
-                // if (event.key === "Enter") {
-                //     console.log("Enter key was pressed");
-                //     addBlock()
-                // }
-                // handleKeyDownYo(event, id)
+            attributes: {
+                class: "flex-1 focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md"
             },
         },
     });
 
-    const onKeyDown = (e) => {
-        // handleKeyDown(e, id)
-        console.log("foo")
-    }
-
-    const handleBold = (event) => {
-        if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
-            event.preventDefault();
-            editor.chain().focus().toggleBold().run();
-            return true; // Prevent default behavior
-          }
-        return false; // Allow other keydown events
-    };
-
     const container = "flex justify-between items-center"
-    const buttonStyle = "rounded-full border-solid border border-black w-6 h-6 text-center"
-    const inputStyle = "bg-blue-200 w-full h-full ml-2.5 border-solid border border-black rounded-lg text-black"
+    const buttonStyle = "rounded-full border-solid border border-black w-6 h-6 text-center cursor-pointer"
+    const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
     return (
         <div className={container}>
-            <div className={buttonStyle}>+</div>
+            <div 
+                className={buttonStyle}
+                onClick={() => addBloc()}>+</div>
+            <div 
+                className={buttonStyle}
+                onClick={() => deleteBloc(position)}>-</div>
             <EditorContent 
                 editor={editor}
                 className={inputStyle}/>
