@@ -1,33 +1,35 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-import Code from '@tiptap/extension-code'
-import Document from '@tiptap/extension-document'
-import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
 // import ManageBlocsExtension from '../TipTap/ManageBlocsExtension'
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+
 const TextBloc = ({ 
+    blocId,
+    noteId,
+    type,
+    content, 
     deleteBloc,
     addBloc,
+    blocRef,
+    switchBlocs,
     position,
-    value, 
-    setBlocsValue,
-    }) => {
-
-    const [editorInput, setEditorInput] = useState(value); // Initial content
+}) => {
+    
+    const [editorInput, setEditorInput] = useState(content); // Initial content
 
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
                 bold: true, // Disable specific functionality if needed
-            }).extend({
+            })
+            .extend({
                 addKeyboardShortcuts() {
                     return {
                         Enter: () => {
-                            addBloc(); // Call your custom function
-                            return true; // Suppress the default behavior
+                            return true; // Prevent adding line return in current bloc
                         },
                     };
                 },
@@ -35,64 +37,79 @@ const TextBloc = ({
         ],
         content: editorInput, // Initialize editor with userInput
         immediatelyRender: false,
+        onCreate({ editor }) {
+            editor.commands.focus()
+        },
+        onBlur({ editor }) {
+            saveBloc() // Save bloc when focus is lost
+        },
         onUpdate({ editor }) {
-            setEditorInput(editor.getHTML()); // Update user input when editor content changes
-            setBlocsValue(position, editor.getHTML()) 
-            document.addEventListener('keydown', handleKeyDown);
+            setEditorInput(editor.getHTML()); // Update user input when editor content changes 
+            saveBloc()
         },
         editorProps: {
             attributes: {
-                class: "flex-1 focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md"
+                class: "flex-1 focus:outline-none focus:bg-backgroundColor rounded-md pt-0.5"
+            },
+            handleDOMEvents: {
+                keydown: (view, e) => {
+                    handleKeyDown(e)
+                    return false; // Allow default behavior
+                },
             },
         },
     });
 
     const handleKeyDown = (event) => {
         if (event.key === 'Backspace' && editor.isEmpty) {
-            deleteBloc(position);
-        } else if (event.key === 'Enter') {
-            addBloc()
-            event.preventDefault()
+            deleteBloc(blocId);
+            return
+        } 
+        if (event.key === 'Enter') {
+            addBloc(type, noteId)
+            return
+        }
+        if (event.key === 'ArrowUp') {
+            // addBloc(type, noteId)
+            return
         }
     };
 
-    // useEffect(() => {
-    //     if (!editor) {
-    //         console.log("No editor");
-    //         return;
-    //     }
-        
-    //     const handleKeyDown = (event) => {
-    //         if (event.key === 'Backspace' && editor.isEmpty) {
-    //             deleteBloc(position);
-    //         } else if (event.key === 'Enter') {
-    //             addBloc()
-    //             event.preventDefault()
-    //         }
-    //     };
-
-    //     editor.on("update", ({ editor }) => {
-    //         document.addEventListener('keydown', handleKeyDown);
-    //     });
-
-    //     // Cleanup
-    //     return () => {
-    //         document.removeEventListener('keydown', handleKeyDown);
-    //     };
-    // }, [editor, position, deleteBloc]);
+    const saveBloc = async () => {
+        try {
+            const response = await fetch(`${backendUrl}/blocs/`, {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ blocId, type, content: editorInput })
+              });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.result) {
+                // for now, only log success
+                console.log(`Bloc ${blocId} saved in database`)
+                console.log("content = ", editorInput)
+                // NEED TO MANAGE NOTE UPDATEDAT HERE (new route put ?)
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
 
     const container = "flex justify-between items-center"
-    const buttonStyle = "rounded-full border-solid border border-black w-6 h-6 text-center cursor-pointer"
+    const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
     const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
     return (
         <div className={container}>
             <div 
                 className={buttonStyle}
-                onClick={() => addBloc()}>+</div>
-            <div 
+                onClick={() => addBloc(type, noteId)}>+</div>
+            {/* <div 
                 className={buttonStyle}
-                onClick={() => deleteBloc(position)}>-</div>
+                onClick={() => deleteBloc(blocId)}>-</div> */}
             <EditorContent 
+                ref={blocRef}
                 editor={editor}
                 className={inputStyle}/>
         </div>
