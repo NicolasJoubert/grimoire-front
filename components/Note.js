@@ -120,6 +120,21 @@ const Note = () => {
         //   </div>
       )})
 
+     /* tag */
+     useEffect(() => {
+        (async () => {
+            try {
+                const response = await fetch(`${backendUrl}/`)
+            }
+        })
+     })
+        
+
+    const tagDur = ["javascript", "python", "go", "c#","java"]  
+
+
+
+
     const container = "flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black"
     const topContainer = "flex justify-between items-center w-full h-12"
     const title="text-2xl"
