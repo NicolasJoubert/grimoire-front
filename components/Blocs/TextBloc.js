@@ -9,6 +9,7 @@ import Text from '@tiptap/extension-text'
 // import ManageBlocsExtension from '../TipTap/ManageBlocsExtension'
 
 const TextBloc = ({ 
+    id,
     deleteBloc,
     addBloc,
     position,
@@ -31,10 +32,12 @@ const TextBloc = ({
         extensions: [
             StarterKit.configure({
                 bold: true, // Disable specific functionality if needed
-            }).extend({
+            })
+            .extend({
                 addKeyboardShortcuts() {
                     return {
                         Enter: () => {
+                            console.log("Enter (from extend)")
                             addBloc();
                             // editor.commands.blur()   TO CHECK !!!
                             return true; // Suppress the default behavior
@@ -46,12 +49,16 @@ const TextBloc = ({
         content: editorInput, // Initialize editor with userInput
         immediatelyRender: false,
         onCreate({ editor }) {
+            // editor.selectAll()
             editor.commands.focus()
         },
         onUpdate({ editor }) {
+            // editor.commands.focus("end")
+            document.addEventListener('keydown', handleKeyDown);
+            console.log("editor.getHTML()", editor.getHTML());
+            
             setEditorInput(editor.getHTML()); // Update user input when editor content changes
-            setBlocsValue(position, editor.getHTML()) 
-            document.addEventListener('keydown', handleKeyDown, editor);
+            setBlocsValue(id, editor.getHTML()) 
         },
         editorProps: {
             attributes: {
@@ -63,8 +70,13 @@ const TextBloc = ({
     const handleKeyDown = (event) => {
         if (event.key === 'Backspace' && editor.isEmpty) {
             console.log("deletion baby")
-            deleteBloc(position);
+            deleteBloc(id);
+            return
         } 
+        // if (event.key === 'Enter') {
+        //     console.log("Enter from hanleKeyDown")
+        //     addBloc()
+        // }
     };
 
     // useEffect(() => {
@@ -102,7 +114,7 @@ const TextBloc = ({
                 onClick={() => addBloc()}>+</div>
             <div 
                 className={buttonStyle}
-                onClick={() => deleteBloc(position)}>-</div>
+                onClick={() => deleteBloc(id)}>-</div>
             <EditorContent 
                 editor={editor}
                 className={inputStyle}/>

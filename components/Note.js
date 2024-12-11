@@ -70,7 +70,7 @@ const Note = () => {
         })();
     }, [noteData])
 
-    /** Update blocs position when numbered of blocs are changed*/
+    /** Update blocs position when number of blocs are changed*/
     useEffect(() => {
         const blocs = noteData?.blocs?.map((data, i) => {
             return { 
@@ -108,23 +108,23 @@ const Note = () => {
         setBlocsLength(blocsLength += 1)
     };
     
-    const deleteBloc = (blocPosition) => {
-        console.log("position: ", blocPosition)
-        // Deleling a bloc means filtering current notedData blocs with blocs whose position is different than the function argument
-        const updatedBlocs = noteData.blocs.filter(data => data.position != blocPosition)
-
+    const deleteBloc = (id) => {
+        console.log("id: ", id)
+        
         // delete bloc ONLY if there are more than 1 bloc
         if (blocsLength > 1) { 
+            // Deleting a bloc means filtering current notedData blocs with blocs whose position is different than the function argument
+            const updatedBlocs = noteData.blocs.filter(data => data.id != id)
             setNoteData((prevData) => ({
                 ...prevData,
                 blocs: updatedBlocs,
             }));
-            setBlocsLength(blocsLength -= 1)
+            setBlocsLength(updatedBlocs.length)
         }
     };
     
-    const setBlocsValue = (blocPosition, value) => {
-        const updatedBlocs = noteData.blocs.map(data => data.position == blocPosition ? { ...data, value } : data)
+    const setBlocsValue = (id, value) => {
+        const updatedBlocs = noteData.blocs.map(data => data.id == id ? { ...data, value } : data)
         setNoteData((prevData) => ({
             ...prevData,
             blocs: updatedBlocs,
@@ -141,7 +141,7 @@ const Note = () => {
 
     const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
         let blocComponent =  <TextBloc 
-            key={i}
+            id={bloc.id}
             position={i}
             value={bloc.value}
             addBloc={addBloc}
@@ -149,7 +149,7 @@ const Note = () => {
             setBlocsValue={setBlocsValue}/>
 
           return (
-            <div key={i}>{blocComponent}</div>
+            <div key={bloc.id}>{blocComponent}</div>
         //       <div key={i} className="bg-blue-500">
         //       <button onClick={(i, type) => setBlocsType(bloc.position, "text")} className="">Text</button>
         //       {blocComponent}
@@ -158,7 +158,7 @@ const Note = () => {
 
     const container = "flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black"
     const topContainer = "flex justify-between items-center w-full h-12"
-    const title="text-2xl"
+    const title="text-2xl font-bold"
     const icons=""
     const metadataContainer = "flex flex-row justify-between items-center w-full h-12"
     const tagsContainer = "flex justify-start"
