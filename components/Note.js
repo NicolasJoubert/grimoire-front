@@ -1,14 +1,11 @@
 import 'antd/dist/antd.css';
-import { Popover, Button } from 'antd';
 import moment from 'moment';
 import { useState, useEffect, useRef } from 'react'
 import { useSelector } from "react-redux"
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
-import { createTextBloc } from '../modules/blocsFormatter';
-import { Editor } from "@tiptap/react"; // Import the TipTap editor
-
+// import { Editor } from "@tiptap/react"; // Import the TipTap editor
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 

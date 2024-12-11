@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-import Code from '@tiptap/extension-code'
-import Document from '@tiptap/extension-document'
-import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
 // import ManageBlocsExtension from '../TipTap/ManageBlocsExtension'
+
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const TextBloc = ({ 
     blocId,
@@ -18,29 +16,8 @@ const TextBloc = ({
     blocRef,
     switchBlocs,
     position,
-    }) => {
-
-    const saveBloc = async () => {
-        try {
-            const response = await fetch(`${backendUrl}/blocs/`, {
-                method: "PUT",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ blocId, type })
-              });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            if (data.result) {
-                // for now, only log success
-                console.log(`Note ${currentNote} saved in database`)
-            }
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    }
-
-
+}) => {
+    
     const [editorInput, setEditorInput] = useState(content); // Initial content
 
     const editor = useEditor({
@@ -63,14 +40,16 @@ const TextBloc = ({
         onCreate({ editor }) {
             editor.commands.focus()
         },
-        // onFocus({ editor }) {
-        // },
+        onBlur({ editor }) {
+            saveBloc() // Save bloc when focus is lost
+        },
         onUpdate({ editor }) {
             setEditorInput(editor.getHTML()); // Update user input when editor content changes 
+            saveBloc()
         },
         editorProps: {
             attributes: {
-                class: "flex-1 focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-md"
+                class: "flex-1 focus:outline-none focus:bg-backgroundColor rounded-md pt-0.5"
             },
             handleDOMEvents: {
                 keydown: (view, e) => {
@@ -96,33 +75,30 @@ const TextBloc = ({
         }
     };
 
-    // useEffect(() => {
-    //     if (!editor) {
-    //         console.log("No editor");
-    //         return;
-    //     }
-        
-    //     const handleKeyDown = (event) => {
-    //         if (event.key === 'Backspace' && editor.isEmpty) {
-    //             deleteBloc(position);
-    //         } else if (event.key === 'Enter') {
-    //             addBloc()
-    //             event.preventDefault()
-    //         }
-    //     };
-
-    //     editor.on("update", ({ editor }) => {
-    //         document.addEventListener('keydown', handleKeyDown);
-    //     });
-
-    //     // Cleanup
-    //     return () => {
-    //         document.removeEventListener('keydown', handleKeyDown);
-    //     };
-    // }, [editor, position, deleteBloc]);
+    const saveBloc = async () => {
+        try {
+            const response = await fetch(`${backendUrl}/blocs/`, {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ blocId, type, content: editorInput })
+              });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.result) {
+                // for now, only log success
+                console.log(`Bloc ${blocId} saved in database`)
+                console.log("content = ", editorInput)
+                // NEED TO MANAGE NOTE UPDATEDAT HERE (new route put ?)
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
 
     const container = "flex justify-between items-center"
-    const buttonStyle = "rounded-full border-solid border border-black w-6 h-6 text-center cursor-pointer"
+    const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
     const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
     return (
         <div className={container}>
