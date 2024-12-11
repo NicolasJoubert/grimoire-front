@@ -10,7 +10,7 @@ function NoteLinks({ title, noteId }) {
 
   return (
     <div
-      className='text-gray-900 mb-0 cursor-pointer hover:underline pl-4'
+      className='text-gray-900 mb-0 cursor-pointer hover:underline hover:text-lightPurple transition duration-300 ease-in-out pl-4'
       onClick={handleClick}
     >
       <span>{title}</span>
