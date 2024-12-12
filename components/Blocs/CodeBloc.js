@@ -1,4 +1,6 @@
 import clsx from 'clsx';
+import 'antd/dist/antd.css';
+import { Popover } from 'antd';
 import { useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -18,6 +20,7 @@ const CodeBloc = ({
 }) => {
     
     const [editorInput, setEditorInput] = useState(content); // Initial content
+    const [nextBlocType, setNextBlocType] = useState("") 
 
     const editorStyle = "flex-1 focus:outline-none bg-darkPurple hover:bg-lightPurple text-white rounded-md pt-0.5"
 
@@ -92,17 +95,26 @@ const CodeBloc = ({
         }
     }
 
+    const popoverContentStyle = "flex w-full focus:outline-none bg-lightPurple text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 hover:cursor-pointer"
+    const popoverContent = (
+        <div className="">
+          <div className={popoverContentStyle} onClick={() => addBloc("text", noteId)}>Texte</div>
+          <div className={popoverContentStyle} onClick={() => addBloc("code", noteId)}>Code</div>
+        </div>
+    );
+
     const container = "flex justify-between items-center"
+    const popoverStyle = ""
     const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
     const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
     return (
         <div className={container}>
-            <div 
-                className={buttonStyle}
-                onClick={() => addBloc(type, noteId)}>+</div>
-            {/* <div 
-                className={buttonStyle}
-                onClick={() => deleteBloc(blocId)}>-</div> */}
+            <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
+                <div 
+                    className={buttonStyle}
+                    onClick={() => addBloc(type, noteId)}>+</div>
+            </Popover>
+
             <EditorContent 
                 editor={editor}
                 className={inputStyle}/>

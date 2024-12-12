@@ -1,4 +1,3 @@
-import 'antd/dist/antd.css';
 import moment from 'moment';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -96,6 +95,9 @@ export default function Note() {
 
     const addBloc = async (type, noteId) => {
         // create new bloc and update noteData blocs array
+
+        console.log("blocType => ", type)
+        console.log("noteId => ", noteId)
         const response = await fetch(`${backendUrl}/blocs/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -140,7 +142,7 @@ export default function Note() {
         blocComponent =  <TextBloc 
                               blocId={bloc._id}
                               noteId={currentNote}
-                              type="text"
+                              type={bloc.type}
                               position={i + 1}
                               blocRef={(bloc) => (blocRefs.current[i] = bloc)}
                               content={bloc.content}
@@ -153,7 +155,7 @@ export default function Note() {
         blocComponent =  <CodeBloc 
                               blocId={bloc._id}
                               noteId={currentNote}
-                              type="code"
+                              type={bloc.type}
                               language="nodejs"
                               content={bloc.content}
                               addBloc={addBloc}
