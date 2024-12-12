@@ -156,7 +156,7 @@ export default function Note() {
                               blocId={bloc._id}
                               noteId={currentNote}
                               type={bloc.type}
-                              language="nodejs"
+                              language="javascript"
                               content={bloc.content}
                               addBloc={addBloc}
                               deleteBloc={deleteBloc}

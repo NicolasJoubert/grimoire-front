@@ -23,7 +23,7 @@ const TextBloc = ({
     
     const [editorInput, setEditorInput] = useState(content); // Initial content
 
-    const editorStyle = "flex-1 focus:outline-none hover:bg-backgroundColor rounded-md pt-0.5"
+    const editorStyle = "flex-1 focus:outline-none focus:bg-backgroundColor hover:bg-backgroundColor rounded-md pt-0.5"
 
     const editor = useEditor({
         extensions: [
