@@ -157,13 +157,7 @@ const Note = () => {
       )})
 
      /* tag */
-     useEffect(() => {
-        (async () => {
-            try {
-                const response = await fetch(`${backendUrl}/`)
-            }
-        })
-     })
+     
         
 
     const tagDur = ["javascript", "python", "go", "c#","java"]  
