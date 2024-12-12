@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: null, 
+  value: null,
 };
 
 export const userSlice = createSlice({
@@ -11,8 +11,11 @@ export const userSlice = createSlice({
     replaceCurrentNote: (state, action) => {
       state.value = action.payload;
     },
+    deleteCurrentNote: (state) => {
+      state.value = null;
+    },
   },
 });
 
-export const { replaceCurrentNote } = userSlice.actions;
+export const { replaceCurrentNote, deleteCurrentNote } = userSlice.actions;
 export default userSlice.reducer;
