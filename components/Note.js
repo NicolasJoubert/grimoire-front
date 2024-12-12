@@ -134,18 +134,33 @@ export default function Note() {
     };
     
     const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
-      let blocComponent =  <TextBloc 
-        blocId={bloc._id}
-        noteId={currentNote}
-        type="text"
-        position={i + 1}
-        blocRef={(bloc) => (blocRefs.current[i] = bloc)}
-        content={bloc.content}
-        addBloc={addBloc}
-        deleteBloc={deleteBloc}
-        switchBlocs={(e) => switchBlocs(e, i)}
+      let blocComponent = null
+
+      if (bloc.type === "text") {
+        blocComponent =  <TextBloc 
+                              blocId={bloc._id}
+                              noteId={currentNote}
+                              type="text"
+                              position={i + 1}
+                              blocRef={(bloc) => (blocRefs.current[i] = bloc)}
+                              content={bloc.content}
+                              addBloc={addBloc}
+                              deleteBloc={deleteBloc}
+                              switchBlocs={(e) => switchBlocs(e, i)}
           // setBlocsValue={setBlocsValue}
-      />
+                          />
+      } else if (bloc.type === "code") {
+        blocComponent =  <CodeBloc 
+                              blocId={bloc._id}
+                              noteId={currentNote}
+                              type="code"
+                              language="nodejs"
+                              content={bloc.content}
+                              addBloc={addBloc}
+                              deleteBloc={deleteBloc}
+          // setBlocsValue={setBlocsValue}
+                          />
+      }
             
       return (
           <div key={bloc._id}>{blocComponent}</div>

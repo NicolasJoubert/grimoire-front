@@ -1,32 +1,111 @@
-import { useState, useEffect } from 'react'
+import clsx from 'clsx';
+import { useState } from 'react'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+
+// import ManageBlocsExtension from '../TipTap/ManageBlocsExtension'
+
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const CodeBloc = ({ 
-    handleKeyDown, 
-    id,
-    value,
-    setBlocValue }) => {
+    blocId,
+    noteId,
+    type,
+    language,
+    content, 
+    deleteBloc,
+    addBloc,
+}) => {
+    
+    const [editorInput, setEditorInput] = useState(content); // Initial content
 
-    const [inputValue, setInputValue] = useState(value) 
+    const editorStyle = "flex-1 focus:outline-none bg-darkPurple hover:bg-lightPurple text-white rounded-md pt-0.5"
+
+    const editor = useEditor({
+        extensions: [
+            StarterKit.configure({
+                bold: true, // Disable specific functionality if needed
+            })
+        ],
+        content: "VOICI DU CODE FRERE", // Initialize editor with userInput
+        immediatelyRender: false,
+        onCreate({ editor }) {
+            editor.commands.focus()
+        },
+        onBlur({ editor }) {
+            saveBloc() // Save bloc when focus is lost
+        },
+        onUpdate({ editor }) {
+            setEditorInput(editor.getHTML()); // Update user input when editor content changes 
+            saveBloc()
+        },
+        editorProps: {
+            attributes: {
+                class: editorStyle
+            },
+            handleDOMEvents: {
+                keydown: (view, e) => {
+                    handleKeyDown(e)
+                    return false; // Allow default behavior
+                },
+                mouseover(view, event) {
+                    // do whatever you want
+                  }
+            },
+        },
+    });
 
 
-    const onKeyDown = (e) => {
-        handleKeyDown(e, id)
+    const handleKeyDown = (event) => {
+        if (event.key === 'Backspace' && editor.isEmpty) {
+            deleteBloc(blocId);
+            return
+        } 
+        if (event.key === 'Enter') {
+            addBloc(type, noteId)
+            return
+        }
+        if (event.key === 'ArrowUp') {
+            // addBloc(type, noteId)
+            return
+        }
+    };
+
+    const saveBloc = async () => {
+        try {
+            const response = await fetch(`${backendUrl}/blocs/`, {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ blocId, type, content: editorInput, language })
+              });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.result) {
+                // for now, only log success
+                console.log(`Bloc ${blocId} saved in database`)
+                // NEED TO MANAGE NOTE UPDATEDAT HERE (new route put ?)
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     }
 
-    const handleChange = (e) => {
-        setInputValue(e.target.value)
-        setBlocValue(id, inputValue)
-    } 
-
+    const container = "flex justify-between items-center"
+    const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
+    const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
     return (
-        <div className={styles.bloc}>
-            <input 
-                className=""
-                onKeyDown={onKeyDown}
-                type="text"
-                value={inputValue}
-                onChange={handleChange}>
-            </input>
+        <div className={container}>
+            <div 
+                className={buttonStyle}
+                onClick={() => addBloc(type, noteId)}>+</div>
+            {/* <div 
+                className={buttonStyle}
+                onClick={() => deleteBloc(blocId)}>-</div> */}
+            <EditorContent 
+                editor={editor}
+                className={inputStyle}/>
         </div>
     )
 }

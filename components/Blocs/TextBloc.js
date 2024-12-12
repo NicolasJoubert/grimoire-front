@@ -96,7 +96,6 @@ const TextBloc = ({
             if (data.result) {
                 // for now, only log success
                 console.log(`Bloc ${blocId} saved in database`)
-                console.log("content = ", editorInput)
                 // NEED TO MANAGE NOTE UPDATEDAT HERE (new route put ?)
             }
         } catch (error) {
@@ -111,7 +110,7 @@ const TextBloc = ({
         <div className={container}>
             <div 
                 className={buttonStyle}
-                onClick={() => addBloc(type, noteId)}>+</div>
+                onClick={() => addBloc("code", noteId)}>+</div>
             {/* <div 
                 className={buttonStyle}
                 onClick={() => deleteBloc(blocId)}>-</div> */}
