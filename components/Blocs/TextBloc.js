@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -19,6 +20,8 @@ const TextBloc = ({
 }) => {
     
     const [editorInput, setEditorInput] = useState(content); // Initial content
+
+    const editorStyle = "flex-1 focus:outline-none hover:bg-backgroundColor rounded-md pt-0.5"
 
     const editor = useEditor({
         extensions: [
@@ -49,16 +52,20 @@ const TextBloc = ({
         },
         editorProps: {
             attributes: {
-                class: "flex-1 focus:outline-none focus:bg-backgroundColor rounded-md pt-0.5"
+                class: editorStyle
             },
             handleDOMEvents: {
                 keydown: (view, e) => {
                     handleKeyDown(e)
                     return false; // Allow default behavior
                 },
+                mouseover(view, event) {
+                    // do whatever you want
+                  }
             },
         },
     });
+
 
     const handleKeyDown = (event) => {
         if (event.key === 'Backspace' && editor.isEmpty) {
