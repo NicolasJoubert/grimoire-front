@@ -1,11 +1,13 @@
 import { useDispatch } from 'react-redux';
 import { replaceCurrentNote } from '../reducers/currentNote';
 
-function NoteLinks({ title, noteId }) {
+function NoteLinks({ title, noteId, setSearchBarIsVisible }) {
   const dispatch = useDispatch();
   const handleClick = () => {
     dispatch(replaceCurrentNote(noteId));
+    setSearchBarIsVisible(false)
     console.log('cliqué sur' + noteId);
+    
   };
 
   return (
