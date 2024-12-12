@@ -143,6 +143,7 @@ export default function Note() {
         content={bloc.content}
         addBloc={addBloc}
         deleteBloc={deleteBloc}
+        fetchNote={fetchNote}
         switchBlocs={(e) => switchBlocs(e, i)}
           // setBlocsValue={setBlocsValue}
       />
