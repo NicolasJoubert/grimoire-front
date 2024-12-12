@@ -6,17 +6,18 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import currentNote from '../reducers/currentNote';
 import user from '../reducers/user';
+import favorite from '../reducers/favorite.js';
 
 import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import storage from 'redux-persist/lib/storage';
 
-const reducers = combineReducers({ currentNote, user });
+const reducers = combineReducers({ currentNote, user, favorite });
 const persistConfig = {
   key: 'grimoire',
   storage,
-  blacklist: [] 
-}
+  blacklist: [],
+};
 
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
