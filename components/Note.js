@@ -1,4 +1,3 @@
-import 'antd/dist/antd.css';
 import moment from 'moment';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -123,37 +122,52 @@ export default function Note() {
     }
   };
 
-  const blocRefs = useRef([]);
+    const blocRefs = useRef([]);
+    
+    const switchBlocs = (e, index) => {
+        if (e.key === "ArrowDown") {
+            if (index < blocCount - 1) {
+                blocRefs.current[index + 1].commands.focus();
+            }
+        } else if (e.key === "ArrowUp") {
+            if (index > 0) {
+                blocRefs.current[index - 1].commands.focus();
+            }
+        }
+    };
+    
+    const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
+      let blocComponent = null
 
-  const switchBlocs = (e, index) => {
-    if (e.key === 'ArrowDown') {
-      if (index < blocCount - 1) {
-        blocRefs.current[index + 1].commands.focus();
+      if (bloc.type === "text") {
+        blocComponent =  <TextBloc 
+                              blocId={bloc._id}
+                              noteId={currentNote}
+                              type={bloc.type}
+                              position={i + 1}
+                              blocRef={(bloc) => (blocRefs.current[i] = bloc)}
+                              content={bloc.content}
+                              addBloc={addBloc}
+                              deleteBloc={deleteBloc}
+                              switchBlocs={(e) => switchBlocs(e, i)}
+          // setBlocsValue={setBlocsValue}
+                          />
+      } else if (bloc.type === "code") {
+        blocComponent =  <CodeBloc 
+                              blocId={bloc._id}
+                              noteId={currentNote}
+                              type={bloc.type}
+                              language="javascript"
+                              content={bloc.content}
+                              addBloc={addBloc}
+                              deleteBloc={deleteBloc}
+          // setBlocsValue={setBlocsValue}
+                          />
       }
-    } else if (e.key === 'ArrowUp') {
-      if (index > 0) {
-        blocRefs.current[index - 1].commands.focus();
-      }
-    }
-  };
-  const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
-    let blocComponent = (
-      <TextBloc
-        blocId={bloc._id}
-        noteId={currentNote}
-        type='text'
-        position={i + 1}
-        blocRef={(bloc) => (blocRefs.current[i] = bloc)}
-        content={bloc.content}
-        addBloc={addBloc}
-        deleteBloc={deleteBloc}
-        switchBlocs={(e) => switchBlocs(e, i)}
-        // setBlocsValue={setBlocsValue}
-      />
-    );
-
-    return <div key={bloc._id}>{blocComponent}</div>;
-  });
+            
+      return (
+          <div key={bloc._id}>{blocComponent}</div>
+      )})
 
   const deleteNote = async () => {
     try {

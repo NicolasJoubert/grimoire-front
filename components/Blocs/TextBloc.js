@@ -1,4 +1,7 @@
-import { useState } from 'react'
+import clsx from 'clsx';
+import 'antd/dist/antd.css';
+import { Popover } from 'antd';
+import { useEffect, useState, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -19,6 +22,24 @@ const TextBloc = ({
 }) => {
     
     const [editorInput, setEditorInput] = useState(content); // Initial content
+    const [blocHeight, setBlocHeight] = useState("24px")
+    // const [editorHeight, setEditorHeight] = useState('auto'); // State to store dynamic height
+
+    const editorRef = useRef(null); // Reference for the editor DOM node
+
+    // useEffect(() => {
+    //     if (editorRef.current) {
+    //         const rect = editorRef.current.getBoundingClientRect();
+    //         console.log("rect", rect, rect.height);
+
+    //         setBlocHeight(`${rect.height}px`); // Minimum height of 24px
+    //     }
+    // }, [editorInput]); // Trigger update when editorInput changes
+
+    const editorStyle = clsx(
+        `h-[${blocHeight}]`,
+        "flex-1 focus:outline-none focus:bg-backgroundColor hover:bg-backgroundColor rounded-md pt-0.5"
+    );
 
     const editor = useEditor({
         extensions: [
@@ -44,12 +65,18 @@ const TextBloc = ({
             saveBloc() // Save bloc when focus is lost
         },
         onUpdate({ editor }) {
-            setEditorInput(editor.getHTML()); // Update user input when editor content changes 
+            setEditorInput(editor.getHTML()); // Update user input when editor content changes
+            if (editorRef.current) {
+                // Compute the height based on content
+                const scrollHeight = editorRef.current.scrollHeight;
+                setBlocHeight(scrollHeight);
+              } 
+            console.log("hieght ", blocHeight)
             saveBloc()
         },
         editorProps: {
             attributes: {
-                class: "flex-1 focus:outline-none focus:bg-backgroundColor rounded-md pt-0.5"
+                class: editorStyle
             },
             handleDOMEvents: {
                 keydown: (view, e) => {
@@ -60,12 +87,14 @@ const TextBloc = ({
         },
     });
 
+    /** Manage key shortcuts  */
     const handleKeyDown = (event) => {
         if (event.key === 'Backspace' && editor.isEmpty) {
             deleteBloc(blocId);
             return
         } 
-        if (event.key === 'Enter') {
+
+        if (event.key === 'Enter' && !event.shiftKey) {
             addBloc(type, noteId)
             return
         }
@@ -75,6 +104,7 @@ const TextBloc = ({
         }
     };
 
+    /** Save Bloc in database */
     const saveBloc = async () => {
         try {
             const response = await fetch(`${backendUrl}/blocs/`, {
@@ -89,7 +119,6 @@ const TextBloc = ({
             if (data.result) {
                 // for now, only log success
                 console.log(`Bloc ${blocId} saved in database`)
-                console.log("content = ", editorInput)
                 // NEED TO MANAGE NOTE UPDATEDAT HERE (new route put ?)
             }
         } catch (error) {
@@ -97,19 +126,28 @@ const TextBloc = ({
         }
     }
 
-    const container = "flex justify-between items-center"
+    const popoverContentStyle = "flex w-full focus:outline-none bg-lightPurple text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 hover:cursor-pointer"
+    const popoverContent = (
+        <div className="">
+          <div className={popoverContentStyle} onClick={() => addBloc("text", noteId)}>Texte</div>
+          <div className={popoverContentStyle} onClick={() => addBloc("code", noteId)}>Code</div>
+        </div>
+    );
+
+    const container = clsx("flex justify-between items-center mt-0.5") // `h-[${blocHeight}]`, 
+    const popoverStyle = ""
     const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
-    const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
+    const inputStyle = clsx("w-full ml-2.5 text-black")// border-solid border border-black rounded-md 
     return (
-        <div className={container}>
-            <div 
-                className={buttonStyle}
-                onClick={() => addBloc(type, noteId)}>+</div>
-            {/* <div 
-                className={buttonStyle}
-                onClick={() => deleteBloc(blocId)}>-</div> */}
+        <div className={container} style={{ height: blocHeight }}>
+            <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
+                <div 
+                    className={buttonStyle}
+                    onClick={() => addBloc(type, noteId)}>+</div>
+            </Popover>
+
             <EditorContent 
-                ref={blocRef}
+                ref={editorRef}
                 editor={editor}
                 className={inputStyle}/>
         </div>
