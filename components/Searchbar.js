@@ -17,7 +17,7 @@ export default function Searchbar({
   const [search, setSearch] = useState('');
   const [searchedNotes, setSearchedNotes] = useState([]);
   const [tag, setTag] = useState([]);
-  const [isVisible, setSearchBarIsVisible] = useState(false);
+  const [searchBarIsVisible, setSearchBarIsVisible] = useState(false);
 
   const token = useSelector((state) => state.user.value.token);
 
@@ -126,7 +126,7 @@ export default function Searchbar({
         </button>
       )}
 
-      {isVisible && (<div className='absolute top-20 left-0 w-full max-w-screen-sm flex flex-col justify-center justify-items-center'>
+      {searchBarIsVisible && (<div className='absolute top-20 left-0 w-full max-w-screen-sm flex flex-col justify-center justify-items-center'>
         <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
           {tags}
         </div>

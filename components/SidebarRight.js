@@ -121,7 +121,8 @@ export default function SidebarRight({toggleSidebarRight}) {
 
   //Liste des notes mise a jour au jour J
   const listUpdatedNote = updates.map((update, index) => (
-    <NoteLink key={index} title={update.title} noteId={update._id} />
+    <NoteLink key={index} title={update.title} noteId={update._id}/>
+    //<NoteLink key={index} title={update.title} noteId={update._id} setSearchBarIsVisible={setSearchBarIsVisible}/>
   ))
 
   return (
