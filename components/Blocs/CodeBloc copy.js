@@ -3,15 +3,10 @@ import clsx from 'clsx';
 import 'antd/dist/antd.css';
 import { Popover } from 'antd';
 import { useState } from 'react'
-
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import React from 'react'
-
-// Import a theme and a language mode from Ace
-import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/mode-javascript";
-
-// Ensure Ace can find its worker files
-import "ace-builds/src-noconflict/worker-javascript";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -32,7 +27,52 @@ const CodeBloc = ({
 
     const editorStyle = "flex-1 focus:outline-none bg-darkPurple text-white rounded-md pt-0.5 px-1"
 
+    const editor = useEditor({
+        extensions: [
+            StarterKit.configure({
+                bold: true, // Disable specific functionality if needed
+            }),
+            CodeBlockLowlight.configure({
+                lowlight,
+                defaultLanguage: "javascript", // Set the default language
+              }),
+        ],
+        content: "VOICI DU CODE FRERE", // Initialize editor with userInput
+        immediatelyRender: false,
+        onCreate({ editor }) {
+            editor.commands.focus()
+        },
+        onBlur({ editor }) {
+            saveBloc() // Save bloc when focus is lost
+        },
+        onUpdate({ editor }) {
+            setEditorInput(editor.getHTML()); // Update user input when editor content changes 
+            adjustHeight(editor); // Sync height on content update         // !!!!!!!!!! CODE GPT TO REMOVE 
+            saveBloc()
+        },
+        editorProps: {
+            attributes: {
+                class: editorStyle
+            },
+            handleDOMEvents: {
+                keydown: (view, e) => {
+                    handleKeyDown(e)
+                    return false; // Allow default behavior
+                },
+            },
+        },
+    });
     
+    const handleKeyDown = (event) => {
+        if (event.key === 'Backspace' && editor.isEmpty) {
+            deleteBloc(blocId);
+            return
+        } 
+        if (event.key === 'ArrowUp') {
+            // addBloc(type, noteId)
+            return
+        }
+    };
     
     const saveBloc = async () => {
         try {
