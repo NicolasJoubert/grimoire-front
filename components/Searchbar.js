@@ -18,8 +18,8 @@ export default function Searchbar({
   const [searchedNotes, setSearchedNotes] = useState([]);
   const [tag, setTag] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
-  const token = useSelector((state) => state.user.value.token);
 
+  const token = useSelector((state) => state.user.value.token);
 
   const changeInput = (inputValue) => {
     if(inputValue===""){
@@ -64,7 +64,7 @@ export default function Searchbar({
   let notes = []
   if(searchedNotes.length > 0){
     notes = searchedNotes.map((note, i) => {
-      return <NoteLink key={i} title={note.title} />;
+      return <NoteLink key={i} title={note.title} noteId={note._id} />;
     });
     
   }

@@ -2,12 +2,12 @@ import 'antd/dist/antd.css';
 import moment from 'moment';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { deleteCurrentNote } from '../reducers/currentNote.js';
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { deleteCurrentNote } from '../reducers/currentNote.js';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -143,7 +143,6 @@ export default function Note() {
         content={bloc.content}
         addBloc={addBloc}
         deleteBloc={deleteBloc}
-        fetchNote={fetchNote}
         switchBlocs={(e) => switchBlocs(e, i)}
           // setBlocsValue={setBlocsValue}
       />
