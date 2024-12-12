@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import 'antd/dist/antd.css';
 import { Popover } from 'antd';
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -22,16 +22,24 @@ const TextBloc = ({
 }) => {
     
     const [editorInput, setEditorInput] = useState(content); // Initial content
-    const [lineCount, setLineCount] = useState(1);
-    const [blocHeight, setBlocHeight] = useState(`${lineCount * 24}px`)
+    const [blocHeight, setBlocHeight] = useState("24px")
+    // const [editorHeight, setEditorHeight] = useState('auto'); // State to store dynamic height
 
-    useEffect(() => {
-        setBlocHeight(`${(lineCount + 1) * 24}px`)
-    }, [lineCount])
+    const editorRef = useRef(null); // Reference for the editor DOM node
 
-    // let blocHeight =  // bloc and input height increase proportionnaly with number of lines
+    // useEffect(() => {
+    //     if (editorRef.current) {
+    //         const rect = editorRef.current.getBoundingClientRect();
+    //         console.log("rect", rect, rect.height);
 
-    const editorStyle = clsx(`h-[${blocHeight}]`, "flex-1 focus:outline-none focus:bg-backgroundColor hover:bg-backgroundColor rounded-md pt-0.5")
+    //         setBlocHeight(`${rect.height}px`); // Minimum height of 24px
+    //     }
+    // }, [editorInput]); // Trigger update when editorInput changes
+
+    const editorStyle = clsx(
+        `h-[${blocHeight}]`,
+        "flex-1 focus:outline-none focus:bg-backgroundColor hover:bg-backgroundColor rounded-md pt-0.5"
+    );
 
     const editor = useEditor({
         extensions: [
@@ -57,7 +65,13 @@ const TextBloc = ({
             saveBloc() // Save bloc when focus is lost
         },
         onUpdate({ editor }) {
-            setEditorInput(editor.getHTML()); // Update user input when editor content changes 
+            setEditorInput(editor.getHTML()); // Update user input when editor content changes
+            if (editorRef.current) {
+                // Compute the height based on content
+                const scrollHeight = editorRef.current.scrollHeight;
+                setBlocHeight(scrollHeight);
+              } 
+            console.log("hieght ", blocHeight)
             saveBloc()
         },
         editorProps: {
@@ -120,12 +134,12 @@ const TextBloc = ({
         </div>
     );
 
-    const container = clsx(`h-[${blocHeight}]`, "flex justify-between items-center mt-0.5")
+    const container = clsx("flex justify-between items-center mt-0.5") // `h-[${blocHeight}]`, 
     const popoverStyle = ""
     const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
-    const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
+    const inputStyle = clsx("w-full ml-2.5 text-black")// border-solid border border-black rounded-md 
     return (
-        <div className={container}>
+        <div className={container} style={{ height: blocHeight }}>
             <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
                 <div 
                     className={buttonStyle}
@@ -133,6 +147,7 @@ const TextBloc = ({
             </Popover>
 
             <EditorContent 
+                ref={editorRef}
                 editor={editor}
                 className={inputStyle}/>
         </div>

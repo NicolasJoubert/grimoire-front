@@ -94,12 +94,12 @@ const CodeBloc = ({
         </div>
     );
 
-    const container = "flex justify-between items-start mt-0.5"
+    const container = "flex justify-between items-start mt-1 mb-4"
     const popoverStyle = ""
     const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
     const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
 
-    return (                              // style= code GPT TO REMOVE !!!!!! 
+    return (                            
         <div className={clsx(container)} style={{ height: blocHeight }}>  
             <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
                 <div 
