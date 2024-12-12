@@ -20,7 +20,9 @@ const CodeBloc = ({
 }) => {
     
     const [editorInput, setEditorInput] = useState(content); // Initial content
-    const [nextBlocType, setNextBlocType] = useState("") 
+    const [blocHeight, setBlocHeight] = useState('auto'); // Dynamically manage height
+
+    // const [nextBlocType, setNextBlocType] = useState("") 
 
     const editorStyle = "flex-1 focus:outline-none bg-darkPurple hover:bg-lightPurple text-white rounded-md pt-0.5"
 
@@ -40,6 +42,7 @@ const CodeBloc = ({
         },
         onUpdate({ editor }) {
             setEditorInput(editor.getHTML()); // Update user input when editor content changes 
+            adjustHeight(editor); // Sync height on content update
             saveBloc()
         },
         editorProps: {
@@ -51,36 +54,28 @@ const CodeBloc = ({
                     handleKeyDown(e)
                     return false; // Allow default behavior
                 },
-                mouseover(view, event) {
-                    // do whatever you want
-                  }
             },
         },
     });
-
-
+    
     const handleKeyDown = (event) => {
         if (event.key === 'Backspace' && editor.isEmpty) {
             deleteBloc(blocId);
             return
         } 
-        if (event.key === 'Enter') {
-            addBloc(type, noteId)
-            return
-        }
         if (event.key === 'ArrowUp') {
             // addBloc(type, noteId)
             return
         }
     };
-
+    
     const saveBloc = async () => {
         try {
             const response = await fetch(`${backendUrl}/blocs/`, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ blocId, type, content: editorInput, language })
-              });
+            });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -94,6 +89,18 @@ const CodeBloc = ({
             console.error('Error fetching data:', error);
         }
     }
+    
+    /** Sync bloc height with Editor height */
+    const adjustHeight = (editor) => {
+        if (editor) {
+            const { height } = editor.view.dom.getBoundingClientRect(); // Get the bounding height
+            setBlocHeight(`${height}px`);
+        }
+    };
+
+    if (editor && blocHeight === 'auto') {
+        adjustHeight(editor);
+    }
 
     const popoverContentStyle = "flex w-full focus:outline-none bg-lightPurple text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 hover:cursor-pointer"
     const popoverContent = (
@@ -103,12 +110,12 @@ const CodeBloc = ({
         </div>
     );
 
-    const container = "flex justify-between items-center"
+    const container = "flex justify-between items-start"
     const popoverStyle = ""
     const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
     const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
     return (
-        <div className={container}>
+        <div className={clsx(container)} style={{ height: blocHeight }}>
             <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
                 <div 
                     className={buttonStyle}

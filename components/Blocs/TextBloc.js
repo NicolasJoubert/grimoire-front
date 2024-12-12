@@ -61,9 +61,6 @@ const TextBloc = ({
                     handleKeyDown(e)
                     return false; // Allow default behavior
                 },
-                mouseover(view, event) {
-                    // do whatever you want
-                  }
             },
         },
     });
