@@ -14,6 +14,7 @@ module.exports = {
           ),
         'backImg-signup': "url('/assets/backimage-signup.png')",
         'backImg-signin': "url('/assets/backimage-signin.png')",
+        'backImg-settings': "url('/assets/backimage-settings.png')",
       },
       colors: {
         tagColor: '#E2EAED',
