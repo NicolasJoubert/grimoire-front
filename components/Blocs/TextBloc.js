@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import 'antd/dist/antd.css';
 import { Popover } from 'antd';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -22,8 +22,16 @@ const TextBloc = ({
 }) => {
     
     const [editorInput, setEditorInput] = useState(content); // Initial content
+    const [lineCount, setLineCount] = useState(1);
+    const [blocHeight, setBlocHeight] = useState(`${lineCount * 24}px`)
 
-    const editorStyle = "flex-1 focus:outline-none focus:bg-backgroundColor hover:bg-backgroundColor rounded-md pt-0.5"
+    useEffect(() => {
+        setBlocHeight(`${(lineCount + 1) * 24}px`)
+    }, [lineCount])
+
+    // let blocHeight =  // bloc and input height increase proportionnaly with number of lines
+
+    const editorStyle = clsx(`h-[${blocHeight}]`, "flex-1 focus:outline-none focus:bg-backgroundColor hover:bg-backgroundColor rounded-md pt-0.5")
 
     const editor = useEditor({
         extensions: [
@@ -65,13 +73,14 @@ const TextBloc = ({
         },
     });
 
-
+    /** Manage key shortcuts  */
     const handleKeyDown = (event) => {
         if (event.key === 'Backspace' && editor.isEmpty) {
             deleteBloc(blocId);
             return
         } 
-        if (event.key === 'Enter') {
+
+        if (event.key === 'Enter' && !event.shiftKey) {
             addBloc(type, noteId)
             return
         }
@@ -81,6 +90,7 @@ const TextBloc = ({
         }
     };
 
+    /** Save Bloc in database */
     const saveBloc = async () => {
         try {
             const response = await fetch(`${backendUrl}/blocs/`, {
@@ -110,7 +120,7 @@ const TextBloc = ({
         </div>
     );
 
-    const container = "flex justify-between items-center"
+    const container = clsx(`h-[${blocHeight}]`, "flex justify-between items-center mt-0.5")
     const popoverStyle = ""
     const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
     const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
