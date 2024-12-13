@@ -17,7 +17,7 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Note() {
   const [noteData, setNoteData] = useState({});
-  const [blocCount, setBlocCount] = useState(0);
+  const [blocCount, setBlocCount] = useState(1);
   const dispatch = useDispatch();
 
   const currentNote = useSelector((state) => state.currentNote.value);
@@ -36,7 +36,7 @@ export default function Note() {
           title: data.note.title,
           createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
           updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
-          blocs: data.note.blocs,
+          blocs: data.note.blocs.sort((a, b) => a.position - b.position), // sort bloc in increasing order of position
           forwardNotes: data.note.forwardNotes,
           backwardNotes: data.note.backwardNotes,
           isBookmarded: data.note.isBookmarked,
@@ -61,11 +61,8 @@ export default function Note() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response.json();
-      if (data.result) {
-        // for now, only log success
-        console.log(`Note ${currentNote} saved in database`);
-      }
+      await response.json();
+
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -75,13 +72,7 @@ export default function Note() {
    * Automatically had a bloc on creation
    */
   useEffect(() => {
-    if (blocCount === 0 && noteData?.blocs?.length === 0) {
-      // controls that no bloc exists in note
-      addBloc('text', currentNote);
       fetchNote();
-    } else {
-      fetchNote();
-    }
   }, [currentNote, blocCount]);
 
   /** Updates note in database when noteData is changed */
@@ -99,15 +90,37 @@ export default function Note() {
     dispatch(updateTitleNote(newTitle));
   };
 
-  const addBloc = async (type, noteId) => {
-    // create new bloc and update noteData blocs array
-    const response = await fetch(`${backendUrl}/blocs/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, noteId }),
-    });
-    const data = await response.json();
-    data.result && setBlocCount((blocCount += 1));
+  /** Add a bloc below the one which created it */
+  const addBloc = async (position, type, noteId) => {
+
+    // Get blocs in the note that have a position superior to the one creating it
+    const response = await fetch(`${backendUrl}/blocs/${noteId}/${position}`)
+    const data = await response.json()
+    const blocsIds = data.blocs.map(bloc => bloc._id)
+
+    if (data.result) {
+
+      // if there are blocs below the new one, we increment their position
+      if (blocsIds.length > 0) {
+        const response = await fetch(`${backendUrl}/blocs/increment`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ blocsIds }),
+        });
+        await response.json();
+      }
+
+      // After potential below blocs were displaced, we create the new bloc
+      const newBlocPosition = position + 1 // new bloc has a position superior by one to the precedent
+      const response = await fetch(`${backendUrl}/blocs/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ position: newBlocPosition, type, noteId }),
+      });
+      const data = await response.json();
+      // update bloc count (used to fetch note)
+      data.result && setBlocCount((blocCount += 1))
+    }
   };
 
   const deleteBloc = async (blocId) => {
@@ -125,19 +138,17 @@ export default function Note() {
     }
   };
 
-  const blocRefs = useRef([]);
-
-  const switchBlocs = (e, index) => {
-    if (e.key === 'ArrowDown') {
-      if (index < blocCount - 1) {
-        blocRefs.current[index + 1].commands.focus();
-      }
-    } else if (e.key === 'ArrowUp') {
-      if (index > 0) {
-        blocRefs.current[index - 1].commands.focus();
-      }
-    }
-  };
+  // const switchBlocs = (e, index) => {
+  //   if (e.key === 'ArrowDown') {
+  //     if (index < blocCount - 1) {
+  //       blocRefs.current[index + 1].commands.focus();
+  //     }
+  //   } else if (e.key === 'ArrowUp') {
+  //     if (index > 0) {
+  //       blocRefs.current[index - 1].commands.focus();
+  //     }
+  //   }
+  // };
 
   const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
     let blocComponent = null;
@@ -148,12 +159,11 @@ export default function Note() {
                               noteId={currentNote}
                               type={bloc.type}
                               content={bloc.content}
+                              position={bloc.position}
                               height={bloc.height}
-                              position={i + 1}
-                              blocRef={(bloc) => (blocRefs.current[i] = bloc)}
                               addBloc={addBloc}
                               deleteBloc={deleteBloc}
-                              switchBlocs={(e) => switchBlocs(e, i)}
+                              // switchBlocs={(e) => switchBlocs(e, i)}
           // setBlocsValue={setBlocsValue}
                           />
       } else if (bloc.type === "code") {
@@ -162,6 +172,7 @@ export default function Note() {
                               noteId={currentNote}
                               type={bloc.type}
                               language="javascript"
+                              position={bloc.position}
                               lineCount={bloc.lineCount}
                               content={bloc.content}
                               addBloc={addBloc}
@@ -229,7 +240,7 @@ export default function Note() {
     //tag 
   const tagDur= ["JavaScript", "Python", "Go", "CSS","TypeScript", "C#"]
     const [tag, setTag] = useState("")
-    const [isTagInputVisible, setIsTagInputVisible] = useState("false")
+    const [isTagInputVisible, setIsTagInputVisible] = useState(false)
     const [tags, setTags] = useState([])
     const userId = useSelector((state) => state.user.value.token);
     const noteId = useSelector((state) => state.currentNote.value)
@@ -260,7 +271,6 @@ export default function Note() {
                   
                 })
             const result = await response.json()
-             console.log(result)
              if (result) {
                 setTag(""); // Réinitialise le champ tag
                 setIsTagInputVisible(false); // Masque le champ input
