@@ -10,17 +10,17 @@ import StarterKit from '@tiptap/starter-kit'
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const TextBloc = ({ 
-    blocId,
-    noteId,
-    type,
-    content,
-    height, 
-    deleteBloc,
-    addBloc,
-    blocRef,
-    switchBlocs,
-    position,
-}) => {
+            blocId,
+            noteId,
+            type,
+            content,
+            position,
+            height, 
+            deleteBloc,
+            addBloc,
+            // blocRef,
+            // switchBlocs,
+        }) => {
     
     const [editorInput, setEditorInput] = useState(content); // Initial content
     const [blocHeight, setBlocHeight] = useState(height)
@@ -64,7 +64,6 @@ const TextBloc = ({
                   setBlocHeight(scrollHeight);
 
               } 
-            console.log("hieght ", blocHeight)
             saveBloc()
         },
         editorProps: {
@@ -88,7 +87,7 @@ const TextBloc = ({
         } 
 
         if (event.key === 'Enter' && !event.shiftKey) {
-            addBloc(type, noteId)
+            addBloc(position, type, noteId)
             return
         }
         if (event.key === 'ArrowUp') {
@@ -100,7 +99,7 @@ const TextBloc = ({
     /** Save Bloc in database */
     const saveBloc = async () => {
         try {
-            const response = await fetch(`${backendUrl}/blocs/`, {
+            const response = await fetch(`${backendUrl}/blocs/save`, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ blocId, type, height: blocHeight, content: editorInput })
@@ -122,8 +121,8 @@ const TextBloc = ({
     const popoverContentStyle = "flex w-full focus:outline-none bg-lightPurple text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 hover:cursor-pointer"
     const popoverContent = (
         <div className="">
-          <div className={popoverContentStyle} onClick={() => addBloc("text", noteId)}>Texte</div>
-          <div className={popoverContentStyle} onClick={() => addBloc("code", noteId)}>Code</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
         </div>
     );
 
@@ -143,7 +142,7 @@ const TextBloc = ({
                 <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
                     <div 
                         className={buttonStyle}
-                        onClick={() => addBloc(type, noteId)}>+</div>
+                        onClick={() => addBloc(position, type, noteId)}>+</div>
                 </Popover>
 
             <EditorContent 

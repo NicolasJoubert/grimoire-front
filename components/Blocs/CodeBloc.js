@@ -11,22 +11,23 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github_light_default";
 import "ace-builds/src-noconflict/theme-dracula";
 import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-python";
 
-// Ensure Ace can find its worker files
-import "ace-builds/src-noconflict/worker-javascript";
+// import "ace-builds/src-noconflict/worker-javascript";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const CodeBloc = ({ 
-    blocId,
-    noteId,
-    type,
-    language,
-    lineCount,
-    content, 
-    deleteBloc,
-    addBloc,
-}) => {
+            blocId,
+            noteId,
+            type,
+            language,
+            position,
+            lineCount,
+            content, 
+            deleteBloc,
+            addBloc,
+        }) => {
 
     const [code, setCode] = useState(content);    // Set code content, initialized with bloc content in DB
     const [isRunCodeShown, setIsRunCodeShown] = useState(false)
@@ -94,7 +95,7 @@ const CodeBloc = ({
     /** Save bloc in DB */
     const saveBloc = async (newCode) => {
         try {
-            const response = await fetch(`${backendUrl}/blocs/`, {
+            const response = await fetch(`${backendUrl}/blocs/save`, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ blocId, type, content: newCode, language })
@@ -116,8 +117,8 @@ const CodeBloc = ({
     const popoverContentStyle = "flex w-full focus:outline-none bg-lightPurple text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 hover:cursor-pointer"
     const popoverContent = (
         <div className="">
-          <div className={popoverContentStyle} onClick={() => addBloc("text", noteId)}>Texte</div>
-          <div className={popoverContentStyle} onClick={() => addBloc("code", noteId)}>Code</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
         </div>
     );
 //`h-[${blocHeight}px]`
@@ -142,7 +143,7 @@ const CodeBloc = ({
             <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
                 <div 
                     className={buttonStyle}
-                    onClick={() => addBloc(type, noteId)}>+</div>
+                    onClick={() => addBloc(position, type, noteId)}>+</div>
             </Popover>
             <div className={codeblocContainer}>
                 <div className={editorContainer}>
