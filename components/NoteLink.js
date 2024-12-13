@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { replaceCurrentNote } from '../reducers/currentNote';
+import{ changeStatus } from '../reducers/changeStatus'
 
 function NoteLinks({ title, noteId, isCurrent, stylePage }) {
   const dispatch = useDispatch();
