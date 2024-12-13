@@ -2,20 +2,22 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   value: false,
+  modalSearchBarValue: false
 };
 
 export const favoriteSlice = createSlice({
-  name: 'favorite',
+  name: 'changeStatus',
   initialState,
   reducers: {
     toggleFavorite: (state) => {
       state.value = !state.value;
     },
-    setFavorite: (state, action) => {
-      state.value = action.payload;
+    updateSetSearch: (state) => {
+      state.modalSearchBarValue = true;
     },
+
   },
 });
 
-export const { toggleFavorite, setFavorite } = favoriteSlice.actions;
+export const { toggleFavorite } = favoriteSlice.actions;
 export default favoriteSlice.reducer;

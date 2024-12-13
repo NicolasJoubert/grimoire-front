@@ -13,7 +13,8 @@ const TextBloc = ({
     blocId,
     noteId,
     type,
-    content, 
+    content,
+    height, 
     deleteBloc,
     addBloc,
     blocRef,
@@ -22,22 +23,13 @@ const TextBloc = ({
 }) => {
     
     const [editorInput, setEditorInput] = useState(content); // Initial content
-    const [blocHeight, setBlocHeight] = useState("24px")
-    // const [editorHeight, setEditorHeight] = useState('auto'); // State to store dynamic height
+    const [blocHeight, setBlocHeight] = useState(height)
+    const [isBlocHovered, setIsBlocHovered] = useState(false);   
 
     const editorRef = useRef(null); // Reference for the editor DOM node
 
-    // useEffect(() => {
-    //     if (editorRef.current) {
-    //         const rect = editorRef.current.getBoundingClientRect();
-    //         console.log("rect", rect, rect.height);
-
-    //         setBlocHeight(`${rect.height}px`); // Minimum height of 24px
-    //     }
-    // }, [editorInput]); // Trigger update when editorInput changes
-
     const editorStyle = clsx(
-        `h-[${blocHeight}]`,
+        `h-[${blocHeight}px]`,
         "flex-1 focus:outline-none focus:bg-backgroundColor hover:bg-backgroundColor rounded-md pt-0.5"
     );
 
@@ -69,7 +61,8 @@ const TextBloc = ({
             if (editorRef.current) {
                 // Compute the height based on content
                 const scrollHeight = editorRef.current.scrollHeight;
-                setBlocHeight(scrollHeight);
+                  setBlocHeight(scrollHeight);
+
               } 
             console.log("hieght ", blocHeight)
             saveBloc()
@@ -110,7 +103,7 @@ const TextBloc = ({
             const response = await fetch(`${backendUrl}/blocs/`, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ blocId, type, content: editorInput })
+                body: JSON.stringify({ blocId, type, height: blocHeight, content: editorInput })
               });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -134,17 +127,24 @@ const TextBloc = ({
         </div>
     );
 
-    const container = clsx("flex justify-between items-center mt-0.5") // `h-[${blocHeight}]`, 
+    const container = clsx(
+                        `h-[${blocHeight}px]`,
+                        "flex justify-between items-start")
     const popoverStyle = ""
-    const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
+    const buttonStyle = clsx(
+        isBlocHovered ? "bg-lightPurple" : "bg-transparent",
+        "rounded-full w-6 h-6 text-center cursor-pointer text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200")
     const inputStyle = clsx("w-full ml-2.5 text-black")// border-solid border border-black rounded-md 
     return (
-        <div className={container} style={{ height: blocHeight }}>
-            <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
-                <div 
-                    className={buttonStyle}
-                    onClick={() => addBloc(type, noteId)}>+</div>
-            </Popover>
+        <div 
+            className={container}
+            onMouseEnter={() => setIsBlocHovered(true)}
+            onMouseLeave={() => setIsBlocHovered(false)}>
+                <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
+                    <div 
+                        className={buttonStyle}
+                        onClick={() => addBloc(type, noteId)}>+</div>
+                </Popover>
 
             <EditorContent 
                 ref={editorRef}

@@ -124,7 +124,7 @@ export default function SidebarRight({toggleSidebarRight}) {
   ))
 
   return (
-    <div className="h-full w-64 bg-backgroundColor flex flex-col">
+    <div className="h-full w-64 bg-backgroundColor flex flex-col px-4">
       <div className='flex justify-start'>
         <button className='pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
           <TbLayoutSidebarRightCollapseFilled
