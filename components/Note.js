@@ -4,13 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteCurrentNote,
   replaceCurrentNote,
+  updateTitleNote,
 } from '../reducers/currentNote.js';
 import { toggleFavorite } from '../reducers/favorite.js';
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faTrashCan, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBookmark,
+  faTrashCan,
+  faCirclePlus,
+} from '@fortawesome/free-solid-svg-icons';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -90,10 +95,12 @@ export default function Note() {
 
   /** Change title value in noteData state when changed */
   const handleTitleChange = (event) => {
+    const newTitle = event.target.value;
     setNoteData((prevData) => ({
       ...prevData, // Copy all other properties
-      title: event.target.value, // Update only the title
+      title: newTitle, // Update only the title
     }));
+    dispatch(updateTitleNote(newTitle));
   };
 
   const addBloc = async (type, noteId) => {
@@ -225,24 +232,22 @@ export default function Note() {
     }
   };
 
-    //tag 
-    const [tag, setTag] = useState("")
-    const [showModal, setShowModal] = useState("false")
-    
-        const addTag = async () => {
-            try {  
-            const response = await fetch(
-                `${backendUrl}/tag/`,
-                {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', }, 
-                    body: JSON.stringify({ tag }),     
-                }
-            ) 
-        } catch (error) {
-            console.error('Error add tag', error);
-       }}        
-    
+  //tag
+  const [tag, setTag] = useState('');
+  const [showModal, setShowModal] = useState('false');
+
+  const addTag = async () => {
+    try {
+      const response = await fetch(`${backendUrl}/tag/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tag }),
+      });
+    } catch (error) {
+      console.error('Error add tag', error);
+    }
+  };
+
   const container =
     'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black';
   const topContainer = 'flex justify-between items-center w-full h-12';
@@ -290,11 +295,7 @@ export default function Note() {
           <Tag>bdd</Tag>
           <Tag>méthode</Tag>
           <button>
-            <FontAwesomeIcon
-              icon={faCirclePlus}
-              className={icons}
-              
-            />
+            <FontAwesomeIcon icon={faCirclePlus} className={icons} />
           </button>
         </div>
         <div className={dates}>
