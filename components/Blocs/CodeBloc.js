@@ -67,7 +67,7 @@ const CodeBloc = ({
     /** When code it written, it updates the input and save bloc in dv */
     const handleCodeChange = (newCode) => {
         setCode(newCode);
-        saveBloc();
+        saveBloc(newCode);
     };
 
     /** Exec code and display result */
@@ -83,18 +83,21 @@ const CodeBloc = ({
 
           if (apiResponse.result) {
             setRunResult(apiResponse.data.output)
+            // setRunResult(JSON.stringify(apiResponse.data.output.split("\n")))
+
+            // console.log(JSON.stringify(runResult))
           } else {
             setRunResult("Could not run code ┐( ˘_˘ )┌")
           }
     }
 
     /** Save bloc in DB */
-    const saveBloc = async () => {
+    const saveBloc = async (newCode) => {
         try {
             const response = await fetch(`${backendUrl}/blocs/`, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ blocId, type, content: code, language })
+                body: JSON.stringify({ blocId, type, content: newCode, language })
             });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
