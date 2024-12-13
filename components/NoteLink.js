@@ -1,17 +1,25 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { replaceCurrentNote } from '../reducers/currentNote';
 
-function NoteLinks({ title, noteId }) {
+function NoteLinks({ title, noteId, isCurrent, stylePage }) {
   const dispatch = useDispatch();
+
   const handleClick = () => {
     dispatch(replaceCurrentNote(noteId));
     // setSearchBarIsVisible(false)
     console.log('cliqué sur' + noteId);
   };
 
+  const baseStyle =
+    'cursor-pointer transition duration-300 hover:text-lightPurple ease-in-out rounded-md text-darkPurple w-auto ml-1 mr-1 pl-2';
+
+  const styleAccordingToThePage = {
+    sidebar: isCurrent && 'bg-darkPurple text-white w-auto',
+  };
+
   return (
     <div
-      className='text-gray-900 mb-0 cursor-pointer hover:underline hover:text-lightPurple transition duration-300 ease-in-out pl-4'
+      className={`${baseStyle} ${styleAccordingToThePage[stylePage]}`}
       onClick={handleClick}
     >
       <span>{title}</span>

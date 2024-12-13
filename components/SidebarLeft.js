@@ -60,7 +60,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       }
     };
     fetchFavorites();
-  }, [isFavorite]);
+  }, [isFavorite, currentNote]);
 
   // FETCH NOTE TITLE WITH USER TOKEN
   useEffect(() => {
@@ -151,7 +151,13 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       {/* NOTES TITLE */}
       <div className='flex-1 overflow-y-auto'>
         {titleNotes.map((note, i) => (
-          <NoteLink key={i} title={note.title} noteId={note.id} />
+          <NoteLink
+            key={i}
+            title={note.title}
+            noteId={note.id}
+            isCurrent={currentNote === note.id}
+            stylePage='sidebar'
+          />
         ))}
       </div>
 
