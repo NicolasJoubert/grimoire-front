@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   value: false,
-  modalSearchBarvalue: false
+  modalSearchBarValue: false
 };
 
 export const favoriteSlice = createSlice({
@@ -13,7 +13,7 @@ export const favoriteSlice = createSlice({
       state.value = !state.value;
     },
     updateSetSearch: (state) => {
-      state.modalSearchBarvalue = true;
+      state.modalSearchBarValue = true;
     },
 
   },
