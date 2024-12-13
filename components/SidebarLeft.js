@@ -3,6 +3,7 @@ import NoteLink from './NoteLink.js';
 // REDUCER
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../reducers/user';
+import { deleteCurrentNote } from '../reducers/currentNote';
 
 import { useRouter } from 'next/router';
 
@@ -87,6 +88,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const handleLogout = () => {
     router.push('/');
     dispatch(logout());
+    dispatch(deleteCurrentNote());
   };
 
   // TODO FAIRE LA FONCTION DARK LIGHT MODE

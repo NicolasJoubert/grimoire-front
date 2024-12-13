@@ -8,6 +8,8 @@ import AceEditor from "react-ace";
 
 // Import a theme and a language mode from Ace
 import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-github_light_default";
+import "ace-builds/src-noconflict/theme-dracula";
 import "ace-builds/src-noconflict/mode-javascript";
 
 // Ensure Ace can find its worker files
@@ -29,6 +31,8 @@ const CodeBloc = ({
     const [devLang, setDevLang] = useState(language)
     const [lineCount, setLineCount] = useState(1);
     const [blocHeight, setBlocHeight] = useState('80px');
+    const [isBlocHovered, setIsBlocHovered] = useState(false);   
+
 
     useEffect(() => {
         // increase blocHeight on every 5 lines added
@@ -94,22 +98,26 @@ const CodeBloc = ({
         </div>
     );
 
-    const container = "flex justify-between items-start mt-1 mb-4"
+    const container = clsx(
+                        `h-[${blocHeight}px]`,
+                        "flex justify-between items-start mt-1 mb-4")
     const popoverStyle = ""
-    const buttonStyle = "rounded-full w-6 h-6 text-center cursor-pointer bg-transparent text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200 opacity-0"
-    const inputStyle = "w-full h-6 ml-2.5 text-black"// border-solid border border-black rounded-md 
-
+    const buttonStyle = clsx(
+        isBlocHovered ? "bg-lightPurple" : "bg-transparent",
+        "rounded-full w-6 h-6 text-center cursor-pointer text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200")
     return (                            
         <div className={clsx(container)} style={{ height: blocHeight }}>  
             <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
                 <div 
                     className={buttonStyle}
+                    onMouseEnter={() => setIsBlocHovered(true)}
+                    onMouseLeave={() => setIsBlocHovered(false)}
                     onClick={() => addBloc(type, noteId)}>+</div>
             </Popover>
             {/* <div className="flex-1 rounded-md"> */}
                 <AceEditor
                     mode="javascript" // Language mode
-                    theme="monokai" // Theme
+                    theme="dracula" // Theme
                     value={code} // Current code
                     onChange={handleCodeChange} // Update state on code change
                     onLoad={handleEditorLoad}
