@@ -121,7 +121,7 @@ const TextBloc = ({
 
     const popoverContentStyle = "flex w-full focus:outline-none bg-lightPurple text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 hover:cursor-pointer"
     const popoverContent = (
-        <div className="">
+        <div className="!bg-red-300">
           <div className={popoverContentStyle} onClick={() => addBloc("text", noteId)}>Texte</div>
           <div className={popoverContentStyle} onClick={() => addBloc("code", noteId)}>Code</div>
         </div>
@@ -130,7 +130,6 @@ const TextBloc = ({
     const container = clsx(
                         `h-[${blocHeight}px]`,
                         "flex justify-between items-start")
-    const popoverStyle = ""
     const buttonStyle = clsx(
         isBlocHovered ? "bg-lightPurple" : "bg-transparent",
         "rounded-full w-6 h-6 text-center cursor-pointer text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200")
@@ -140,7 +139,7 @@ const TextBloc = ({
             className={container}
             onMouseEnter={() => setIsBlocHovered(true)}
             onMouseLeave={() => setIsBlocHovered(false)}>
-                <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
+                <Popover title="Type de bloc" content={popoverContent} trigger="hover">
                     <div 
                         className={buttonStyle}
                         onClick={() => addBloc(type, noteId)}>+</div>
