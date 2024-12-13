@@ -10,7 +10,7 @@ import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faTrashCan, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faTrashCan, faCirclePlus, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -223,22 +223,62 @@ export default function Note() {
   };
 
     //tag 
+  const tagDur= ["JavaScript", "Python", "Go", "CSS","TypeScript", "C#"]
     const [tag, setTag] = useState("")
-    const [showModal, setShowModal] = useState("false")
+    const [isTagInputVisible, setIsTagInputVisible] = useState("false")
+    const [tags, setTags] = useState([])
+    const userId = useSelector((state) => state.user.value.token);
+    const noteId = useSelector((state) => state.currentNote.value)
+
+    const fetchTags = () => {
+        fetch(`${backendUrl}/tags/` + noteId)
+            .then((r) => r.json())
+            .then((d) => setTags(d.tags))
+            .catch((e) => console.error(e.message))
+    }
+
+    useEffect(() => {
+        fetchTags()
+    }, [noteId])
     
-        const addTag = async () => {
+    const addTag = async () => {
             try {  
             const response = await fetch(
-                `${backendUrl}/tag/`,
+                `${backendUrl}/tags/`,
                 {
-                    method: 'PUT',
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json', }, 
-                    body: JSON.stringify({ tag }),     
-                }
-            ) 
+                    body: JSON.stringify({
+                        value: tag,
+                        token: userId,
+                        noteId: noteId,
+                     }),  
+                  
+                })
+            const result = await response.json()
+             console.log(result)
+             if (result) {
+                setTag(""); // Réinitialise le champ tag
+                setIsTagInputVisible(false); // Masque le champ input
+                fetchTags()
+            } else {
+                
+                console.error('Error adding tag: ', result.error);
+            }
         } catch (error) {
             console.error('Error add tag', error);
-       }}        
+       }} 
+       
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            setIsTagInputVisible(false)
+            addTag()
+        }
+
+    }
+    const inputVis = () => {
+        setIsTagInputVisible(!isTagInputVisible)
+    }        
     
   const container =
     'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black';
@@ -248,7 +288,7 @@ export default function Note() {
     'p-4 text-lightPurple text-base hover:text-darkPurple transition duration-300 ease-in-out';
   const metadataContainer =
     'flex flex-row justify-between items-center w-full h-12';
-  const tagsContainer = 'flex justify-start';
+  const tagsContainer = 'flex justify-start items-center';
   const dates = 'flex flex-col justify-center items-end';
   const blocsContainer = 'flex-1 flex-col justify-start items start py-3';
 
@@ -284,13 +324,27 @@ export default function Note() {
       </div>
       <div className={metadataContainer}>
         <div className={tagsContainer}>
-          <Tag>bdd</Tag>
-          <Tag>méthode</Tag>
+            {tags.map((t) => <Tag key={t._id}>{t.value}</Tag>)}
+              {isTagInputVisible && (
+                <div className="flex items-center">
+                  <input
+                    type='text'
+                    placeholder='Ajoute un tag bro'
+                    onChange={(e) => setTag(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    value={tag}
+                    className="border p-2 rounded mr-2 "
+                  />
+                  {/* <button onClick={addTag} className="p-2 bg-darkPurple text-white rounded">
+                    <FontAwesomeIcon icon={faCircleCheck} />
+                  </button> */}
+                </div>
+              )}
           <button>
             <FontAwesomeIcon
               icon={faCirclePlus}
               className={icons}
-              
+              onClick={inputVis}
             />
           </button>
         </div>
