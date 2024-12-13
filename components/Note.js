@@ -10,7 +10,7 @@ import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faTrashCan, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -222,6 +222,24 @@ export default function Note() {
     }
   };
 
+    //tag 
+    const [tag, setTag] = useState("")
+    const [showModal, setShowModal] = useState("false")
+    
+        const addTag = async () => {
+            try {  
+            const response = await fetch(
+                `${backendUrl}/tag/`,
+                {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', }, 
+                    body: JSON.stringify({ tag }),     
+                }
+            ) 
+        } catch (error) {
+            console.error('Error add tag', error);
+       }}        
+    
   const container =
     'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black';
   const topContainer = 'flex justify-between items-center w-full h-12';
@@ -268,6 +286,13 @@ export default function Note() {
         <div className={tagsContainer}>
           <Tag>bdd</Tag>
           <Tag>méthode</Tag>
+          <button>
+            <FontAwesomeIcon
+              icon={faCirclePlus}
+              className={icons}
+              
+            />
+          </button>
         </div>
         <div className={dates}>
           <span>Créée le {noteData.createdAt}</span>
