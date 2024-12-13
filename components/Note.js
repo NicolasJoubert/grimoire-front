@@ -144,9 +144,10 @@ export default function Note() {
                               blocId={bloc._id}
                               noteId={currentNote}
                               type={bloc.type}
+                              content={bloc.content}
+                              height={bloc.height}
                               position={i + 1}
                               blocRef={(bloc) => (blocRefs.current[i] = bloc)}
-                              content={bloc.content}
                               addBloc={addBloc}
                               deleteBloc={deleteBloc}
                               switchBlocs={(e) => switchBlocs(e, i)}
@@ -158,6 +159,7 @@ export default function Note() {
                               noteId={currentNote}
                               type={bloc.type}
                               language="javascript"
+                              lineCount={bloc.lineCount}
                               content={bloc.content}
                               addBloc={addBloc}
                               deleteBloc={deleteBloc}

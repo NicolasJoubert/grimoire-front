@@ -22,6 +22,7 @@ const CodeBloc = ({
     noteId,
     type,
     language,
+    lineCount,
     content, 
     deleteBloc,
     addBloc,
@@ -29,16 +30,16 @@ const CodeBloc = ({
 
     const [code, setCode] = useState(content);    // ADD CONTENT
     const [devLang, setDevLang] = useState(language)
-    const [lineCount, setLineCount] = useState(1);
-    const [blocHeight, setBlocHeight] = useState('80px');
+    const [lineCounter, setLineCounter] = useState(lineCount);
+    const [blocHeight, setBlocHeight] = useState('80px'); // not linked to backend
     const [isBlocHovered, setIsBlocHovered] = useState(false);   
 
     console.log("is bloc hovered", isBlocHovered)
 
     useEffect(() => {
         // increase blocHeight on every 5 lines added
-        (lineCount === 5 || lineCount % 5 === 0) && setBlocHeight(`${lineCount*16}px`) 
-    }, [lineCount])
+        (lineCounter % 5 === 0) && setBlocHeight(`${(lineCounter + 4)*16}px`) 
+    }, [lineCounter])
 
     const saveBloc = async () => {
         try {
@@ -80,7 +81,7 @@ const CodeBloc = ({
         //count number of line to define bloc height
         const updateLineCount = () => {
             const lines = editor.session.getLength();
-            setLineCount(lines);
+            setLineCounter(lines);
           };
       
           // Update line count whenever the editor content changes
