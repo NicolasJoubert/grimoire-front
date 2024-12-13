@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   value: null,
+  title: '',
 };
 
 export const userSlice = createSlice({
@@ -14,8 +15,12 @@ export const userSlice = createSlice({
     deleteCurrentNote: (state) => {
       state.value = null;
     },
+    updateTitleNote: (state, action) => {
+      state.title = action.payload;
+    },
   },
 });
 
-export const { replaceCurrentNote, deleteCurrentNote } = userSlice.actions;
+export const { replaceCurrentNote, deleteCurrentNote, updateTitleNote } =
+  userSlice.actions;
 export default userSlice.reducer;

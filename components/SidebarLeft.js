@@ -36,6 +36,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const user = useSelector((state) => state.user.value);
   const currentNote = useSelector((state) => state.currentNote.value);
   const isFavorite = useSelector((state) => state.favorite.value);
+  const modifTitle = useSelector((state) => state.currentNote.title);
 
   // FETCH FAVORITE NOTE TITLE WITH USER TOKEN
   useEffect(() => {
@@ -63,7 +64,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       }
     };
     fetchFavorites();
-  }, [isFavorite, currentNote]);
+  }, [isFavorite, currentNote, modifTitle]);
 
   // FETCH NOTE TITLE WITH USER TOKEN
   useEffect(() => {
@@ -84,7 +85,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       }
     };
     fetchNotes();
-  }, [currentNote]);
+  }, [currentNote, modifTitle]);
 
 
   return (
