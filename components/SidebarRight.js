@@ -164,7 +164,7 @@ export default function SidebarRight({toggleSidebarRight}) {
         <ul className="list-disc list-inside text-black">
           {/* Affichage de chaque note */}
           
-          {notes.length>0 ? listNote : "Vous n'avez créé aucune note aujourdhui glandeur va !!!"}
+          {notes.length>0 ? listNote : "Aucune note aujourdhui"}
         </ul>
       </div>
 
