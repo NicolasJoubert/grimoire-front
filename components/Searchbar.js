@@ -17,7 +17,7 @@ export default function Searchbar({
   const [search, setSearch] = useState('');
   const [searchedNotes, setSearchedNotes] = useState([]);
   const [tag, setTag] = useState([]);
-  const [isVisible, setIsVisible] = useState(false);
+  const [searchBarIsVisible, setSearchBarIsVisible] = useState(false);
 
   const token = useSelector((state) => state.user.value.token);
 
@@ -25,7 +25,7 @@ export default function Searchbar({
     if(inputValue===""){
       setSearch('')
       setSearchedNotes([])
-      setIsVisible(false)
+      setSearchBarIsVisible(false)
       return 
     }
     //si dans valeur de l'input il existe le caractere "#"
@@ -33,7 +33,7 @@ export default function Searchbar({
       const tabStringInput = inputValue.split(' '); //On crée un tableau a partir de la chaine de caractere avec le separeteur " "
       const tabTag = tabStringInput.filter((el) => el.startsWith('#')); // On filtre que les element qui commence par "#"
       setTag(tabTag); // on et a jour l'etat
-      setIsVisible(true)
+      setSearchBarIsVisible(true)
     }
 
     setSearch(inputValue);
@@ -43,7 +43,7 @@ export default function Searchbar({
       .then((data) => {
         setSearchedNotes(data);
         if(data.length>0){
-          setIsVisible(true)
+          setSearchBarIsVisible(true)
         }
       });
   };
@@ -64,9 +64,8 @@ export default function Searchbar({
   let notes = []
   if(searchedNotes.length > 0){
     notes = searchedNotes.map((note, i) => {
-      return <NoteLink key={i} title={note.title} noteId={note._id} />;
+      return <NoteLink key={i} title={note.title} noteId={note._id} setSearchBarIsVisible={setSearchBarIsVisible}/>;
     });
-    
   }
 
   return (
@@ -127,7 +126,7 @@ export default function Searchbar({
         </button>
       )}
 
-      {isVisible && (<div className='absolute top-20 left-0 w-full max-w-screen-sm flex flex-col justify-center justify-items-center'>
+      {searchBarIsVisible && (<div className='absolute top-20 left-0 w-full max-w-screen-sm flex flex-col justify-center justify-items-center'>
         <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
           {tags}
         </div>
