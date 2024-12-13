@@ -33,6 +33,7 @@ const CodeBloc = ({
     const [blocHeight, setBlocHeight] = useState('80px');
     const [isBlocHovered, setIsBlocHovered] = useState(false);   
 
+    console.log("is bloc hovered", isBlocHovered)
 
     useEffect(() => {
         // increase blocHeight on every 5 lines added
@@ -106,12 +107,14 @@ const CodeBloc = ({
         isBlocHovered ? "bg-lightPurple" : "bg-transparent",
         "rounded-full w-6 h-6 text-center cursor-pointer text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200")
     return (                            
-        <div className={clsx(container)} style={{ height: blocHeight }}>  
+        <div 
+            className={clsx(container)}
+            onMouseEnter={() => setIsBlocHovered(true)}
+            onMouseLeave={() => setIsBlocHovered(false)}
+            >  
             <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
                 <div 
                     className={buttonStyle}
-                    onMouseEnter={() => setIsBlocHovered(true)}
-                    onMouseLeave={() => setIsBlocHovered(false)}
                     onClick={() => addBloc(type, noteId)}>+</div>
             </Popover>
             {/* <div className="flex-1 rounded-md"> */}
