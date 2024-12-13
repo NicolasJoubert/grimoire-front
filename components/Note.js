@@ -240,7 +240,7 @@ export default function Note() {
     //tag 
   const tagDur= ["JavaScript", "Python", "Go", "CSS","TypeScript", "C#"]
     const [tag, setTag] = useState("")
-    const [isTagInputVisible, setIsTagInputVisible] = useState("false")
+    const [isTagInputVisible, setIsTagInputVisible] = useState(false)
     const [tags, setTags] = useState([])
     const userId = useSelector((state) => state.user.value.token);
     const noteId = useSelector((state) => state.currentNote.value)
