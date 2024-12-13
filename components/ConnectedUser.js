@@ -3,6 +3,7 @@ import { faMoon, faRightFromBracket, faHatWizard } from '@fortawesome/free-solid
 
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../reducers/user';
+import { removeCurrentNote } from '../reducers/currentNote';
 import { useRouter } from 'next/router';
 
 
@@ -17,6 +18,7 @@ export default function ConnectedUser() {
   const handleLogout = () => {
     router.push('/');
     dispatch(logout());
+    dispatch(removeCurrentNote());
   };
 
   // TODO FAIRE LA FONCTION DARK LIGHT MODE

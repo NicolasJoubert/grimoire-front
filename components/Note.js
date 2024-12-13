@@ -2,7 +2,7 @@ import moment from 'moment';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  deleteCurrentNote,
+  removeCurrentNote,
   replaceCurrentNote,
   updateTitleNote,
 } from '../reducers/currentNote.js';
@@ -197,7 +197,7 @@ export default function Note() {
 
       if (data.result) {
         console.log('Note deleted successfully');
-        dispatch(deleteCurrentNote());
+        dispatch(removeCurrentNote());
       } else {
         console.error('Error deleting note:', data.error);
       }
