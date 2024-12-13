@@ -31,7 +31,6 @@ export default function SidebarRight({toggleSidebarRight}) {
         const data = await response.json();
   
         if (data.result && data.notes.length>0) {
-          console.log("fetched notes :",data.notes);
           setNotes(data.notes);
         } else {
           setNotes([]);
@@ -58,7 +57,6 @@ export default function SidebarRight({toggleSidebarRight}) {
         const data = await response.json();
   
         if (data.result && data.notes.length>0) {
-          console.log("fetched notes :",data.notes);
           setUpdates(data.notes);
         } else {
           setUpdates([]);
@@ -116,12 +114,12 @@ export default function SidebarRight({toggleSidebarRight}) {
   
   //Liste des notes du jour
   const listNote = notes.map((note, index) => (
-    <NoteLink key={index} title={note.title} noteId={note._id}/>
+    <NoteLink key={index} title={note.title} noteId={note.id}/>
   ))
 
   //Liste des notes mise a jour au jour J
   const listUpdatedNote = updates.map((update, index) => (
-    <NoteLink key={index} title={update.title} noteId={update._id}/>
+    <NoteLink key={index} title={update.title} noteId={update.id}/>
     //<NoteLink key={index} title={update.title} noteId={update._id} setSearchBarIsVisible={setSearchBarIsVisible}/>
   ))
 
