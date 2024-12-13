@@ -20,6 +20,9 @@ import {
 
 import { TbLayoutSidebarLeftCollapseFilled } from 'react-icons/tb';
 
+// Import du composant FooterSideBar
+import ConnectedUser from './ConnectedUser.js';
+
 export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -83,17 +86,6 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
     fetchNotes();
   }, [currentNote]);
 
-  // FONCTION TO DISCONNECT USERS
-  const handleLogout = () => {
-    router.push('/');
-    dispatch(logout());
-  };
-
-  // TODO FAIRE LA FONCTION DARK LIGHT MODE
-  // turn on light or dark mode NOT ACTIVE
-  const darkLightMode = () => {
-    console.log('clique sur le ligth dark mode');
-  };
 
   return (
     <div className='h-full w-64 bg-backgroundColor flex flex-col'>
@@ -161,29 +153,9 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
         ))}
       </div>
 
-      {/* FOOTER SIDEBAR */}
-      <div className='flex justify-between items-center p-2 border-t border-gray-300'>
-        <div className='flex items-center'>
-          <FontAwesomeIcon icon={faHatWizard} className='text-darkPurple' />
-          <p className='text-sm text-black mb-0 ml-2'>{user.username}</p>
-        </div>
-        <div className='flex justify-normal items-center'>
-          <button>
-            <FontAwesomeIcon
-              icon={faMoon}
-              className='mr-2 text-darkPurple text-base  hover:text-lightPurple transition duration-300 ease-in-out'
-              onClick={darkLightMode}
-            />
-          </button>
-          <button>
-            <FontAwesomeIcon
-              icon={faRightFromBracket}
-              className='text-darkPurple text-base  hover:text-lightPurple transition duration-300 ease-in-out'
-              onClick={handleLogout}
-            />
-          </button>
-        </div>
-      </div>
+      {/* Utilisation du comaposant ConnectedUser*/}
+        <ConnectedUser />
+      
     </div>
   );
 }
