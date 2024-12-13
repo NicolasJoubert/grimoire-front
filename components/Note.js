@@ -6,7 +6,7 @@ import {
   replaceCurrentNote,
   updateTitleNote,
 } from '../reducers/currentNote.js';
-import { toggleFavorite } from '../reducers/favorite.js';
+import { toggleFavorite } from '../reducers/changeStatus.js';
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';

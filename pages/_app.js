@@ -6,7 +6,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import currentNote from '../reducers/currentNote';
 import user from '../reducers/user';
-import favorite from '../reducers/favorite.js';
+import favorite from '../reducers/changeStatus.js';
 
 import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';

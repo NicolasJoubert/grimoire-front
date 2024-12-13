@@ -5,7 +5,7 @@ const initialState = {
 };
 
 export const favoriteSlice = createSlice({
-  name: 'favorite',
+  name: 'changeStatus',
   initialState,
   reducers: {
     toggleFavorite: (state) => {
