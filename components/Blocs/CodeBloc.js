@@ -71,9 +71,21 @@ const CodeBloc = ({
     };
 
     /** Exec code and display result */
-    const runCode = () => {
+    const runCode = async () => {
         setIsRunCodeShown(true)
-        setRunResult("Bon anniversaire Marvin ♥")
+
+        const response = await fetch(`${backendUrl}/dev`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code})
+          })
+          const apiResponse = await response.json()
+
+          if (apiResponse.result) {
+            setRunResult(apiResponse.data.output)
+          } else {
+            setRunResult("Could not run code ┐( ˘_˘ )┌")
+          }
     }
 
     /** Save bloc in DB */
