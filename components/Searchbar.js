@@ -2,6 +2,10 @@ import { useState } from 'react';
 import NoteLink from './NoteLink'
 import Image from 'next/image';
 import { TbLayoutSidebarLeftExpandFilled, TbLayoutSidebarRightExpandFilled } from 'react-icons/tb';
+import { useSelector } from 'react-redux';
+
+
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export default function Searchbar({
   createNote,
@@ -11,26 +15,36 @@ export default function Searchbar({
   isSidebarRightVisible,
 }) {
   const [search, setSearch] = useState('');
-  const [dataNote, setDataNote] = useState([]);
+  const [searchedNotes, setSearchedNotes] = useState([]);
   const [tag, setTag] = useState([]);
+  const [searchBarIsVisible, setSearchBarIsVisible] = useState(false);
 
-  const handleSubmit = () => {
-    console.log(search);
-  };
+  const token = useSelector((state) => state.user.value.token);
 
   const changeInput = (inputValue) => {
+    if(inputValue===""){
+      setSearch('')
+      setSearchedNotes([])
+      setSearchBarIsVisible(false)
+      return 
+    }
     //si dans valeur de l'input il existe le caractere "#"
     if (inputValue.includes('#')) {
       const tabStringInput = inputValue.split(' '); //On crée un tableau a partir de la chaine de caractere avec le separeteur " "
       const tabTag = tabStringInput.filter((el) => el.startsWith('#')); // On filtre que les element qui commence par "#"
       setTag(tabTag); // on et a jour l'etat
+      setSearchBarIsVisible(true)
     }
-    setSearch(inputValue);
 
-    fetch(`http://localhost:3000/search/${inputValue}`)
+    setSearch(inputValue);
+    
+    fetch(`${backendUrl}/notes/search/${inputValue}/${token}`)
       .then((response) => response.json())
       .then((data) => {
-        setDataNote(data);
+        setSearchedNotes(data);
+        if(data.length>0){
+          setSearchBarIsVisible(true)
+        }
       });
   };
 
@@ -47,11 +61,15 @@ export default function Searchbar({
   });
 
   //creation liste noteLink
-  let notes = dataNote.map((note, i) => {
-    return <NoteLink key={i} title={note.title} />;
-  });
+  let notes = []
+  if(searchedNotes.length > 0){
+    notes = searchedNotes.map((note, i) => {
+      return <NoteLink key={i} title={note.title} noteId={note._id} setSearchBarIsVisible={setSearchBarIsVisible}/>;
+    });
+  }
+
   return (
-    <div className='text-gray-900 flex flex-row justify-around justify-items-center bg-backgroundColor sticky top-0 relative'>
+    <div className='text-gray-900 flex flex-row justify-between justify-items-center bg-backgroundColor sticky top-0 relative py-4'>
       {/* Bouton pour afficher la Sidebar uniquement si elle est cachée */}
       {!isSidebarLeftVisible && (
         <button className='p-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
@@ -61,40 +79,42 @@ export default function Searchbar({
           />
         </button>
       )}
-
-      <button onClick={() => createNote()} className='h-10'>
+      <button onClick={() => createNote()} >
         <Image
           src='/assets/icon_new_note.png'
           width={35}
           height={35}
-          alt='icon of filter'
-        />
+          alt='icon of new folder'
+          />
       </button>
+          
+      <div className='flex justify-end justify-items-end w-[80%] block '>
 
-      <div className='flex justify-end justify-items-end border-b-2 border-darkPurple w-96 block h-10'>
-        <input
-          onChange={(e) => changeInput(e.target.value)}
-          value={search}
-          className='border-black text-gray-900 w-full focus:outline-none bg-backgroundColor'
-        />
-        <button onClick={() => handleSubmit()}>
+        <div className='mr-4 flex justify-end justify-items-end border-b-2 border-darkPurple block w-full h-10'>
+          <input
+            onChange={(e) => changeInput(e.target.value)}
+            value={search}
+            className='  text-lg border-black text-gray-900 w-full focus:outline-none bg-backgroundColor'
+            placeholder='Search'
+          />
+          <button onClick={() => handleSubmit()}>
+            <Image
+              src='/assets/icon_search.png'
+              width={25}
+              height={25}
+              alt='icon of search'
+            />
+          </button>
+        </div>
+        <button onClick={() => handleSubmit()} className=' mt-2'>
           <Image
-            src='/assets/icon_search.png'
-            width={25}
-            height={25}
+            src='/assets/icon_filter.png'
+            width={40}
+            height={40}
             alt='icon of filter'
           />
         </button>
       </div>
-
-      <button onClick={() => handleSubmit()} className='h-10'>
-        <Image
-          src='/assets/icon_filter.png'
-          width={30}
-          height={30}
-          alt='icon of filter'
-        />
-      </button>
       
         {/* Bouton pour afficher la Sidebar uniquement si elle est cachée */}
       {!isSidebarRightVisible && (
@@ -106,14 +126,14 @@ export default function Searchbar({
         </button>
       )}
 
-      <div className='absolute top-10 w-full max-w-screen-sm flex flex-col'>
+      {searchBarIsVisible && (<div className='absolute top-20 left-0 w-full max-w-screen-sm flex flex-col justify-center justify-items-center'>
         <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
           {tags}
         </div>
-        <div className='w-full flex flex-col bg-lightPurple'>
-          {notes}
+        <div className='w-full flex flex-col bg-lightPurple rounded-lg p-4 '>
+        {searchedNotes && notes}
         </div>
-      </div>
+      </div>)}
     </div>
   );
 }

@@ -33,18 +33,36 @@ function Settings() {
          <input className=' w-8/12 rounded-md' type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} value={username}/>
          <input className=' w-8/12 rounded-md' type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/>
          <input className=' w-8/12 rounded-md' type="password" placeholder='Confirm Password' onChange={(e) => setConfirmPassword(e.target.value)} value={confirmpassword}/>
-         <p className='text-darkPurple font-bold'>Langage favoris</p>
-            <select>
-            <option value="JavaScript">JavaScript</option>
-            <option value="Python">Python</option>
-            <option value="TypeScript">TypeScript</option>
-            <option value="Java">Java</option>
-            <option value="Go">Go</option>
-            </select>
-        <button
-        className='bg-darkPurple text-white mb-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out'>
-         Confirmation
-        </button>    
+            <div className='flex justify-around'>
+                <div className='flex flex-col  justify-between items-center'>
+                 <p className='text-darkPurple font-bold'>Langage favoris</p>
+                <select>
+                 <option value="JavaScript">JavaScript</option>
+                 <option value="Python">Python</option>
+                <option value="TypeScript">TypeScript</option>
+                <option value="Java">Java</option>
+                <option value="Go">Go</option>
+                </select>
+                <button
+                className='bg-darkPurple text-white mb-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out'>
+                Confirmation
+                </button>
+                 </div> 
+                 <div className='flex flex-col items-center'>
+                 <p className='text-darkPurple font-bold'>Thèmes</p>
+                <select>
+                 <option value="JavaScript">Monokai</option>
+                 <option value="Python"></option>
+                <option value="TypeScript">TypeScript</option>
+                <option value="Java">Java</option>
+                <option value="Go">Go</option>
+                </select>
+                <button
+                className='bg-darkPurple text-white mb-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out'>
+                Confirmation
+                </button>
+                 </div>  
+            </div>  
         </div>
         <div className="bg-backImg-settings bg-cover bg-center h-screen w-9/12"> {/*image de fond */}
         </div>

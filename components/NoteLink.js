@@ -5,6 +5,7 @@ function NoteLinks({ title, noteId }) {
   const dispatch = useDispatch();
   const handleClick = () => {
     dispatch(replaceCurrentNote(noteId));
+    // setSearchBarIsVisible(false)
     console.log('cliqué sur' + noteId);
   };
 

@@ -23,8 +23,8 @@ import { TbLayoutSidebarLeftCollapseFilled } from 'react-icons/tb';
 export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-  const [selectFavoris, setFavoris] = useState('');
-  const [notes, setNotes] = useState([]);
+  const [selectFavoris, setFavoris] = useState([]);
+  const [titleNotes, setTitleNote] = useState([]);
 
   const router = useRouter();
 
@@ -32,10 +32,36 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
   const currentNote = useSelector((state) => state.currentNote.value);
+  const isFavorite = useSelector((state) => state.favorite.value);
 
-  const favoris = ['Note 1', 'Note 2'];
+  // FETCH FAVORITE NOTE TITLE WITH USER TOKEN
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const response = await fetch(
+          backendUrl + `/notes/favorites/${user.token}`
+        );
 
-  // TODO DYNAMISER LES FAVORIS
+        const data = await response.json();
+
+        if (data.result) {
+          setFavoris(data.favorites);
+        } else {
+          console.error(
+            'Erreur lors de la récupération des favoris',
+            data.error
+          );
+        }
+      } catch (err) {
+        console.error(
+          'Erreur lors de la récupération des favoris',
+          err.message
+        );
+      }
+    };
+    fetchFavorites();
+  }, [isFavorite]);
+
   // FETCH NOTE TITLE WITH USER TOKEN
   useEffect(() => {
     const fetchNotes = async () => {
@@ -46,7 +72,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
         console.log(data);
 
         if (data.result) {
-          setNotes(data.notes);
+          setTitleNote(data.notes);
         } else {
           console.error('Erreur lors de la récupération des notes', data.error);
         }
@@ -88,17 +114,13 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       <div className='border-b-2 border-solid border-gray pl-4 pb-4'>
         <div className='flex items-center justify-normal ml-10'>
           <FontAwesomeIcon icon={faBookmark} className='text-darkPurple' />
-          <p className='items-center text-darkPurple m-2 font-bold'>Favoris</p>
+          <p className='items-center text-darkPurple mt-0 mb-0 ml-2 font-bold'>
+            Favoris
+          </p>
         </div>
-        <div className='ml-16'>
-          {favoris.map((favoris, index) => (
-            <p
-              key={index}
-              onClick={() => setFavoris(favoris)}
-              className='text-grey mb-0 cursor-pointer hover:underline'
-            >
-              {favoris}
-            </p>
+        <div className='ml-12'>
+          {selectFavoris.map((favoris, i) => (
+            <NoteLink key={i} title={favoris.title} noteId={favoris.id} />
           ))}
         </div>
       </div>
@@ -128,7 +150,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
 
       {/* NOTES TITLE */}
       <div className='flex-1 overflow-y-auto'>
-        {notes.map((note, i) => (
+        {titleNotes.map((note, i) => (
           <NoteLink key={i} title={note.title} noteId={note.id} />
         ))}
       </div>

@@ -72,7 +72,8 @@ export default function Home() {
         <SidebarRight
           toggleSidebarRight={toggleSidebarRight}
           createNote={createNote}
-        />)}
+        />
+      )}
     </div>
   );
 }
