@@ -5,17 +5,14 @@ const initialState = {
 };
 
 export const favoriteSlice = createSlice({
-  name: 'favorite',
+  name: 'changeStatus',
   initialState,
   reducers: {
     toggleFavorite: (state) => {
       state.value = !state.value;
     },
-    setFavorite: (state, action) => {
-      state.value = action.payload;
-    },
   },
 });
 
-export const { toggleFavorite, setFavorite } = favoriteSlice.actions;
+export const { toggleFavorite } = favoriteSlice.actions;
 export default favoriteSlice.reducer;

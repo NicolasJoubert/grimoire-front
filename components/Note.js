@@ -4,13 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteCurrentNote,
   replaceCurrentNote,
+  updateTitleNote,
 } from '../reducers/currentNote.js';
-import { toggleFavorite } from '../reducers/favorite.js';
+import { toggleFavorite } from '../reducers/changeStatus.js';
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faTrashCan, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBookmark,
+  faTrashCan,
+  faCirclePlus,
+} from '@fortawesome/free-solid-svg-icons';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -90,10 +95,12 @@ export default function Note() {
 
   /** Change title value in noteData state when changed */
   const handleTitleChange = (event) => {
+    const newTitle = event.target.value;
     setNoteData((prevData) => ({
       ...prevData, // Copy all other properties
-      title: event.target.value, // Update only the title
+      title: newTitle, // Update only the title
     }));
+    dispatch(updateTitleNote(newTitle));
   };
 
   const addBloc = async (type, noteId) => {
@@ -122,52 +129,55 @@ export default function Note() {
     }
   };
 
-    const blocRefs = useRef([]);
-    
-    const switchBlocs = (e, index) => {
-        if (e.key === "ArrowDown") {
-            if (index < blocCount - 1) {
-                blocRefs.current[index + 1].commands.focus();
-            }
-        } else if (e.key === "ArrowUp") {
-            if (index > 0) {
-                blocRefs.current[index - 1].commands.focus();
-            }
-        }
-    };
-    
-    const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
-      let blocComponent = null
+  const blocRefs = useRef([]);
 
-      if (bloc.type === "text") {
-        blocComponent =  <TextBloc 
-                              blocId={bloc._id}
-                              noteId={currentNote}
-                              type={bloc.type}
-                              position={i + 1}
-                              blocRef={(bloc) => (blocRefs.current[i] = bloc)}
-                              content={bloc.content}
-                              addBloc={addBloc}
-                              deleteBloc={deleteBloc}
-                              switchBlocs={(e) => switchBlocs(e, i)}
-          // setBlocsValue={setBlocsValue}
-                          />
-      } else if (bloc.type === "code") {
-        blocComponent =  <CodeBloc 
-                              blocId={bloc._id}
-                              noteId={currentNote}
-                              type={bloc.type}
-                              language="javascript"
-                              content={bloc.content}
-                              addBloc={addBloc}
-                              deleteBloc={deleteBloc}
-          // setBlocsValue={setBlocsValue}
-                          />
+  const switchBlocs = (e, index) => {
+    if (e.key === 'ArrowDown') {
+      if (index < blocCount - 1) {
+        blocRefs.current[index + 1].commands.focus();
       }
-            
-      return (
-          <div key={bloc._id}>{blocComponent}</div>
-      )})
+    } else if (e.key === 'ArrowUp') {
+      if (index > 0) {
+        blocRefs.current[index - 1].commands.focus();
+      }
+    }
+  };
+
+  const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
+    let blocComponent = null;
+
+    if (bloc.type === 'text') {
+      blocComponent = (
+        <TextBloc
+          blocId={bloc._id}
+          noteId={currentNote}
+          type={bloc.type}
+          position={i + 1}
+          blocRef={(bloc) => (blocRefs.current[i] = bloc)}
+          content={bloc.content}
+          addBloc={addBloc}
+          deleteBloc={deleteBloc}
+          switchBlocs={(e) => switchBlocs(e, i)}
+          // setBlocsValue={setBlocsValue}
+        />
+      );
+    } else if (bloc.type === 'code') {
+      blocComponent = (
+        <CodeBloc
+          blocId={bloc._id}
+          noteId={currentNote}
+          type={bloc.type}
+          language='javascript'
+          content={bloc.content}
+          addBloc={addBloc}
+          deleteBloc={deleteBloc}
+          // setBlocsValue={setBlocsValue}
+        />
+      );
+    }
+
+    return <div key={bloc._id}>{blocComponent}</div>;
+  });
 
   const deleteNote = async () => {
     try {
@@ -222,24 +232,22 @@ export default function Note() {
     }
   };
 
-    //tag 
-    const [tag, setTag] = useState("")
-    const [showModal, setShowModal] = useState("false")
-    
-        const addTag = async () => {
-            try {  
-            const response = await fetch(
-                `${backendUrl}/tag/`,
-                {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', }, 
-                    body: JSON.stringify({ tag }),     
-                }
-            ) 
-        } catch (error) {
-            console.error('Error add tag', error);
-       }}        
-    
+  //tag
+  const [tag, setTag] = useState('');
+  const [showModal, setShowModal] = useState('false');
+
+  const addTag = async () => {
+    try {
+      const response = await fetch(`${backendUrl}/tag/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tag }),
+      });
+    } catch (error) {
+      console.error('Error add tag', error);
+    }
+  };
+
   const container =
     'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black';
   const topContainer = 'flex justify-between items-center w-full h-12';
@@ -287,11 +295,7 @@ export default function Note() {
           <Tag>bdd</Tag>
           <Tag>méthode</Tag>
           <button>
-            <FontAwesomeIcon
-              icon={faCirclePlus}
-              className={icons}
-              
-            />
+            <FontAwesomeIcon icon={faCirclePlus} className={icons} />
           </button>
         </div>
         <div className={dates}>

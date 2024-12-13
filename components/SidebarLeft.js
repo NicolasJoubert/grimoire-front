@@ -21,6 +21,9 @@ import {
 
 import { TbLayoutSidebarLeftCollapseFilled } from 'react-icons/tb';
 
+// Import du composant FooterSideBar
+import ConnectedUser from './ConnectedUser.js';
+
 export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -34,6 +37,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const user = useSelector((state) => state.user.value);
   const currentNote = useSelector((state) => state.currentNote.value);
   const isFavorite = useSelector((state) => state.favorite.value);
+  const modifTitle = useSelector((state) => state.currentNote.title);
 
   // FETCH FAVORITE NOTE TITLE WITH USER TOKEN
   useEffect(() => {
@@ -61,7 +65,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       }
     };
     fetchFavorites();
-  }, [isFavorite]);
+  }, [isFavorite, currentNote, modifTitle]);
 
   // FETCH NOTE TITLE WITH USER TOKEN
   useEffect(() => {
@@ -82,20 +86,8 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       }
     };
     fetchNotes();
-  }, [currentNote]);
+  }, [currentNote, modifTitle]);
 
-  // FONCTION TO DISCONNECT USERS
-  const handleLogout = () => {
-    router.push('/');
-    dispatch(logout());
-    dispatch(deleteCurrentNote());
-  };
-
-  // TODO FAIRE LA FONCTION DARK LIGHT MODE
-  // turn on light or dark mode NOT ACTIVE
-  const darkLightMode = () => {
-    console.log('clique sur le ligth dark mode');
-  };
 
   return (
     <div className='h-full w-64 bg-backgroundColor flex flex-col'>
@@ -153,33 +145,19 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       {/* NOTES TITLE */}
       <div className='flex-1 overflow-y-auto'>
         {titleNotes.map((note, i) => (
-          <NoteLink key={i} title={note.title} noteId={note.id} />
+          <NoteLink
+            key={i}
+            title={note.title}
+            noteId={note.id}
+            isCurrent={currentNote === note.id}
+            stylePage='sidebar'
+          />
         ))}
       </div>
 
-      {/* FOOTER SIDEBAR */}
-      <div className='flex justify-between items-center p-2 border-t border-gray-300'>
-        <div className='flex items-center'>
-          <FontAwesomeIcon icon={faHatWizard} className='text-darkPurple' />
-          <p className='text-sm text-black mb-0 ml-2'>{user.username}</p>
-        </div>
-        <div className='flex justify-normal items-center'>
-          <button>
-            <FontAwesomeIcon
-              icon={faMoon}
-              className='mr-2 text-darkPurple text-base  hover:text-lightPurple transition duration-300 ease-in-out'
-              onClick={darkLightMode}
-            />
-          </button>
-          <button>
-            <FontAwesomeIcon
-              icon={faRightFromBracket}
-              className='text-darkPurple text-base  hover:text-lightPurple transition duration-300 ease-in-out'
-              onClick={handleLogout}
-            />
-          </button>
-        </div>
-      </div>
+      {/* Utilisation du comaposant ConnectedUser*/}
+        <ConnectedUser />
+      
     </div>
   );
 }
