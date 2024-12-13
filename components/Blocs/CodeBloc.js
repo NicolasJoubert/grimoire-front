@@ -30,7 +30,7 @@ const CodeBloc = ({
 
     const [code, setCode] = useState(content);    // Set code content, initialized with bloc content in DB
     const [isRunCodeShown, setIsRunCodeShown] = useState(false)
-    const [execResult, setExecResult] = useState("")
+    const [runResult, setRunResult] = useState("")
     const [devLang, setDevLang] = useState(language)
     const [lineCounter, setLineCounter] = useState(lineCount);
     const [blocHeight, setBlocHeight] = useState('80px'); // not linked to backend
@@ -72,7 +72,8 @@ const CodeBloc = ({
 
     /** Exec code and display result */
     const runCode = () => {
-        console.log("codeIsRun")
+        setIsRunCodeShown(true)
+        setRunResult("Bon anniversaire Marvin ♥")
     }
 
     /** Save bloc in DB */
@@ -115,7 +116,7 @@ const CodeBloc = ({
     const editorContainer = "flex w-full flex-col justify-center items-start mb-2"
     const executionContainer = "flex w-full justify-between items-start "
     const runButton = "bg-darkPurple text-white w-12 h-8 rounded-md hover:bg-grey transition duration-300 ease-in-out mb-1 mr-2"
-    const executedCodeContainer = "flex w-[93%] justify-center items-start bg-white rounded-md px-2 mb-1"
+    const executedCodeContainer = "flex w-[93%] min-h-8 font-mono text-xs justify-start items-start bg-white rounded-md px-2 mb-1"
 
     return (                            
         <div 
@@ -153,8 +154,8 @@ const CodeBloc = ({
                     />
                 </div>
                 <div className={executionContainer}>
-                    <button className={runButton}>RUN</button>
-                    {isRunCodeShown && <div className={executedCodeContainer}>{execResult}</div>} {/* Div that rendered the result of code execution */}
+                    <button className={runButton} onClick={runCode}>RUN</button>
+                    {isRunCodeShown && <div className={executedCodeContainer}>{runResult}</div>} {/* Div that rendered the result of code execution */}
                 </div>
             </div>
         </div>
