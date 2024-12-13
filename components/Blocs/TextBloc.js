@@ -13,7 +13,8 @@ const TextBloc = ({
     blocId,
     noteId,
     type,
-    content, 
+    content,
+    height, 
     deleteBloc,
     addBloc,
     blocRef,
@@ -22,7 +23,7 @@ const TextBloc = ({
 }) => {
     
     const [editorInput, setEditorInput] = useState(content); // Initial content
-    const [blocHeight, setBlocHeight] = useState(38)
+    const [blocHeight, setBlocHeight] = useState(height)
     const [isBlocHovered, setIsBlocHovered] = useState(false);   
 
     const editorRef = useRef(null); // Reference for the editor DOM node
@@ -102,7 +103,7 @@ const TextBloc = ({
             const response = await fetch(`${backendUrl}/blocs/`, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ blocId, type, content: editorInput })
+                body: JSON.stringify({ blocId, type, height: blocHeight, content: editorInput })
               });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

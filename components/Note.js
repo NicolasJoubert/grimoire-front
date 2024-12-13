@@ -146,34 +146,32 @@ export default function Note() {
   const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
     let blocComponent = null;
 
-    if (bloc.type === 'text') {
-      blocComponent = (
-        <TextBloc
-          blocId={bloc._id}
-          noteId={currentNote}
-          type={bloc.type}
-          position={i + 1}
-          blocRef={(bloc) => (blocRefs.current[i] = bloc)}
-          content={bloc.content}
-          addBloc={addBloc}
-          deleteBloc={deleteBloc}
-          switchBlocs={(e) => switchBlocs(e, i)}
+      if (bloc.type === "text") {
+        blocComponent =  <TextBloc 
+                              blocId={bloc._id}
+                              noteId={currentNote}
+                              type={bloc.type}
+                              content={bloc.content}
+                              height={bloc.height}
+                              position={i + 1}
+                              blocRef={(bloc) => (blocRefs.current[i] = bloc)}
+                              addBloc={addBloc}
+                              deleteBloc={deleteBloc}
+                              switchBlocs={(e) => switchBlocs(e, i)}
+          // setBlocsValue={setBlocsValue}
+                          />
+      } else if (bloc.type === "code") {
+        blocComponent =  <CodeBloc 
+                              blocId={bloc._id}
+                              noteId={currentNote}
+                              type={bloc.type}
+                              language="javascript"
+                              lineCount={bloc.lineCount}
+                              content={bloc.content}
+                              addBloc={addBloc}
+                              deleteBloc={deleteBloc}
           // setBlocsValue={setBlocsValue}
         />
-      );
-    } else if (bloc.type === 'code') {
-      blocComponent = (
-        <CodeBloc
-          blocId={bloc._id}
-          noteId={currentNote}
-          type={bloc.type}
-          language='javascript'
-          content={bloc.content}
-          addBloc={addBloc}
-          deleteBloc={deleteBloc}
-          // setBlocsValue={setBlocsValue}
-        />
-      );
     }
 
     return <div key={bloc._id}>{blocComponent}</div>;
