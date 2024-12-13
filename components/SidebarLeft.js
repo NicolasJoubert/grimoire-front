@@ -60,17 +60,6 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
     fetchNotes();
   }, [currentNote]);
 
-  // FONCTION TO DISCONNECT USERS
-  const handleLogout = () => {
-    router.push('/');
-    dispatch(logout());
-  };
-
-  // TODO FAIRE LA FONCTION DARK LIGHT MODE
-  // turn on light or dark mode NOT ACTIVE
-  const darkLightMode = () => {
-    console.log('clique sur le ligth dark mode');
-  };
 
   return (
     <div className='h-full w-64 bg-backgroundColor flex flex-col'>
@@ -139,11 +128,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
 
       {/* FOOTER SIDEBAR */}
       // Utilisation du comaposant ConnectedUser
-      <ConnectedUser
-      user={user} 
-      darkLightMode={darkLightMode} 
-      handleLogout={handleLogout} 
-      /> 
+        <ConnectedUser />
       
     </div>
   );
