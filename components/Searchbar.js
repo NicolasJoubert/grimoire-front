@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import NoteLink from './NoteLink'
 import Image from 'next/image';
 import { TbLayoutSidebarLeftExpandFilled, TbLayoutSidebarRightExpandFilled } from 'react-icons/tb';
@@ -13,19 +13,22 @@ export default function Searchbar({
   toggleSidebarRight,
   isSidebarLeftVisible,
   isSidebarRightVisible,
+  onOutsideClick
+
 }) {
   const [search, setSearch] = useState('');
   const [searchedNotes, setSearchedNotes] = useState([]);
   const [tag, setTag] = useState([]);
-  const [searchBarIsVisible, setSearchBarIsVisible] = useState(false);
-
+  const [isSearchResultVisible, setIsSearchResultVisible] = useState(false);
   const token = useSelector((state) => state.user.value.token);
-
+  
+  
+  //Input value gestion
   const changeInput = (inputValue) => {
     if(inputValue===""){
       setSearch('')
       setSearchedNotes([])
-      setSearchBarIsVisible(false)
+      setIsSearchResultVisible(false)
       return 
     }
     //si dans valeur de l'input il existe le caractere "#"
@@ -33,7 +36,7 @@ export default function Searchbar({
       const tabStringInput = inputValue.split(' '); //On crée un tableau a partir de la chaine de caractere avec le separeteur " "
       const tabTag = tabStringInput.filter((el) => el.startsWith('#')); // On filtre que les element qui commence par "#"
       setTag(tabTag); // on et a jour l'etat
-      setSearchBarIsVisible(true)
+      setIsSearchResultVisible(true)
     }
 
     setSearch(inputValue);
@@ -43,12 +46,35 @@ export default function Searchbar({
       .then((data) => {
         setSearchedNotes(data);
         if(data.length>0){
-          setSearchBarIsVisible(true)
+          setIsSearchResultVisible(true)
         }
       });
   };
 
-  //creation liste HASTAG
+  //gestion du click exterieur ************************/
+  const elementRef = useRef(null);
+  useEffect(() => {
+    // Fonction de gestion du clic
+    const handleClickOutside = (event) => {
+      if (elementRef.current && !elementRef.current.contains(event.target)) {
+        setIsSearchResultVisible(onOutsideClick); // Appelle la fonction passée en props
+      }
+    };
+
+    // Ajoute un écouteur d'événement global
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      // Nettoie l'écouteur d'événement quand le composant est démonté
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onOutsideClick]);
+ //END gestion du click exterieur ************************/
+
+  
+
+
+  //HASTAG creation liste 
   let tags = tag.map((hastag, i) => {
     return (
       <div
@@ -60,13 +86,14 @@ export default function Searchbar({
     );
   });
 
-  //creation liste noteLink
+  //noteLink creation liste 
   let notes = []
   if(searchedNotes.length > 0){
     notes = searchedNotes.map((note, i) => {
-      return <NoteLink key={i} title={note.title} noteId={note._id} setSearchBarIsVisible={setSearchBarIsVisible}/>;
+      return <NoteLink key={i} title={note.title} noteId={note._id} setIsSearchResultVisible={setIsSearchResultVisible}/>;
     });
   }
+
 
   return (
     <div className='text-gray-900 flex flex-row justify-between justify-items-center bg-backgroundColor sticky top-0 relative py-4'>
@@ -96,6 +123,7 @@ export default function Searchbar({
             value={search}
             className='  text-lg border-black text-gray-900 w-full focus:outline-none bg-backgroundColor'
             placeholder='Search'
+            
           />
           <button onClick={() => handleSubmit()}>
             <Image
@@ -126,7 +154,7 @@ export default function Searchbar({
         </button>
       )}
 
-      {searchBarIsVisible && (<div className='absolute top-20 left-0 w-full max-w-screen-sm flex flex-col justify-center justify-items-center'>
+      {isSearchResultVisible && (<div ref={elementRef} className='absolute top-20 left-0 w-full max-w-screen-sm flex flex-col justify-center justify-items-center'>
         <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
           {tags}
         </div>

@@ -50,6 +50,9 @@ export default function Home() {
     data.result && dispatch(replaceCurrentNote(data.note._id));
   };
 
+
+  //Gestion Click Exterieur searchBar
+
   return (
     <div className='text-white flex flex-row space-x h-screen p-0 m-0'>
       {isSidebarLeftVisible && (
@@ -65,6 +68,7 @@ export default function Home() {
           isSidebarLeftVisible={isSidebarLeftVisible}
           toggleSidebarRight={toggleSidebarRight}
           isSidebarRightVisible={isSidebarRightVisible}
+          onOutsideClick={false}
         />
         {noteId ? <Note /> : <Placeholder />}
       </div>
