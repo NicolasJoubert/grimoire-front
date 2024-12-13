@@ -17,7 +17,7 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Note() {
   const [noteData, setNoteData] = useState({});
-  const [blocCount, setBlocCount] = useState(0);
+  const [blocCount, setBlocCount] = useState(1);
   const dispatch = useDispatch();
 
   const currentNote = useSelector((state) => state.currentNote.value);
@@ -75,13 +75,7 @@ export default function Note() {
    * Automatically had a bloc on creation
    */
   useEffect(() => {
-    if (blocCount === 0 && noteData?.blocs?.length === 0) {
-      // controls that no bloc exists in note
-      addBloc('text', currentNote);
       fetchNote();
-    } else {
-      fetchNote();
-    }
   }, [currentNote, blocCount]);
 
   /** Updates note in database when noteData is changed */
@@ -99,15 +93,15 @@ export default function Note() {
     dispatch(updateTitleNote(newTitle));
   };
 
-  const addBloc = async (type, noteId) => {
+  const addBloc = async (position, type, noteId) => {
     // create new bloc and update noteData blocs array
     const response = await fetch(`${backendUrl}/blocs/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, noteId }),
+      body: JSON.stringify({ position, type, noteId }),
     });
     const data = await response.json();
-    data.result && setBlocCount((blocCount += 1));
+    data.result && setBlocCount((blocCount += 1))
   };
 
   const deleteBloc = async (blocId) => {
@@ -260,7 +254,6 @@ export default function Note() {
                   
                 })
             const result = await response.json()
-             console.log(result)
              if (result) {
                 setTag(""); // Réinitialise le champ tag
                 setIsTagInputVisible(false); // Masque le champ input
