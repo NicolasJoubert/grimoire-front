@@ -28,6 +28,7 @@ export default function ConnectedUser() {
 
   return (
     <div className='flex justify-between items-center p-2 border-t border-gray-300'>
+      
       <div className='flex items-center'>
         <FontAwesomeIcon 
         icon={faHatWizard} 
@@ -35,22 +36,23 @@ export default function ConnectedUser() {
         />
         <p className='text-sm text-black mb-0 ml-2'>{user.username}</p>
       </div>
+
       <div className='flex justify-normal items-center'>
         <button onClick={darkLightMode}>
           <FontAwesomeIcon
             icon={faMoon}
             className='mr-2 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
-            
           />
         </button>
+
         <button onClick={handleLogout}>
           <FontAwesomeIcon
             icon={faRightFromBracket}
             className='text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
-            
           />
         </button>
       </div>
+
     </div>
   );
 }
