@@ -139,7 +139,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
 
       {/* FOOTER SIDEBAR */}
       // Utilisation du comaposant ConnectedUser
-      <ConnectedUser 
+      <ConnectedUser
       user={user} 
       darkLightMode={darkLightMode} 
       handleLogout={handleLogout} 
