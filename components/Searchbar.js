@@ -90,7 +90,7 @@ export default function Searchbar({
   let notes = []
   if(searchedNotes.length > 0){
     notes = searchedNotes.map((note, i) => {
-      return <NoteLink key={i} title={note.title} noteId={note._id} setIsSearchResultVisible={setIsSearchResultVisible}/>;
+      return <NoteLink key={i} title={note.title} noteId={note._id}/>;
     });
   }
 
