@@ -125,8 +125,6 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
         ))}
       </div>
 
-
-    
       {/* Utilisation du comaposant ConnectedUser*/}
         <ConnectedUser 
         alt='Choose between Dark or Light mode'
