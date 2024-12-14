@@ -157,9 +157,9 @@ export default function SidebarRight({toggleSidebarRight}) {
       </div>
 
       {/* Section des Notes du jour */}
-      <div className="mb-4">
+      <div className="mb-4 h-[30%]">
         <h3 className="text-lg font-semibold text-darkPurple">Note{notes.length>0 && "s"} du jour</h3>
-        <ul className="list-disc list-inside text-black">
+        <ul className="list-disc list-inside text-black overflow-y-scroll h-[85%] ">
           {/* Affichage de chaque note */}
           
           {notes.length>0 ? listNote : "Aucune note aujourdhui"}
@@ -168,9 +168,9 @@ export default function SidebarRight({toggleSidebarRight}) {
 
       {/* Section des Mises à jour */}
       
-      {  updates.length > 0 && (<div className="mb-4">
+      {  updates.length > 0 && (<div className="mb-4 h-[30%]">
         <h3 className="text-lg font-semibold text-darkPurple">Mise à jour</h3>
-        <ul className="list-disc list-inside text-black">
+        <ul className="list-disc list-inside text-black overflow-y-scroll h-[65%]">
           {/* Affichage de chaque mise à jour */}
           {listUpdatedNote}
 
@@ -178,11 +178,11 @@ export default function SidebarRight({toggleSidebarRight}) {
       </div>)}
 
       {/* Calendrier */}
-      <div>
+      <div className="top-[70%] p-2 absolute w-[20%]">
         {/* Jours de la semaine */}
         <div className="grid grid-cols-7 gap-2 text-center text-sm font-medium">
           {daysOfWeek.map((day, index) => (
-            <div key={index} className="text-black">
+            <div key={index} className="text-black bg-lightPurple rounded">
               {day}
             </div>
           ))}
@@ -200,7 +200,7 @@ export default function SidebarRight({toggleSidebarRight}) {
               <button
                 key={index}
                 onClick={() => handleSelectDate(day)} // Mise à jour de la date sélectionnée
-                className={`py-2 rounded ${
+                className={`rounded ${
                   isSelected
                     ? "bg-darkPurple text-white" // Style du jour sélectionné
                     : "bg-whitePure text-black hover:bg-lightPurple" // Style des autres jours
