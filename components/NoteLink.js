@@ -1,13 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import { replaceCurrentNote } from '../reducers/currentNote';
-import{ changeStatus } from '../reducers/changeStatus'
 
 function NoteLinks({ title, noteId, isCurrent, stylePage }) {
   const dispatch = useDispatch();
 
   const handleClick = () => {
     dispatch(replaceCurrentNote(noteId));
-    console.log('cliqué sur' + noteId);
+    //console.log('cliqué sur' + noteId);
   };
 
   // variable pour le style de base dut titre de la note

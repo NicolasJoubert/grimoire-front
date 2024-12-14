@@ -36,7 +36,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
   const currentNote = useSelector((state) => state.currentNote.value);
-  const isFavorite = useSelector((state) => state.favorite.value);
+  const isFavorite = useSelector((state) => state.changeStatus.value);
   const modifTitle = useSelector((state) => state.currentNote.title);
 
   // FETCH FAVORITE NOTE TITLE WITH USER TOKEN
