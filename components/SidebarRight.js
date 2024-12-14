@@ -124,7 +124,7 @@ export default function SidebarRight({toggleSidebarRight}) {
   ))
 
   return (
-    <div className="h-full w-64 bg-backgroundColor flex flex-col px-4">
+    <div className="h-full w-64 bg-backgroundColor flex flex-col px-4 relatif">
       <div className='flex justify-start'>
         <button className='pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
           <TbLayoutSidebarRightCollapseFilled
@@ -178,7 +178,7 @@ export default function SidebarRight({toggleSidebarRight}) {
       </div>)}
 
       {/* Calendrier */}
-      <div className="top-[70%] p-2 absolute w-[20%]">
+      <div className="top-[70%] p-2 absolute w-[24%]">
         {/* Jours de la semaine */}
         <div className="grid grid-cols-7 gap-2 text-center text-sm font-medium">
           {daysOfWeek.map((day, index) => (
