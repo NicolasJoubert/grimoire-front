@@ -106,7 +106,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
             Favoris
           </p>
         </div>
-        <div className='ml-12 overflow-y-auto max-h-[150px]'>
+        <div className='ml-12 overflow-y-auto max-h-[150px] mr-2'>
           {selectFavoris.map((favoris, i) => (
             <NoteLink key={i} title={favoris.title} noteId={favoris.id} />
           ))}
@@ -137,7 +137,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       </div>
 
       {/* NOTES TITLE */}
-      <div className='flex-1 overflow-y-auto pl-4'>
+      <div className='flex-1 overflow-y-auto pl-4 mr-2'>
         {titleNotes.map((note, i) => (
           <NoteLink
             key={i}
