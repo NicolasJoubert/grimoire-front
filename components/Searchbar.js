@@ -108,7 +108,7 @@ export default function Searchbar({
     <div className='text-gray-900 flex flex-row justify-between items-center bg-backgroundColor sticky top-0 py-4'>
       {/* Bouton pour afficher la Sidebar uniquement si elle est cachée */}
       {!isSidebarLeftVisible && (
-        <button className='p-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
+        <button className='pb-8 pl-4 pr-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
           <TbLayoutSidebarLeftExpandFilled
             size={24}
             onClick={toggleSidebarLeft}
@@ -143,7 +143,7 @@ export default function Searchbar({
 
       {/* Bouton pour afficher la Sidebar uniquement si elle est cachée */}
       {!isSidebarRightVisible && (
-        <button className='p-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
+        <button className='pb-8 pl-4 pr-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
           <TbLayoutSidebarRightExpandFilled
             size={24}
             onClick={toggleSidebarRight}
