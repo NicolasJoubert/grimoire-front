@@ -11,7 +11,12 @@ import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faTrashCan, faCirclePlus, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBookmark,
+  faTrashCan,
+  faCirclePlus,
+  faCircleCheck,
+} from '@fortawesome/free-solid-svg-icons';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -62,7 +67,6 @@ export default function Note() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       await response.json();
-
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -72,7 +76,7 @@ export default function Note() {
    * Automatically had a bloc on creation
    */
   useEffect(() => {
-      fetchNote();
+    fetchNote();
   }, [currentNote, blocCount]);
 
   /** Updates note in database when noteData is changed */
@@ -92,14 +96,12 @@ export default function Note() {
 
   /** Add a bloc below the one which created it */
   const addBloc = async (position, type, noteId) => {
-
     // Get blocs in the note that have a position superior to the one creating it
-    const response = await fetch(`${backendUrl}/blocs/${noteId}/${position}`)
-    const data = await response.json()
-    const blocsIds = data.blocs.map(bloc => bloc._id)
+    const response = await fetch(`${backendUrl}/blocs/${noteId}/${position}`);
+    const data = await response.json();
+    const blocsIds = data.blocs.map((bloc) => bloc._id);
 
     if (data.result) {
-
       // if there are blocs below the new one, we increment their position
       if (blocsIds.length > 0) {
         const response = await fetch(`${backendUrl}/blocs/increment`, {
@@ -111,7 +113,7 @@ export default function Note() {
       }
 
       // After potential below blocs were displaced, we create the new bloc
-      const newBlocPosition = position + 1 // new bloc has a position superior by one to the precedent
+      const newBlocPosition = position + 1; // new bloc has a position superior by one to the precedent
       const response = await fetch(`${backendUrl}/blocs/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -119,7 +121,7 @@ export default function Note() {
       });
       const data = await response.json();
       // update bloc count (used to fetch note)
-      data.result && setBlocCount((blocCount += 1))
+      data.result && setBlocCount((blocCount += 1));
     }
   };
 
@@ -153,32 +155,36 @@ export default function Note() {
   const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
     let blocComponent = null;
 
-      if (bloc.type === "text") {
-        blocComponent =  <TextBloc 
-                              blocId={bloc._id}
-                              noteId={currentNote}
-                              type={bloc.type}
-                              content={bloc.content}
-                              position={bloc.position}
-                              height={bloc.height}
-                              addBloc={addBloc}
-                              deleteBloc={deleteBloc}
-                              // switchBlocs={(e) => switchBlocs(e, i)}
-          // setBlocsValue={setBlocsValue}
-                          />
-      } else if (bloc.type === "code") {
-        blocComponent =  <CodeBloc 
-                              blocId={bloc._id}
-                              noteId={currentNote}
-                              type={bloc.type}
-                              language="javascript"
-                              position={bloc.position}
-                              lineCount={bloc.lineCount}
-                              content={bloc.content}
-                              addBloc={addBloc}
-                              deleteBloc={deleteBloc}
+    if (bloc.type === 'text') {
+      blocComponent = (
+        <TextBloc
+          blocId={bloc._id}
+          noteId={currentNote}
+          type={bloc.type}
+          content={bloc.content}
+          position={bloc.position}
+          height={bloc.height}
+          addBloc={addBloc}
+          deleteBloc={deleteBloc}
+          // switchBlocs={(e) => switchBlocs(e, i)}
           // setBlocsValue={setBlocsValue}
         />
+      );
+    } else if (bloc.type === 'code') {
+      blocComponent = (
+        <CodeBloc
+          blocId={bloc._id}
+          noteId={currentNote}
+          type={bloc.type}
+          language='javascript'
+          position={bloc.position}
+          lineCount={bloc.lineCount}
+          content={bloc.content}
+          addBloc={addBloc}
+          deleteBloc={deleteBloc}
+          // setBlocsValue={setBlocsValue}
+        />
+      );
     }
 
     return <div key={bloc._id}>{blocComponent}</div>;
@@ -237,65 +243,61 @@ export default function Note() {
     }
   };
 
-    //tag 
-  const tagDur= ["JavaScript", "Python", "Go", "CSS","TypeScript", "C#"]
-    const [tag, setTag] = useState("")
-    const [isTagInputVisible, setIsTagInputVisible] = useState(false)
-    const [tags, setTags] = useState([])
-    const userId = useSelector((state) => state.user.value.token);
-    const noteId = useSelector((state) => state.currentNote.value)
+  //tag
+  const tagDur = ['JavaScript', 'Python', 'Go', 'CSS', 'TypeScript', 'C#'];
+  const [tag, setTag] = useState('');
+  const [isTagInputVisible, setIsTagInputVisible] = useState(false);
+  const [tags, setTags] = useState([]);
+  const userId = useSelector((state) => state.user.value.token);
+  const noteId = useSelector((state) => state.currentNote.value);
 
-    const fetchTags = () => {
-        fetch(`${backendUrl}/tags/` + noteId)
-            .then((r) => r.json())
-            .then((d) => setTags(d.tags))
-            .catch((e) => console.error(e.message))
+  const fetchTags = () => {
+    fetch(`${backendUrl}/tags/` + noteId)
+      .then((r) => r.json())
+      .then((d) => setTags(d.tags))
+      .catch((e) => console.error(e.message));
+  };
+
+  useEffect(() => {
+    fetchTags();
+  }, [noteId]);
+
+  const addTag = async () => {
+    try {
+      const response = await fetch(`${backendUrl}/tags/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          value: tag,
+          token: userId,
+          noteId: noteId,
+        }),
+      });
+      const result = await response.json();
+      if (result) {
+        setTag(''); // Réinitialise le champ tag
+        setIsTagInputVisible(false); // Masque le champ input
+        fetchTags();
+      } else {
+        console.error('Error adding tag: ', result.error);
+      }
+    } catch (error) {
+      console.error('Error add tag', error);
     }
+  };
 
-    useEffect(() => {
-        fetchTags()
-    }, [noteId])
-    
-    const addTag = async () => {
-            try {  
-            const response = await fetch(
-                `${backendUrl}/tags/`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', }, 
-                    body: JSON.stringify({
-                        value: tag,
-                        token: userId,
-                        noteId: noteId,
-                     }),  
-                  
-                })
-            const result = await response.json()
-             if (result) {
-                setTag(""); // Réinitialise le champ tag
-                setIsTagInputVisible(false); // Masque le champ input
-                fetchTags()
-            } else {
-                
-                console.error('Error adding tag: ', result.error);
-            }
-        } catch (error) {
-            console.error('Error add tag', error);
-       }} 
-       
-    const handleKeyDown = (event) => {
-        if (event.key === "Enter") {
-            setIsTagInputVisible(false)
-            addTag()
-        }
-
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      setIsTagInputVisible(false);
+      addTag();
     }
-    const inputVis = () => {
-        setIsTagInputVisible(!isTagInputVisible)
-    }        
-    
+  };
+  const inputVis = () => {
+    setIsTagInputVisible(!isTagInputVisible);
+  };
+
   const container =
-    'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black';
+    'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black w-auto';
   const topContainer = 'flex justify-between items-center w-full h-12';
   const title = 'text-2xl font-bold';
   const icons =
@@ -338,22 +340,24 @@ export default function Note() {
       </div>
       <div className={metadataContainer}>
         <div className={tagsContainer}>
-            {tags.map((t) => <Tag key={t._id}>{t.value}</Tag>)}
-              {isTagInputVisible && (
-                <div className="flex items-center">
-                  <input
-                    type='text'
-                    placeholder='Ajoute un tag bro'
-                    onChange={(e) => setTag(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    value={tag}
-                    className="border p-2 rounded mr-2 "
-                  />
-                  {/* <button onClick={addTag} className="p-2 bg-darkPurple text-white rounded">
+          {tags.map((t) => (
+            <Tag key={t._id}>{t.value}</Tag>
+          ))}
+          {isTagInputVisible && (
+            <div className='flex items-center'>
+              <input
+                type='text'
+                placeholder='Ajoute un tag bro'
+                onChange={(e) => setTag(e.target.value)}
+                onKeyDown={handleKeyDown}
+                value={tag}
+                className='border p-2 rounded mr-2 '
+              />
+              {/* <button onClick={addTag} className="p-2 bg-darkPurple text-white rounded">
                     <FontAwesomeIcon icon={faCircleCheck} />
                   </button> */}
-                </div>
-              )}
+            </div>
+          )}
           <button>
             <FontAwesomeIcon
               icon={faCirclePlus}
