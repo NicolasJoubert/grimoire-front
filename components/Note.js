@@ -18,13 +18,20 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export default function Note() {
   const [noteData, setNoteData] = useState({});
   const [blocCount, setBlocCount] = useState(1);
+  const [tagInput, setTagInput] = useState("")
+  const [tags, setTags] = useState([])
+  const [isTagInputVisible, setIsTagInputVisible] = useState(false)
+  
   const dispatch = useDispatch();
+  const userId = useSelector((state) => state.user.value.token);
+  const noteId = useSelector((state) => state.currentNote.value)
 
-  const currentNote = useSelector((state) => state.currentNote.value);
+  // ************ ALL FUNCTIONS *************
 
+  /** Retrieve note from database */
   const fetchNote = async () => {
     try {
-      const response = await fetch(`${backendUrl}/notes/${currentNote}`);
+      const response = await fetch(`${backendUrl}/notes/${noteId}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -50,13 +57,14 @@ export default function Note() {
     }
   };
 
+  /** Save note when title is changed and update updatedAt  */
   const saveNote = async () => {
     // IMPORTANT : do not save blocs, only updated last modified and title
     try {
       const response = await fetch(`${backendUrl}/notes/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ noteId: currentNote, noteData }),
+        body: JSON.stringify({ noteId, noteData }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -68,26 +76,27 @@ export default function Note() {
     }
   };
 
-  /** Fetch note in database based on ID in currentNote reducer
-   * Automatically had a bloc on creation
-   */
-  useEffect(() => {
-      fetchNote();
-  }, [currentNote, blocCount]);
+  /** delete note in database and remove it from store */
+  const deleteNote = async () => {
+    try {
+      const response = await fetch(
+        `${backendUrl}/notes/delete/${noteId}`,
+        { method: 'DELETE' }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
 
-  /** Updates note in database when noteData is changed */
-  useEffect(() => {
-    saveNote();
-  }, [noteData, blocCount]); // Adding blocsCount allow to update lastmodified when bloc is added or deleted
-
-  /** Change title value in noteData state when changed */
-  const handleTitleChange = (event) => {
-    const newTitle = event.target.value;
-    setNoteData((prevData) => ({
-      ...prevData, // Copy all other properties
-      title: newTitle, // Update only the title
-    }));
-    dispatch(updateTitleNote(newTitle));
+      if (data.result) {
+        console.log('Note deleted successfully');
+        dispatch(removeCurrentNote());
+      } else {
+        console.error('Error deleting note:', data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting note:', error);
+    }
   };
 
   /** Add a bloc below the one which created it */
@@ -127,7 +136,7 @@ export default function Note() {
     // delete bloc ONLY if there are more than 1 bloc
     if (blocCount > 1) {
       const response = await fetch(
-        `${backendUrl}/blocs/${blocId}/${currentNote}`,
+        `${backendUrl}/blocs/${blocId}/${noteId}`,
         {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
@@ -138,78 +147,21 @@ export default function Note() {
     }
   };
 
-  // const switchBlocs = (e, index) => {
-  //   if (e.key === 'ArrowDown') {
-  //     if (index < blocCount - 1) {
-  //       blocRefs.current[index + 1].commands.focus();
-  //     }
-  //   } else if (e.key === 'ArrowUp') {
-  //     if (index > 0) {
-  //       blocRefs.current[index - 1].commands.focus();
-  //     }
-  //   }
-  // };
-
-  const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
-    let blocComponent = null;
-
-      if (bloc.type === "text") {
-        blocComponent =  <TextBloc 
-                              blocId={bloc._id}
-                              noteId={currentNote}
-                              type={bloc.type}
-                              content={bloc.content}
-                              position={bloc.position}
-                              height={bloc.height}
-                              addBloc={addBloc}
-                              deleteBloc={deleteBloc}
-                              // switchBlocs={(e) => switchBlocs(e, i)}
-          // setBlocsValue={setBlocsValue}
-                          />
-      } else if (bloc.type === "code") {
-        blocComponent =  <CodeBloc 
-                              blocId={bloc._id}
-                              noteId={currentNote}
-                              type={bloc.type}
-                              language="javascript"
-                              position={bloc.position}
-                              lineCount={bloc.lineCount}
-                              content={bloc.content}
-                              addBloc={addBloc}
-                              deleteBloc={deleteBloc}
-          // setBlocsValue={setBlocsValue}
-        />
-    }
-
-    return <div key={bloc._id}>{blocComponent}</div>;
-  });
-
-  const deleteNote = async () => {
-    try {
-      const response = await fetch(
-        `${backendUrl}/notes/delete/${currentNote}`,
-        { method: 'DELETE' }
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-
-      if (data.result) {
-        console.log('Note deleted successfully');
-        dispatch(removeCurrentNote());
-      } else {
-        console.error('Error deleting note:', data.error);
-      }
-    } catch (error) {
-      console.error('Error deleting note:', error);
-    }
+  /** Change title value in noteData state when changed */
+  const handleTitleChange = (event) => {
+    const newTitle = event.target.value;
+    setNoteData((prevData) => ({
+      ...prevData, // Copy all other properties
+      title: newTitle, // Update only the title
+    }));
+    dispatch(updateTitleNote(newTitle));
   };
 
+  /** Update note favorite status */
   const addRemoveFavorite = async () => {
     try {
       const response = await fetch(
-        `${backendUrl}/notes/addfavorites/${currentNote}`,
+        `${backendUrl}/notes/addfavorites/${noteId}`,
         {
           method: 'PUT',
           headers: {
@@ -236,64 +188,110 @@ export default function Note() {
       console.error('Error add or Remove favorite note', error);
     }
   };
+  
+  /** Get tags from database */
+  const fetchTags = () => {
+      fetch(`${backendUrl}/tags/` + noteId)
+          .then((r) => r.json())
+          .then((d) => setTags(d.tags))
+          .catch((e) => console.error(e.message))
+  }
 
-    //tag 
-  const tagDur= ["JavaScript", "Python", "Go", "CSS","TypeScript", "C#"]
-    const [tag, setTag] = useState("")
-    const [isTagInputVisible, setIsTagInputVisible] = useState(false)
-    const [tags, setTags] = useState([])
-    const userId = useSelector((state) => state.user.value.token);
-    const noteId = useSelector((state) => state.currentNote.value)
+  /** Manage keyboard interactions for tags */
+  const handleTagKeyDown = (event) => {
+    if (event.key === "Enter") {
+        setIsTagInputVisible(false)
+        addTag()
+    }
+  }
+  
+  /** Show tag input  */
+  const displayTagInput = () => {
+    setIsTagInputVisible(!isTagInputVisible)
+  } 
+     
+  /** Create tag in database and fetch tags  */
+  const addTag = async () => {
+    try {  
+      const response = await fetch(`${backendUrl}/tags/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', }, 
+        body: JSON.stringify({
+            value: tagInput,
+            token: userId,
+            noteId: noteId,
+          }),   
+      })
+      const result = await response.json()
+        if (result) {
+          setTagInput(""); // Réinitialise le champ tag
+          setIsTagInputVisible(false); // Masque le champ input
+          fetchTags()
+      } else {
+        console.error('Error adding tag: ', result.error);
+      }
+    } catch (error) {
+      console.error('Error add tag', error);
+    }};
 
-    const fetchTags = () => {
-        fetch(`${backendUrl}/tags/` + noteId)
-            .then((r) => r.json())
-            .then((d) => setTags(d.tags))
-            .catch((e) => console.error(e.message))
+  // ************ ALL USE EFFECTS *************
+  
+
+  /** Fetch note in database based on ID in currentNote reducer
+   * Automatically add a bloc on creation
+   */
+  useEffect(() => {
+      fetchNote();
+  }, [noteId, blocCount]);
+
+  /** Updates note in database when noteData is changed */
+  useEffect(() => {
+    saveNote();
+  }, [noteData, blocCount]); // Adding blocsCount allow to update lastmodified when bloc is added or deleted
+
+  /** Fetch tag when currentNote is changed */
+  useEffect(() => {
+    fetchTags()
+  }, [noteId])
+
+ // ***************   BLOCS RENDERER   ***********************
+
+  const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
+    let blocComponent = null;
+
+      if (bloc.type === "text") {
+        blocComponent =  <TextBloc 
+                              blocId={bloc._id}
+                              noteId={noteId}
+                              type={bloc.type}
+                              content={bloc.content}
+                              position={bloc.position}
+                              height={bloc.height}
+                              addBloc={addBloc}
+                              deleteBloc={deleteBloc}
+                              // switchBlocs={(e) => switchBlocs(e, i)}
+          // setBlocsValue={setBlocsValue}
+                          />
+      } else if (bloc.type === "code") {
+        blocComponent =  <CodeBloc 
+                              blocId={bloc._id}
+                              noteId={noteId}
+                              type={bloc.type}
+                              language="javascript"
+                              position={bloc.position}
+                              lineCount={bloc.lineCount}
+                              content={bloc.content}
+                              addBloc={addBloc}
+                              deleteBloc={deleteBloc}
+          // setBlocsValue={setBlocsValue}
+        />
     }
 
-    useEffect(() => {
-        fetchTags()
-    }, [noteId])
-    
-    const addTag = async () => {
-            try {  
-            const response = await fetch(
-                `${backendUrl}/tags/`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', }, 
-                    body: JSON.stringify({
-                        value: tag,
-                        token: userId,
-                        noteId: noteId,
-                     }),  
-                  
-                })
-            const result = await response.json()
-             if (result) {
-                setTag(""); // Réinitialise le champ tag
-                setIsTagInputVisible(false); // Masque le champ input
-                fetchTags()
-            } else {
-                
-                console.error('Error adding tag: ', result.error);
-            }
-        } catch (error) {
-            console.error('Error add tag', error);
-       }} 
-       
-    const handleKeyDown = (event) => {
-        if (event.key === "Enter") {
-            setIsTagInputVisible(false)
-            addTag()
-        }
+    return <div key={bloc._id}>{blocComponent}</div>;
+  });
 
-    }
-    const inputVis = () => {
-        setIsTagInputVisible(!isTagInputVisible)
-    }        
-    
+ // ***************   STYLE MANAGEMENT   ***********************
+
   const container =
     'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black';
   const topContainer = 'flex justify-between items-center w-full h-12';
@@ -305,6 +303,9 @@ export default function Note() {
   const tagsContainer = 'flex justify-start items-center';
   const dates = 'flex flex-col justify-center items-end';
   const blocsContainer = 'flex-1 flex-col justify-start items start py-3';
+
+
+  // ***************   NOTE DISPLAY  ***********************
 
   return (
     <div className={container}>
@@ -344,9 +345,9 @@ export default function Note() {
                   <input
                     type='text'
                     placeholder='Ajoute un tag bro'
-                    onChange={(e) => setTag(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    value={tag}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={handleTagKeyDown}
+                    value={tagInput}
                     className="border p-2 rounded mr-2 "
                   />
                   {/* <button onClick={addTag} className="p-2 bg-darkPurple text-white rounded">
@@ -358,7 +359,7 @@ export default function Note() {
             <FontAwesomeIcon
               icon={faCirclePlus}
               className={icons}
-              onClick={inputVis}
+              onClick={displayTagInput}
             />
           </button>
         </div>

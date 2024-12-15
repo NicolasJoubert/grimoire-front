@@ -10,8 +10,10 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github_light_default";
 import "ace-builds/src-noconflict/theme-dracula";
+
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/mode-golang";
 
 // import "ace-builds/src-noconflict/worker-javascript";
 
@@ -36,6 +38,15 @@ const CodeBloc = ({
     const [lineCounter, setLineCounter] = useState(lineCount);
     const [blocHeight, setBlocHeight] = useState('80px'); // not linked to backend
     const [isBlocHovered, setIsBlocHovered] = useState(false);   
+
+    const [selectedLanguage, setSelectedLanguage] = useState({ displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true })
+    const languages = [
+        { displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true },
+        { displayValue: "Python 3", editorValue: "python", apiValue: "python3", isExecutable: true },
+        { displayValue: "Go", editorValue: "golang", apiValue: "go", isExecutable: true },
+        { displayValue: "CSS", editorValue: "css", apiValue: null, isExecutable: false },
+        // to add: java, ruby, json, xml, shell script, html... => compare ace editor and jdoodle doc
+    ]
 
     useEffect(() => {
         // increase blocHeight on every 5 lines added
@@ -71,6 +82,13 @@ const CodeBloc = ({
         saveBloc(newCode);
     };
 
+    // Handler for when selected language changes
+    const handleSelectedLanguageChange = (event) => {
+        setSelectedLanguage(
+            languages.find(language => language.displayValue === event.target.value)
+        );
+    };
+
     /** Exec code and display result */
     const runCode = async () => {
         setIsRunCodeShown(true)
@@ -78,9 +96,10 @@ const CodeBloc = ({
         const response = await fetch(`${backendUrl}/dev`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code})
+            body: JSON.stringify({ code, language: selectedLanguage.apiValue })
           })
           const apiResponse = await response.json()
+          console.log("apiResponse => ", apiResponse)
 
           if (apiResponse.result) {
             setRunResult(apiResponse.data.output)
@@ -147,9 +166,15 @@ const CodeBloc = ({
             </Popover>
             <div className={codeblocContainer}>
                 <div className={editorContainer}>
-                    <input type="text" placeholder='Javascript' /> 
+                <div>
+                    <select id="language-select" value={selectedLanguage.displayValue} onChange={handleSelectedLanguageChange}>
+                        {languages.map((language) => (
+                            <option key={language.displayValue} value={language.displayValue}>{language.displayValue}</option>
+                        ))}
+                    </select>
+                </div>
                     <AceEditor
-                        mode="javascript" // Language mode
+                        mode={selectedLanguage.editorValue} // Language mode
                         theme="dracula" // Theme
                         value={code} // Current code
                         onChange={handleCodeChange} // Update state on code change
@@ -169,10 +194,10 @@ const CodeBloc = ({
                         }}
                     />
                 </div>
-                <div className={executionContainer}>
+                {selectedLanguage.isExecutable && <div className={executionContainer}>
                     <button className={runButton} onClick={runCode}>RUN</button>
                     {isRunCodeShown && <div className={executedCodeContainer}>{runResult}</div>} {/* Div that rendered the result of code execution */}
-                </div>
+                </div>}
             </div>
         </div>
     )
