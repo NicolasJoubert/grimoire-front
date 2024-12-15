@@ -39,7 +39,7 @@ const CodeBloc = ({
     const [blocHeight, setBlocHeight] = useState('80px'); // not linked to backend
     const [isBlocHovered, setIsBlocHovered] = useState(false);   
 
-    const [selectedLanguage, setSelectedLanguage] = useState({ displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs" })
+    const [selectedLanguage, setSelectedLanguage] = useState({ displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true })
     const languages = [
         { displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true },
         { displayValue: "Python 3", editorValue: "python", apiValue: "python3", isExecutable: true },
