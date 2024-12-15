@@ -118,11 +118,10 @@ export default function SidebarRight({toggleSidebarRight}) {
   ))
 
   //Liste des notes mise a jour au jour J
-  const listUpdatedNote = updates.filter(note => note.updatedAt !== note.createdAt)
-  .map((update, index) => (
-    <NoteLink key={index} title={update.title} noteId={update.id}/>
-  ))
-
+  const listUpdatedNote = updates.map((update, index) => (
+      <NoteLink key={index} title={update.title} noteId={update.id}/>
+    ))
+  
   return (
     <div className="h-full w-64 bg-backgroundColor flex flex-col px-4 relatif">
       <div className='flex justify-start'>
