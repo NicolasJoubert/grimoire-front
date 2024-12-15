@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { TbLayoutSidebarLeftExpandFilled, TbLayoutSidebarRightExpandFilled } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 
-
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export default function Searchbar({
@@ -14,14 +13,13 @@ export default function Searchbar({
   isSidebarLeftVisible,
   isSidebarRightVisible,
   onOutsideClick
-
+  
 }) {
   const [search, setSearch] = useState('');
   const [searchedNotes, setSearchedNotes] = useState([]);
   const [tag, setTag] = useState([]);
   const [isSearchResultVisible, setIsSearchResultVisible] = useState(false);
   const token = useSelector((state) => state.user.value.token);
-  
   
   //Input value gestion
   const changeInput = (inputValue) => {
@@ -54,6 +52,7 @@ export default function Searchbar({
   //gestion du click exterieur ************************/
   const elementRef = useRef(null);
   useEffect(() => {
+    
     // Fonction de gestion du clic
     const handleClickOutside = (event) => {
       if (elementRef.current && !elementRef.current.contains(event.target)) {
@@ -71,9 +70,6 @@ export default function Searchbar({
   }, [onOutsideClick]);
  //END gestion du click exterieur ************************/
 
-  
-
-
   //HASTAG creation liste 
   let tags = tag.map((hastag, i) => {
     return (
@@ -90,7 +86,7 @@ export default function Searchbar({
   let notes = []
   if(searchedNotes.length > 0){
     notes = searchedNotes.map((note, i) => {
-      return <NoteLink key={i} title={note.title} noteId={note._id}/>;
+      return <button onClick={()=> setIsSearchResultVisible(false)} className='text-left'><NoteLink key={i} title={note.title} noteId={note._id}/></button>;
     });
   }
 
