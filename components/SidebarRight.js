@@ -122,7 +122,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
   ));
 
   return (
-    <div className='h-full w-64 bg-backgroundColor flex flex-col overflow-hidden'>
+    <div className='h-full w-64 bg-backgroundColor flex flex-col'>
       <div className='flex justify-start'>
         <button className='pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
           <TbLayoutSidebarRightCollapseFilled
@@ -163,11 +163,11 @@ export default function SidebarRight({ toggleSidebarRight }) {
       </div>
 
       {/* Section des Notes du jour */}
-      <div className='border-b-2 border-solid border-gray pl-4'>
+      <div className='border-b-2 border-solid border-gray pl-4 '>
         <h3 className=' font-bold text-darkPurple'>
           Note{notes.length > 0 && 's'} du jour
         </h3>
-        <ul className='list-disc list-inside text-black overflow-y-auto h-[85%] max-h-[100px]'>
+        <ul className='list-disc list-inside text-black overflow-y-auto max-h-[100px] mr-4'>
           {/* Affichage de chaque note */}
 
           {notes.length > 0 ? listNote : 'Aucune note aujourdhui'}
@@ -179,7 +179,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
       {updates.length > 0 && (
         <div className='border-b-2 border-solid border-gray pl-4'>
           <h3 className=' font-bold text-darkPurple'>Mise à jour</h3>
-          <ul className='list-disc list-inside text-black overflow-y-scroll max-h-[125px]'>
+          <ul className='list-disc list-inside text-black overflow-y-auto max-h-[125px] mr-4'>
             {/* Affichage de chaque mise à jour */}
             {listUpdatedNote}
           </ul>
