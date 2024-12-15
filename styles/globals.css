@@ -7,7 +7,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color: backgroundColor;
+  background-color: #f5f7fb;
 }
 
 * {
@@ -35,4 +35,8 @@ https://www.youtube.com/watch?v=Sfb2KNEC8_Y
 
 ::-webkit-scrollbar-thumb:hover {
   background: #462888;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 1px;
 }
