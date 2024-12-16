@@ -117,9 +117,9 @@ export default function SidebarRight({ toggleSidebarRight }) {
 
   //Liste des notes mise a jour au jour J
   const listUpdatedNote = updates.map((update, index) => (
-      <NoteLink key={index} title={update.title} noteId={update.id}/>
-    ))
-  
+    <NoteLink key={index} title={update.title} noteId={update.id} />
+  ));
+
   return (
     <div className='h-full w-64 bg-backgroundColor flex flex-col'>
       <div className='flex justify-start'>
@@ -166,7 +166,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
         <h3 className=' font-bold text-darkPurple'>
           Note{notes.length > 0 && 's'} du jour
         </h3>
-        <ul className='list-disc list-inside text-black overflow-y-auto max-h-[100px] mr-4'>
+        <ul className='list-disc list-inside text-black overflow-y-auto min-h-[160px] max-h-[160px] mr-4'>
           {/* Affichage de chaque note */}
 
           {notes.length > 0 ? listNote : 'Aucune note aujourdhui'}
@@ -178,7 +178,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
       {updates.length > 0 && (
         <div className='border-b-2 border-solid border-gray pl-4'>
           <h3 className=' font-bold text-darkPurple'>Mise à jour</h3>
-          <ul className='list-disc list-inside text-black overflow-y-auto max-h-[125px] mr-4'>
+          <ul className='list-disc list-inside text-black overflow-y-auto min-h-[160px] max-h-[160px] mr-4'>
             {/* Affichage de chaque mise à jour */}
             {listUpdatedNote}
           </ul>
@@ -186,7 +186,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
       )}
 
       {/* Calendrier */}
-      <div className="top-[70%] p-2 absolute w-[19%]">
+      <div className='top-[80%] p-2 w-[100%]'>
         {/* Jours de la semaine */}
         <div className='grid grid-cols-7 gap-2 text-center text-sm font-medium'>
           {daysOfWeek.map((day, index) => (
