@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUsernameInStore, updateProfilePicInStore, updateDefaultDevLangInStore } from '../reducers/user';
+import { 
+    updateUsernameInStore, 
+    updateProfilePicInStore, 
+    updateDefaultDevLangInStore,
+    updateDefaultEditorThemeInStore
+ } from '../reducers/user';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear,faHatWizard, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
-import LanguageSelector from './LanguageSelector';
+import LanguageSelector from './Selectors/LanguageSelector';
+import EditorThemeSelector from './Selectors/EditorThemeSelector';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -17,6 +23,7 @@ const Settings = () => {
     
     const [username, setUsername] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage)
+    const [selectedEditorTheme, setSelectedEditorTheme] = useState(user.defaultEditorTheme)
 
     /** Change username in database and updates reducer */
     const updateUsername = async () => {
@@ -35,6 +42,7 @@ const Settings = () => {
         }
     };
 
+    /** Change default lang in database and updates reducer */
     const updateDefaultDevLang = async () => {
         // Update user in database
         try {
@@ -51,9 +59,27 @@ const Settings = () => {
         }
     };
 
+    /** Change default editor theme in database and updates reducer */
+    const updateDefaultEditorTheme = async () => {
+        // Update user in database
+        try {
+            const response = await fetch(`${backendUrl}/users/update/editorTheme`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: user.token, defaultEditorTheme: selectedEditorTheme.displayValue }),
+            });
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            data.result && dispatch(updateDefaultEditorThemeInStore(selectedEditorTheme)) 
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
     const changeUserInfo = () => {
         ((username) && (username !== user.username)) && updateUsername()
         selectedLanguage !== user.defaultDevLanguage && updateDefaultDevLang()
+        selectedEditorTheme !== user.defaultEditorTheme && updateDefaultEditorTheme()
         router.push("/home")
     }
 
@@ -101,10 +127,9 @@ const Settings = () => {
                 {/* Choix du thèmes de l'éditeur de code*/}
                 <div className='flex flex-col items-center'>
                     <p className='text-darkPurple font-bold'>Thème</p>
-                    <select>
-                        <option value="Monokai">Monokai</option>
-                        <option value="Dracula">Dracula</option>
-                    </select>
+                    <EditorThemeSelector 
+                        selectedEditorTheme={selectedEditorTheme}
+                        setSelectedEditorTheme={setSelectedEditorTheme}/>
                 </div>  
 
                 {/* Confirmer les changements */}

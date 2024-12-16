@@ -40,9 +40,20 @@ export const userSlice = createSlice({
     },
     updateDefaultDevLangInStore: (state, action) => {
       state.value.defaultDevLanguage = action.payload;
+    },
+    updateDefaultEditorThemeInStore: (state, action) => {
+      state.value.defaultEditorTheme = action.payload;
     }
   },
 });
 
-export const { login, logout, updateUsernameInStore, updateProfilePicInStore, updateDefaultDevLangInStore } = userSlice.actions;
+export const { 
+  login, 
+  logout, 
+  updateUsernameInStore, 
+  updateProfilePicInStore, 
+  updateDefaultDevLangInStore,
+  updateDefaultEditorThemeInStore 
+} = userSlice.actions;
+
 export default userSlice.reducer;

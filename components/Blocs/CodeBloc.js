@@ -19,7 +19,7 @@ import "ace-builds/src-noconflict/mode-python";
 
 // import "ace-builds/src-noconflict/worker-javascript";
 
-import LanguageSelector from '../LanguageSelector';
+import LanguageSelector from '../Selectors/LanguageSelector';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -79,13 +79,6 @@ const CodeBloc = ({
         saveBloc(newCode);
     };
 
-    // // Handler for when selected language changes
-    // const handleSelectedLanguageChange = (event) => {
-    //     setSelectedLanguage(
-    //         languages.find(language => language.displayValue === event.target.value)
-    //     );
-    // };
-
     /** Exec code and display result */
     const runCode = async () => {
         setIsRunCodeShown(true)
@@ -96,7 +89,6 @@ const CodeBloc = ({
             body: JSON.stringify({ code, language: selectedLanguage.apiValue })
           })
           const apiResponse = await response.json()
-          console.log("apiResponse => ", apiResponse)
 
           if (apiResponse.result) {
             setRunResult(apiResponse.data.output)
@@ -169,7 +161,7 @@ const CodeBloc = ({
 
                     <AceEditor
                         mode={selectedLanguage.editorValue} // Language mode
-                        theme="dracula" // Theme
+                        theme={user.defaultEditorTheme.editorValue} // Theme
                         value={code} // Current code
                         onChange={handleCodeChange} // Update state on code change
                         onLoad={handleEditorLoad}
