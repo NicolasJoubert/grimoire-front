@@ -28,6 +28,7 @@ export default function Note() {
   const [tags, setTags] = useState([]);
   const [isTagInputVisible, setIsTagInputVisible] = useState(false);
   const [titleForwardNotes, setTitleForwardNotes] = useState([]);
+  const [titleBackwaardNotes, setTitleBackwardNotes] = useState([]);
 
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.value.token);
@@ -65,10 +66,10 @@ export default function Note() {
   };
 
   /**Retrieve linked note forward */
-  const fetchNoteLinkedForward = async () => {
+  const fetchLinkedNotes = async (direction) => {
     try {
       const response = await fetch(
-        backendUrl + `/notes/linked/forward/${noteId}`
+        backendUrl + `/notes/linked/${direction}/${noteId}`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -76,7 +77,11 @@ export default function Note() {
       const data = await response.json();
       console.log(data);
       if (data.result) {
-        setTitleForwardNotes(data.forwardNotes);
+        if (direction === 'forward') {
+          setTitleForwardNotes(data.forwardNotes);
+        } else if (direction === 'backward') {
+          setTitleBackwardNotes(data.backwardNotes);
+        }
       } else {
         console.error('Erreur lors de la récupération des notes', err.message);
       }
@@ -277,7 +282,10 @@ export default function Note() {
 
   /**Fetch forward linked note */
   useEffect(() => {
-    fetchNoteLinkedForward();
+    if (noteId) {
+      fetchLinkedNotes('forward');
+      fetchLinkedNotes('backward');
+    }
   }, [noteId]);
 
   // ***************   BLOCS RENDERER   ***********************
@@ -409,6 +417,14 @@ export default function Note() {
       <div className={blocksLinkedContainer}>
         <div className={blocksBackwardNotesContainer}>
           <h3 className={titleLinkedNote}>Notes liées :</h3>
+          {titleBackwaardNotes.map((note, i) => (
+            <NoteLink
+              key={i}
+              title={note.title}
+              noteId={note.id}
+              stylePage='forwardTitle'
+            />
+          ))}
         </div>
         <div className={blocksForwardNotesContainer}>
           <h3 className={titleLinkedNote}>Notes reférencées :</h3>
