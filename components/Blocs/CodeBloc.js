@@ -14,6 +14,7 @@ import "ace-builds/src-noconflict/theme-dracula";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-golang";
+import "ace-builds/src-noconflict/mode-css";
 
 // import "ace-builds/src-noconflict/worker-javascript";
 
