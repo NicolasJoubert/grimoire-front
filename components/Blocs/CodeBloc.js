@@ -143,6 +143,7 @@ const CodeBloc = ({
         <div className="">
           <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
           <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "internal link", noteId)}>Internal link</div>
         </div>
     );
 //`h-[${blocHeight}px]`

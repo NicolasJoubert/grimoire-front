@@ -10,6 +10,7 @@ import { toggleFavorite } from '../reducers/changeStatus.js';
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
+import InternalLinkBloc from './Blocs/InternalLinkBloc.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBookmark,
@@ -287,6 +288,17 @@ export default function Note() {
                               deleteBloc={deleteBloc}
           // setBlocsValue={setBlocsValue}
         />
+    } else if (bloc.type === "internal link") {
+      blocComponent =  <InternalLinkBloc 
+                            blocId={bloc._id}
+                            noteId={noteId}
+                            type={bloc.type}
+                            content={bloc.content}
+                            position={bloc.position}
+                            height={bloc.height}
+                            addBloc={addBloc}
+                            deleteBloc={deleteBloc}
+                        />
     }
 
     return <div key={bloc._id}>{blocComponent}</div>;
