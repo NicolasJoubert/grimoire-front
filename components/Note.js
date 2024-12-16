@@ -295,7 +295,7 @@ export default function Note() {
  // ***************   STYLE MANAGEMENT   ***********************
 
   const container =
-    'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black w-auto';
+    'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black min-w-[80%] w-auto';
   const topContainer = 'flex justify-between items-center w-full h-12';
   const title = 'text-2xl font-bold';
   const icons =
@@ -305,6 +305,7 @@ export default function Note() {
   const tagsContainer = 'flex justify-start items-center';
   const dates = 'flex flex-col justify-center items-end';
   const blocsContainer = 'flex-1 flex-col justify-start items start py-3';
+
 
 
   // ***************   NOTE DISPLAY  ***********************
@@ -352,9 +353,6 @@ export default function Note() {
                     value={tagInput}
                     className="border p-2 rounded mr-2 "
                   />
-                  {/* <button onClick={addTag} className="p-2 bg-darkPurple text-white rounded">
-                    <FontAwesomeIcon icon={faCircleCheck} />
-                  </button> */}
             </div>
           )}
           <button>
