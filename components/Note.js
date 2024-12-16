@@ -11,7 +11,12 @@ import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faTrashCan, faCirclePlus, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBookmark,
+  faTrashCan,
+  faCirclePlus,
+  faCircleCheck,
+} from '@fortawesome/free-solid-svg-icons';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -70,7 +75,6 @@ export default function Note() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       await response.json();
-
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -101,14 +105,12 @@ export default function Note() {
 
   /** Add a bloc below the one which created it */
   const addBloc = async (position, type, noteId) => {
-
     // Get blocs in the note that have a position superior to the one creating it
-    const response = await fetch(`${backendUrl}/blocs/${noteId}/${position}`)
-    const data = await response.json()
-    const blocsIds = data.blocs.map(bloc => bloc._id)
+    const response = await fetch(`${backendUrl}/blocs/${noteId}/${position}`);
+    const data = await response.json();
+    const blocsIds = data.blocs.map((bloc) => bloc._id);
 
     if (data.result) {
-
       // if there are blocs below the new one, we increment their position
       if (blocsIds.length > 0) {
         const response = await fetch(`${backendUrl}/blocs/increment`, {
@@ -120,7 +122,7 @@ export default function Note() {
       }
 
       // After potential below blocs were displaced, we create the new bloc
-      const newBlocPosition = position + 1 // new bloc has a position superior by one to the precedent
+      const newBlocPosition = position + 1; // new bloc has a position superior by one to the precedent
       const response = await fetch(`${backendUrl}/blocs/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -128,7 +130,7 @@ export default function Note() {
       });
       const data = await response.json();
       // update bloc count (used to fetch note)
-      data.result && setBlocCount((blocCount += 1))
+      data.result && setBlocCount((blocCount += 1));
     }
   };
 
@@ -293,7 +295,7 @@ export default function Note() {
  // ***************   STYLE MANAGEMENT   ***********************
 
   const container =
-    'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black';
+    'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black w-auto';
   const topContainer = 'flex justify-between items-center w-full h-12';
   const title = 'text-2xl font-bold';
   const icons =
@@ -353,8 +355,8 @@ export default function Note() {
                   {/* <button onClick={addTag} className="p-2 bg-darkPurple text-white rounded">
                     <FontAwesomeIcon icon={faCircleCheck} />
                   </button> */}
-                </div>
-              )}
+            </div>
+          )}
           <button>
             <FontAwesomeIcon
               icon={faCirclePlus}

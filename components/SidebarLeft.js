@@ -2,21 +2,16 @@ import { useState, useEffect } from 'react';
 import NoteLink from './NoteLink.js';
 // REDUCER
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../reducers/user';
-import { deleteCurrentNote } from '../reducers/currentNote';
 
 import { useRouter } from 'next/router';
 
 //ICONES FONTAWESOME
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faRightFromBracket,
-  faMoon,
   faBookmark,
   faFolderPlus,
   faFileCirclePlus,
   faFilter,
-  faHatWizard,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { TbLayoutSidebarLeftCollapseFilled } from 'react-icons/tb';
@@ -88,11 +83,10 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
     fetchNotes();
   }, [currentNote, modifTitle]);
 
-
   return (
     <div className='h-full w-64 bg-backgroundColor flex flex-col'>
       {/* HEADER SIDEBAR */}
-      <div className='flex justify-end'>
+      <div className='flex justify-start pl-4'>
         <button className='pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
           <TbLayoutSidebarLeftCollapseFilled
             size={24}
@@ -105,14 +99,14 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       </div>
 
       {/* FAVORIS */}
-      <div className='border-b-2 border-solid border-gray pl-4 pb-4'>
+      <div className='border-b-2 border-solid border-gray pl-4 pb-4 '>
         <div className='flex items-center justify-normal ml-10'>
           <FontAwesomeIcon icon={faBookmark} className='text-darkPurple' />
           <p className='items-center text-darkPurple mt-0 mb-0 ml-2 font-bold'>
             Favoris
           </p>
         </div>
-        <div className='ml-12'>
+        <div className='ml-12 overflow-y-auto max-h-[150px] mr-2'>
           {selectFavoris.map((favoris, i) => (
             <NoteLink key={i} title={favoris.title} noteId={favoris.id} />
           ))}
@@ -143,7 +137,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       </div>
 
       {/* NOTES TITLE */}
-      <div className='flex-1 overflow-y-auto'>
+      <div className='flex-1 overflow-y-auto pl-4 mr-2'>
         {titleNotes.map((note, i) => (
           <NoteLink
             key={i}
@@ -156,8 +150,8 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       </div>
 
       {/* Utilisation du comaposant ConnectedUser*/}
-        <ConnectedUser />
-      
+
+      <ConnectedUser />
     </div>
   );
 }
