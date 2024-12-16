@@ -29,14 +29,14 @@ export default function Note() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // const createdAt = new Date(data.note.createdAt)
+      // const createdAt = new Date(data.not e.createdAt)
       const data = await response.json();
       if (data.result) {
         setNoteData({
           title: data.note.title,
           createdAt: moment(data.note.createdAt).format('DD/MM/YYYY'),
           updatedAt: moment(data.note.updatedAt).format('DD/MM/YYYY'),
-          blocs: data.note.blocs,
+          blocs: data.note.blocs, 
           forwardNotes: data.note.forwardNotes,
           backwardNotes: data.note.backwardNotes,
           isBookmarded: data.note.isBookmarked,
