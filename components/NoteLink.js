@@ -1,4 +1,4 @@
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { replaceCurrentNote } from '../reducers/currentNote';
 
 function NoteLinks({ title, noteId, isCurrent, stylePage }) {
@@ -17,6 +17,7 @@ function NoteLinks({ title, noteId, isCurrent, stylePage }) {
   const styleAccordingToThePage = {
     // nom de la page -> props ensuite pour dynamiser si note courante
     sidebar: isCurrent && 'bg-darkPurple text-white w-auto',
+    forwardTitle: 'italic text-xs overflow-y-auto',
   };
 
   return (
