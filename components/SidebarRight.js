@@ -117,10 +117,9 @@ export default function SidebarRight({ toggleSidebarRight }) {
 
   //Liste des notes mise a jour au jour J
   const listUpdatedNote = updates.map((update, index) => (
-    <NoteLink key={index} title={update.title} noteId={update.id} />
-    //<NoteLink key={index} title={update.title} noteId={update._id} setSearchBarIsVisible={setSearchBarIsVisible}/>
-  ));
-
+      <NoteLink key={index} title={update.title} noteId={update.id}/>
+    ))
+  
   return (
     <div className='h-full w-64 bg-backgroundColor flex flex-col'>
       <div className='flex justify-start'>
@@ -187,7 +186,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
       )}
 
       {/* Calendrier */}
-      <div className='top-[70%] p-2 absolute w-[24%]'>
+      <div className="top-[70%] p-2 absolute w-[15%]">
         {/* Jours de la semaine */}
         <div className='grid grid-cols-7 gap-2 text-center text-sm font-medium'>
           {daysOfWeek.map((day, index) => (
