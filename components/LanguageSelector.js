@@ -6,15 +6,6 @@ const LanguageSelector = ({ selectedLanguage, setSelectedLanguage }) => {
 
     const [languages, setLanguages] = useState([])
 
-
-    // const languages = [
-    //     { displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true },
-    //     { displayValue: "Python 3", editorValue: "python", apiValue: "python3", isExecutable: true },
-    //     { displayValue: "Go", editorValue: "golang", apiValue: "go", isExecutable: true },
-    //     { displayValue: "CSS", editorValue: "css", apiValue: null, isExecutable: false },
-    //     // to add: java, ruby, json, xml, shell script, html... => compare ace editor and jdoodle doc
-    // ]
-
     // Handler for when selected language changes
     const handleSelectedLanguageChange = (event) => {
         setSelectedLanguage(
