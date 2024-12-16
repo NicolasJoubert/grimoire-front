@@ -66,7 +66,7 @@ export default function Home() {
   //Gestion Click Exterieur searchBar
 
   return (
-    <div className='text-white flex flex-row space-x h-screen w-screen p-0 m-0'>
+    <div className='text-white flex flex-row space-x h-[100vh] w-screen p-0 m-0'>
       {isSidebarLeftVisible && (
         <SidebarLeft
           toggleSidebarLeft={toggleSidebarLeft}
