@@ -12,7 +12,7 @@ export const userSlice = createSlice({
     replaceCurrentNote: (state, action) => {
       state.value = action.payload;
     },
-    deleteCurrentNote: (state) => {
+    removeCurrentNote: (state) => {
       state.value = null;
     },
     updateTitleNote: (state, action) => {
@@ -21,6 +21,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { replaceCurrentNote, deleteCurrentNote, updateTitleNote } =
+export const { replaceCurrentNote, removeCurrentNote, updateTitleNote } =
   userSlice.actions;
 export default userSlice.reducer;
