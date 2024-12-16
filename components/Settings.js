@@ -1,20 +1,61 @@
-import React from 'react';
 import { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUsernameInStore, updateProfilePicInStore, updateDefaultDevLangInStore } from '../reducers/user';
+import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear,faHatWizard, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch, useSelector } from 'react-redux';
 
 import LanguageSelector from './LanguageSelector';
 
-function Settings() {
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-    //ETATS
-    // const [email, setemail] = useState('');
+const Settings = () => {
+    const router = useRouter();
+    const user = useSelector((state) => state.user.value);
+    
+    const dispatch = useDispatch()
+    
     const [username, setUsername] = useState('');
-    // const [password, setPassword] = useState('');
-    // const [confirmpassword, setConfirmPassword] = useState('');
+    const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage)
 
-    const [selectedLanguage, setSelectedLanguage] = useState({ displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true })
+    /** Change username in database and updates reducer */
+    const updateUsername = async () => {
+        // Update user in database
+        try {
+            const response = await fetch(`${backendUrl}/users/update/username`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: user.token, username }),
+            });
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            data.result && dispatch(updateUsernameInStore(username)) 
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    const updateDefaultDevLang = async () => {
+        // Update user in database
+        try {
+            const response = await fetch(`${backendUrl}/users/update/devlang`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: user.token, defaultDevLang: selectedLanguage.displayValue }),
+            });
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            data.result && dispatch(updateDefaultDevLangInStore(selectedLanguage)) 
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    const changeUserInfo = () => {
+        ((username) && (username !== user.username)) && updateUsername()
+        selectedLanguage !== user.defaultDevLanguage && updateDefaultDevLang()
+        router.push("/home")
+    }
 
     return(
         <div className='flex flex-1 '>
@@ -68,8 +109,9 @@ function Settings() {
 
                 {/* Confirmer les changements */}
                 <button
-                    className='bg-darkPurple text-white mb-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out'>
-                    Confirmation
+                    className='bg-darkPurple text-white mb-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out'
+                    onClick={changeUserInfo}
+                    >Confirmation
                 </button>
             </div>
             {/*image de fond */}

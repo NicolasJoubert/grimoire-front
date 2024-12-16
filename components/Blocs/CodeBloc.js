@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import 'antd/dist/antd.css';
 import { Popover } from 'antd';
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 
 import AceEditor from "react-ace";
 
@@ -26,7 +27,6 @@ const CodeBloc = ({
             blocId,
             noteId,
             type,
-            language,
             position,
             lineCount,
             content, 
@@ -34,22 +34,16 @@ const CodeBloc = ({
             addBloc,
         }) => {
 
+    const user = useSelector((state) => state.user.value);
+
     const [code, setCode] = useState(content);    // Set code content, initialized with bloc content in DB
     const [isRunCodeShown, setIsRunCodeShown] = useState(false)
     const [runResult, setRunResult] = useState("")
-    const [devLang, setDevLang] = useState(language)
     const [lineCounter, setLineCounter] = useState(lineCount);
     const [blocHeight, setBlocHeight] = useState('80px'); // not linked to backend
     const [isBlocHovered, setIsBlocHovered] = useState(false);   
 
-    const [selectedLanguage, setSelectedLanguage] = useState({ displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true })
-    // const languages = [
-    //     { displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true },
-    //     { displayValue: "Python 3", editorValue: "python", apiValue: "python3", isExecutable: true },
-    //     { displayValue: "Go", editorValue: "golang", apiValue: "go", isExecutable: true },
-    //     { displayValue: "CSS", editorValue: "css", apiValue: null, isExecutable: false },
-    //     // to add: java, ruby, json, xml, shell script, html... => compare ace editor and jdoodle doc
-    // ]
+    const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage)
 
     useEffect(() => {
         // increase blocHeight on every 5 lines added

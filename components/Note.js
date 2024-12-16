@@ -279,7 +279,6 @@ export default function Note() {
                               blocId={bloc._id}
                               noteId={noteId}
                               type={bloc.type}
-                              language="javascript"
                               position={bloc.position}
                               lineCount={bloc.lineCount}
                               content={bloc.content}
