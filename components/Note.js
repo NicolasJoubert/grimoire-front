@@ -332,7 +332,13 @@ export default function Note() {
     'flex flex-row justify-between items-center w-full h-12';
   const tagsContainer = 'flex justify-start items-center';
   const dates = 'flex flex-col justify-center items-end';
-  const blocsContainer = 'flex-1 flex-col justify-start items start py-3';
+  const blocsContainer =
+    'flex-1 flex-col justify-start items start py-3 max-h-[60%]';
+  const blocksLinkedContainer =
+    'flex flex-row justify-between h-[15%] border-solid border border-black rounded';
+  const blocksBackwardNotesContainer = 'w-[50%] p-1  ';
+  const blocksForwardNotesContainer = 'w-[50%] border-l-2 border-grey p-1 ';
+  const titleLinkedNote = 'text-xs underline';
 
   // ***************   NOTE DISPLAY  ***********************
 
