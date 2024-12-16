@@ -20,6 +20,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
   const [notes, setNotes] = useState([]);
   // Mises à jour
   const [updates, setUpdates] = useState([]);
+  const token = useSelector((state) => state.user.value.token);
 
   //Notes du jour
   useEffect(() => {
@@ -28,7 +29,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
         const response = await fetch(backendUrl + `/notes/by/date`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ date: selectedDate }),
+          body: JSON.stringify({ token: token, date: selectedDate }),
         });
 
         const data = await response.json();
@@ -52,7 +53,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
         const response = await fetch(backendUrl + `/notes/by/update`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ date: selectedDate }),
+          body: JSON.stringify({ token: token, date: selectedDate }),
         });
 
         const data = await response.json();
@@ -168,7 +169,6 @@ export default function SidebarRight({ toggleSidebarRight }) {
         </h3>
         <ul className='list-disc list-inside text-black overflow-y-auto max-h-[100px] mr-4'>
           {/* Affichage de chaque note */}
-
           {notes.length > 0 ? listNote : 'Aucune note aujourdhui'}
         </ul>
       </div>
