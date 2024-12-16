@@ -1,4 +1,3 @@
-// import './styles.scss'
 import clsx from 'clsx';
 import 'antd/dist/antd.css';
 import { Popover } from 'antd';
@@ -20,7 +19,6 @@ import "ace-builds/src-noconflict/mode-python";
 // import "ace-builds/src-noconflict/worker-javascript";
 
 import LanguageSelector from '../LanguageSelector';
-
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -174,13 +172,7 @@ const CodeBloc = ({
                 <LanguageSelector 
                     selectedLanguage={selectedLanguage}
                     setSelectedLanguage={setSelectedLanguage}/>
-                {/* <div>
-                    <select id="language-select" value={selectedLanguage.displayValue} onChange={handleSelectedLanguageChange}>
-                        {languages.map((language) => (
-                            <option key={language.displayValue} value={language.displayValue}>{language.displayValue}</option>
-                        ))}
-                    </select>
-                </div> */}
+
                     <AceEditor
                         mode={selectedLanguage.editorValue} // Language mode
                         theme="dracula" // Theme
