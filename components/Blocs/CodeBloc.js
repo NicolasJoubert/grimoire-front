@@ -10,23 +10,27 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github_light_default";
 import "ace-builds/src-noconflict/theme-dracula";
-import "ace-builds/src-noconflict/mode-javascript";
 
-// Ensure Ace can find its worker files
-import "ace-builds/src-noconflict/worker-javascript";
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/mode-golang";
+import "ace-builds/src-noconflict/mode-css";
+
+// import "ace-builds/src-noconflict/worker-javascript";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const CodeBloc = ({ 
-    blocId,
-    noteId,
-    type,
-    language,
-    lineCount,
-    content, 
-    deleteBloc,
-    addBloc,
-}) => {
+            blocId,
+            noteId,
+            type,
+            language,
+            position,
+            lineCount,
+            content, 
+            deleteBloc,
+            addBloc,
+        }) => {
 
     const [code, setCode] = useState(content);    // Set code content, initialized with bloc content in DB
     const [isRunCodeShown, setIsRunCodeShown] = useState(false)
@@ -35,6 +39,15 @@ const CodeBloc = ({
     const [lineCounter, setLineCounter] = useState(lineCount);
     const [blocHeight, setBlocHeight] = useState('80px'); // not linked to backend
     const [isBlocHovered, setIsBlocHovered] = useState(false);   
+
+    const [selectedLanguage, setSelectedLanguage] = useState({ displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true })
+    const languages = [
+        { displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true },
+        { displayValue: "Python 3", editorValue: "python", apiValue: "python3", isExecutable: true },
+        { displayValue: "Go", editorValue: "golang", apiValue: "go", isExecutable: true },
+        { displayValue: "CSS", editorValue: "css", apiValue: null, isExecutable: false },
+        // to add: java, ruby, json, xml, shell script, html... => compare ace editor and jdoodle doc
+    ]
 
     useEffect(() => {
         // increase blocHeight on every 5 lines added
@@ -70,6 +83,13 @@ const CodeBloc = ({
         saveBloc(newCode);
     };
 
+    // Handler for when selected language changes
+    const handleSelectedLanguageChange = (event) => {
+        setSelectedLanguage(
+            languages.find(language => language.displayValue === event.target.value)
+        );
+    };
+
     /** Exec code and display result */
     const runCode = async () => {
         setIsRunCodeShown(true)
@@ -77,9 +97,10 @@ const CodeBloc = ({
         const response = await fetch(`${backendUrl}/dev`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code})
+            body: JSON.stringify({ code, language: selectedLanguage.apiValue })
           })
           const apiResponse = await response.json()
+          console.log("apiResponse => ", apiResponse)
 
           if (apiResponse.result) {
             setRunResult(apiResponse.data.output)
@@ -94,7 +115,7 @@ const CodeBloc = ({
     /** Save bloc in DB */
     const saveBloc = async (newCode) => {
         try {
-            const response = await fetch(`${backendUrl}/blocs/`, {
+            const response = await fetch(`${backendUrl}/blocs/save`, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ blocId, type, content: newCode, language })
@@ -116,8 +137,8 @@ const CodeBloc = ({
     const popoverContentStyle = "flex w-full focus:outline-none bg-lightPurple text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 hover:cursor-pointer"
     const popoverContent = (
         <div className="">
-          <div className={popoverContentStyle} onClick={() => addBloc("text", noteId)}>Texte</div>
-          <div className={popoverContentStyle} onClick={() => addBloc("code", noteId)}>Code</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
         </div>
     );
 //`h-[${blocHeight}px]`
@@ -142,13 +163,19 @@ const CodeBloc = ({
             <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
                 <div 
                     className={buttonStyle}
-                    onClick={() => addBloc(type, noteId)}>+</div>
+                    onClick={() => addBloc(position, type, noteId)}>+</div>
             </Popover>
             <div className={codeblocContainer}>
                 <div className={editorContainer}>
-                    <input type="text" placeholder='Javascript' /> 
+                <div>
+                    <select id="language-select" value={selectedLanguage.displayValue} onChange={handleSelectedLanguageChange}>
+                        {languages.map((language) => (
+                            <option key={language.displayValue} value={language.displayValue}>{language.displayValue}</option>
+                        ))}
+                    </select>
+                </div>
                     <AceEditor
-                        mode="javascript" // Language mode
+                        mode={selectedLanguage.editorValue} // Language mode
                         theme="dracula" // Theme
                         value={code} // Current code
                         onChange={handleCodeChange} // Update state on code change
@@ -168,10 +195,10 @@ const CodeBloc = ({
                         }}
                     />
                 </div>
-                <div className={executionContainer}>
+                {selectedLanguage.isExecutable && <div className={executionContainer}>
                     <button className={runButton} onClick={runCode}>RUN</button>
                     {isRunCodeShown && <div className={executedCodeContainer}>{runResult}</div>} {/* Div that rendered the result of code execution */}
-                </div>
+                </div>}
             </div>
         </div>
     )

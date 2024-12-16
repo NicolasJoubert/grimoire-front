@@ -40,21 +40,33 @@ export default function Home() {
   }, [user, router]);
 
   const createNote = async () => {
+    /** Create note and add a single bloc to it */
     const token = user.token;
+    // Create note
     const response = await fetch(`${backendUrl}/notes/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
     });
     const data = await response.json();
-    data.result && dispatch(replaceCurrentNote(data.note._id));
+    const noteId = data.note._id;
+    if (data.result) {
+      // Place note in store
+      dispatch(replaceCurrentNote(noteId));
+      // Create a text bloc at position 0
+      const response = await fetch(`${backendUrl}/blocs/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ position: 0, type: 'text', noteId }),
+      });
+      await response.json();
+    }
   };
-
 
   //Gestion Click Exterieur searchBar
 
   return (
-    <div className='text-white flex flex-row space-x h-screen p-0 m-0'>
+    <div className='text-white flex flex-row space-x h-screen w-screen p-0 m-0'>
       {isSidebarLeftVisible && (
         <SidebarLeft
           toggleSidebarLeft={toggleSidebarLeft}
