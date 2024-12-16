@@ -310,7 +310,7 @@ export default function Note() {
         />
       );
     } else if (bloc.type === 'code') {
-      blocComponent = (
+      blocComponent = 
         <CodeBloc
           blocId={bloc._id}
           noteId={noteId}
