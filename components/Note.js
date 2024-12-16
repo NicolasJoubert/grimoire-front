@@ -307,20 +307,17 @@ export default function Note() {
           deleteBloc={deleteBloc}
           // switchBlocs={(e) => switchBlocs(e, i)}
           // setBlocsValue={setBlocsValue}
-        />
-      );
-    } else if (bloc.type === 'code') {
-      blocComponent = 
-        <CodeBloc
-          blocId={bloc._id}
-          noteId={noteId}
-          type={bloc.type}
-          language='javascript'
-          position={bloc.position}
-          lineCount={bloc.lineCount}
-          content={bloc.content}
-          addBloc={addBloc}
-          deleteBloc={deleteBloc}
+                          />
+      } else if (bloc.type === "code") {
+        blocComponent =  <CodeBloc 
+                              blocId={bloc._id}
+                              noteId={noteId}
+                              type={bloc.type}
+                              position={bloc.position}
+                              lineCount={bloc.lineCount}
+                              content={bloc.content}
+                              addBloc={addBloc}
+                              deleteBloc={deleteBloc}
           // setBlocsValue={setBlocsValue}
         />
     } else if (bloc.type === "internal link") {

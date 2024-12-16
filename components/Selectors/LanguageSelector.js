@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
+// import { useDispatch, useSelector } from 'react-redux';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const LanguageSelector = ({ selectedLanguage, setSelectedLanguage }) => {
 
     const [languages, setLanguages] = useState([])
+    // const user = useSelector((state) => state.user.value);
 
     // Handler for when selected language changes
     const handleSelectedLanguageChange = (event) => {
