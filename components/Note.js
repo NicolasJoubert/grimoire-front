@@ -307,7 +307,8 @@ export default function Note() {
           deleteBloc={deleteBloc}
           // switchBlocs={(e) => switchBlocs(e, i)}
           // setBlocsValue={setBlocsValue}
-                          />
+                          />)
+
       } else if (bloc.type === "code") {
         blocComponent =  <CodeBloc 
                               blocId={bloc._id}

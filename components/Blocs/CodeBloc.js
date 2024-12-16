@@ -143,8 +143,6 @@ const CodeBloc = ({
     const runButton = "bg-darkPurple text-white w-12 h-8 rounded-md hover:bg-grey transition duration-300 ease-in-out mb-1 mr-2"
     const executedCodeContainer = "flex w-[93%] min-h-8 font-mono text-xs justify-start items-start bg-white rounded-md px-2 mb-1"
 
-    console.log("user", user)
-    console.log("selectedlanguage", selectedLanguage)
     return (                            
         <div 
             className={clsx(container)}
