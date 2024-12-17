@@ -33,7 +33,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
         });
 
         const data = await response.json();
-
+        console.log("data :",data)
         if (data.result && data.notes.length > 0) {
           setNotes(data.notes);
         } else {
