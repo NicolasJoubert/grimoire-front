@@ -8,7 +8,7 @@ import StarterKit from '@tiptap/starter-kit'
 // import ManageBlocsExtension from '../TipTap/ManageBlocsExtension'
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
-
+ 
 const TextBloc = ({ 
             blocId,
             noteId,
