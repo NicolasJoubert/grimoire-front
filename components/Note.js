@@ -340,7 +340,7 @@ export default function Note() {
   // ***************   STYLE MANAGEMENT   ***********************
 
   const container =
-    'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black w-auto ';
+    'flex flex-1 flex-col flex-start bg-white	 border-solid border border-black p-3 rounded-lg text-black w-auto ';
   const topContainer = 'flex justify-between items-center w-full h-12';
   const title = 'text-2xl font-bold';
   const icons =
