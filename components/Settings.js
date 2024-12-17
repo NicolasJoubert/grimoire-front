@@ -12,6 +12,8 @@ import { faGear,faHatWizard, faCirclePlus } from '@fortawesome/free-solid-svg-ic
 import Avatar from './avatar';
 import LanguageSelector from "./Selectors/LanguageSelector";
 import EditorThemeSelector from  "./Selectors/EditorThemeSelector";
+import { imageConfigDefault } from "next/dist/shared/lib/image-config";
+import Image from "next/image";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -23,6 +25,11 @@ const Settings = () => {
     const [username, setUsername] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage)
     const [selectedEditorTheme, setSelectedEditorTheme] = useState(user.defaultEditorTheme)
+    const [avatarPic, setAvatarPic] = useState('/images/HatSorcerer.png');
+
+
+
+
 
     /** Change username in database and updates reducer */
     const updateUsername = async () => {
@@ -97,10 +104,15 @@ const Settings = () => {
 
                 {/* Modification de l'avatar */}
                 <div className="flex flex-col justify-center items-center">
-                    <FontAwesomeIcon icon={faHatWizard} size="4x" className='text-darkPurple mb-3' />
-                    <p className='text-darkPurple'>Modifiez votre Avatar</p>
-                    
-                    <Avatar />
+                    {/* <FontAwesomeIcon icon={faHatWizard} size="4x" className='text-darkPurple mb-3' />
+                    <p className='text-darkPurple'>Modifiez votre Avatar</p> */}
+                    <Image 
+                        src={avatarPic} 
+                        alt="image"
+                        width={100}
+                        height={100} 
+                        />
+                    <Avatar setAvatarPic={setAvatarPic} />
                 </div>
 
                 {/* Modification du username */}
