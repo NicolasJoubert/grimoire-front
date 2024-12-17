@@ -21,7 +21,7 @@
     "@tiptap/react": "^2.10.3",
     "@tiptap/starter-kit": "^2.10.3",
     "ace-builds": "^1.36.5",
-    "antd": "^4.21.3",
+    "antd": "^5.22.5",
     "autoprefixer": "^10.4.20",
     "clsx": "^2.1.1",
     "moment": "^2.30.1",

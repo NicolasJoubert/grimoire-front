@@ -9,18 +9,15 @@ import {
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear,faHatWizard, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-
-import LanguageSelector from './Selectors/LanguageSelector';
-import EditorThemeSelector from './Selectors/EditorThemeSelector';
-
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+import { Modal } from 'antd';
+import Avatar from '../components/avatar';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Settings = () => {
     const router = useRouter();
     const user = useSelector((state) => state.user.value);
     
     const dispatch = useDispatch()
-    
     const [username, setUsername] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage)
     const [selectedEditorTheme, setSelectedEditorTheme] = useState(user.defaultEditorTheme)
@@ -99,11 +96,8 @@ const Settings = () => {
                 <div className="flex flex-col justify-center items-center">
                     <FontAwesomeIcon icon={faHatWizard} size="4x" className='text-darkPurple mb-3' />
                     <p className='text-darkPurple'>Modifiez votre Avatar</p>
-                    <button>
-                        <FontAwesomeIcon icon={faCirclePlus} size="2x" 
-                            className='text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out' 
-                        />
-                    </button>
+                    
+                    <Avatar />
                 </div>
 
                 {/* Modification du username */}

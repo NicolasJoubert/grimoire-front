@@ -1,6 +1,11 @@
 import Settings from "../components/Settings"
+
 function SettingsPage() {
-    return <Settings />;
+    return (
+    <>
+        <Settings />
+    </>
+    );
    }
    
    export default SettingsPage;
