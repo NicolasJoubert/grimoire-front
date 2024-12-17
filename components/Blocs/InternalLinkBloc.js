@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 import { Popover } from 'antd';
 import { useEffect, useState, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -117,7 +117,7 @@ const InternalLinkBloc = ({
         }
     }
 
-    const popoverContentStyle = "flex w-full focus:outline-none bg-lightPurple text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 hover:cursor-pointer"
+    const popoverContentStyle = "flex w-full focus:outline-none text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 pb-1 px-2 mt-2 hover:cursor-pointer"
     const popoverContent = (
         <div className="">
           <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
