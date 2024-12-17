@@ -10,6 +10,8 @@ import { toggleFavorite } from '../reducers/changeStatus.js';
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
+import InternalLinkBloc from './Blocs/InternalLinkBloc.js'
+import NoteLink from './NoteLink.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBookmark,
@@ -23,13 +25,15 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export default function Note() {
   const [noteData, setNoteData] = useState({});
   const [blocCount, setBlocCount] = useState(1);
-  const [tagInput, setTagInput] = useState("")
-  const [tags, setTags] = useState([])
-  const [isTagInputVisible, setIsTagInputVisible] = useState(false)
-  
+  const [tagInput, setTagInput] = useState('');
+  const [tags, setTags] = useState([]);
+  const [isTagInputVisible, setIsTagInputVisible] = useState(false);
+  const [titleForwardNotes, setTitleForwardNotes] = useState([]);
+  const [titleBackwaardNotes, setTitleBackwardNotes] = useState([]);
+
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.value.token);
-  const noteId = useSelector((state) => state.currentNote.value)
+  const noteId = useSelector((state) => state.currentNote.value);
 
   // ************ ALL FUNCTIONS *************
 
@@ -62,6 +66,31 @@ export default function Note() {
     }
   };
 
+  /**Retrieve linked note forward */
+  const fetchLinkedNotes = async (direction) => {
+    try {
+      const response = await fetch(
+        backendUrl + `/notes/linked/${direction}/${noteId}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(data);
+      if (data.result) {
+        if (direction === 'forward') {
+          setTitleForwardNotes(data.forwardNotes);
+        } else if (direction === 'backward') {
+          setTitleBackwardNotes(data.backwardNotes);
+        }
+      } else {
+        console.error('Erreur lors de la récupération des notes', err.message);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   /** Save note when title is changed and update updatedAt  */
   const saveNote = async () => {
     // IMPORTANT : do not save blocs, only updated last modified and title
@@ -83,10 +112,9 @@ export default function Note() {
   /** delete note in database and remove it from store */
   const deleteNote = async () => {
     try {
-      const response = await fetch(
-        `${backendUrl}/notes/delete/${noteId}`,
-        { method: 'DELETE' }
-      );
+      const response = await fetch(`${backendUrl}/notes/delete/${noteId}`, {
+        method: 'DELETE',
+      });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -137,13 +165,10 @@ export default function Note() {
   const deleteBloc = async (blocId) => {
     // delete bloc ONLY if there are more than 1 bloc
     if (blocCount > 1) {
-      const response = await fetch(
-        `${backendUrl}/blocs/${blocId}/${noteId}`,
-        {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      const response = await fetch(`${backendUrl}/blocs/${blocId}/${noteId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
       const data = await response.json();
       data.result && setBlocCount((blocCount -= 1));
     }
@@ -190,60 +215,60 @@ export default function Note() {
       console.error('Error add or Remove favorite note', error);
     }
   };
-  
+
   /** Get tags from database */
   const fetchTags = () => {
-      fetch(`${backendUrl}/tags/` + noteId)
-          .then((r) => r.json())
-          .then((d) => setTags(d.tags))
-          .catch((e) => console.error(e.message))
-  }
+    fetch(`${backendUrl}/tags/` + noteId)
+      .then((r) => r.json())
+      .then((d) => setTags(d.tags))
+      .catch((e) => console.error(e.message));
+  };
 
   /** Manage keyboard interactions for tags */
   const handleTagKeyDown = (event) => {
-    if (event.key === "Enter") {
-        setIsTagInputVisible(false)
-        addTag()
+    if (event.key === 'Enter') {
+      setIsTagInputVisible(false);
+      addTag();
     }
-  }
-  
+  };
+
   /** Show tag input  */
   const displayTagInput = () => {
-    setIsTagInputVisible(!isTagInputVisible)
-  } 
-     
+    setIsTagInputVisible(!isTagInputVisible);
+  };
+
   /** Create tag in database and fetch tags  */
   const addTag = async () => {
-    try {  
+    try {
       const response = await fetch(`${backendUrl}/tags/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', }, 
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            value: tagInput,
-            token: userId,
-            noteId: noteId,
-          }),   
-      })
-      const result = await response.json()
-        if (result) {
-          setTagInput(""); // Réinitialise le champ tag
-          setIsTagInputVisible(false); // Masque le champ input
-          fetchTags()
+          value: tagInput,
+          token: userId,
+          noteId: noteId,
+        }),
+      });
+      const result = await response.json();
+      if (result) {
+        setTagInput(''); // Réinitialise le champ tag
+        setIsTagInputVisible(false); // Masque le champ input
+        fetchTags();
       } else {
         console.error('Error adding tag: ', result.error);
       }
     } catch (error) {
       console.error('Error add tag', error);
-    }};
+    }
+  };
 
   // ************ ALL USE EFFECTS *************
-  
 
   /** Fetch note in database based on ID in currentNote reducer
    * Automatically add a bloc on creation
    */
   useEffect(() => {
-      fetchNote();
+    fetchNote();
   }, [noteId, blocCount]);
 
   /** Updates note in database when noteData is changed */
@@ -253,33 +278,42 @@ export default function Note() {
 
   /** Fetch tag when currentNote is changed */
   useEffect(() => {
-    fetchTags()
-  }, [noteId])
+    fetchTags();
+  }, [noteId]);
 
- // ***************   BLOCS RENDERER   ***********************
+  /**Fetch forward linked note */
+  useEffect(() => {
+    if (noteId) {
+      fetchLinkedNotes('forward');
+      fetchLinkedNotes('backward');
+    }
+  }, [noteId]);
+
+  // ***************   BLOCS RENDERER   ***********************
 
   const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
     let blocComponent = null;
 
-      if (bloc.type === "text") {
-        blocComponent =  <TextBloc 
-                              blocId={bloc._id}
-                              noteId={noteId}
-                              type={bloc.type}
-                              content={bloc.content}
-                              position={bloc.position}
-                              height={bloc.height}
-                              addBloc={addBloc}
-                              deleteBloc={deleteBloc}
-                              // switchBlocs={(e) => switchBlocs(e, i)}
+    if (bloc.type === 'text') {
+      blocComponent = (
+        <TextBloc
+          blocId={bloc._id}
+          noteId={noteId}
+          type={bloc.type}
+          content={bloc.content}
+          position={bloc.position}
+          height={bloc.height}
+          addBloc={addBloc}
+          deleteBloc={deleteBloc}
+          // switchBlocs={(e) => switchBlocs(e, i)}
           // setBlocsValue={setBlocsValue}
-                          />
+                          />)
+
       } else if (bloc.type === "code") {
         blocComponent =  <CodeBloc 
                               blocId={bloc._id}
                               noteId={noteId}
                               type={bloc.type}
-                              language="javascript"
                               position={bloc.position}
                               lineCount={bloc.lineCount}
                               content={bloc.content}
@@ -287,15 +321,26 @@ export default function Note() {
                               deleteBloc={deleteBloc}
           // setBlocsValue={setBlocsValue}
         />
+    } else if (bloc.type === "internal link") {
+      blocComponent =  <InternalLinkBloc 
+                            blocId={bloc._id}
+                            noteId={noteId}
+                            type={bloc.type}
+                            content={bloc.content}
+                            position={bloc.position}
+                            height={bloc.height}
+                            addBloc={addBloc}
+                            deleteBloc={deleteBloc}
+                        />
     }
 
     return <div key={bloc._id}>{blocComponent}</div>;
   });
 
- // ***************   STYLE MANAGEMENT   ***********************
+  // ***************   STYLE MANAGEMENT   ***********************
 
   const container =
-    'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black w-auto';
+    'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black w-auto ';
   const topContainer = 'flex justify-between items-center w-full h-12';
   const title = 'text-2xl font-bold';
   const icons =
@@ -304,8 +349,13 @@ export default function Note() {
     'flex flex-row justify-between items-center w-full h-12';
   const tagsContainer = 'flex justify-start items-center';
   const dates = 'flex flex-col justify-center items-end';
-  const blocsContainer = 'flex-1 flex-col justify-start items start py-3';
-
+  const blocsContainer =
+    'flex-1 flex-col justify-start items start py-3 overflow-y-auto max-h-[60vh]';
+  const blocksLinkedContainer =
+    'flex flex-row justify-between h-[15%] border-solid border border-black rounded';
+  const blocksBackwardNotesContainer = 'w-[50%] p-1  ';
+  const blocksForwardNotesContainer = 'w-[50%] border-l-2 border-grey p-1 ';
+  const titleLinkedNote = 'text-xs underline';
 
   // ***************   NOTE DISPLAY  ***********************
 
@@ -341,18 +391,20 @@ export default function Note() {
       </div>
       <div className={metadataContainer}>
         <div className={tagsContainer}>
-            {tags.map((t) => <Tag key={t._id}>{t.value}</Tag>)}
-              {isTagInputVisible && (
-                <div className="flex items-center">
-                  <input
-                    type='text'
-                    placeholder='Ajoute un tag bro'
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyDown={handleTagKeyDown}
-                    value={tagInput}
-                    className="border p-2 rounded mr-2 "
-                  />
-                  {/* <button onClick={addTag} className="p-2 bg-darkPurple text-white rounded">
+          {tags.map((t) => (
+            <Tag key={t._id}>{t.value}</Tag>
+          ))}
+          {isTagInputVisible && (
+            <div className='flex items-center'>
+              <input
+                type='text'
+                placeholder='Ajoute un tag bro'
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleTagKeyDown}
+                value={tagInput}
+                className='border p-2 rounded mr-2 '
+              />
+              {/* <button onClick={addTag} className="p-2 bg-darkPurple text-white rounded">
                     <FontAwesomeIcon icon={faCircleCheck} />
                   </button> */}
             </div>
@@ -371,6 +423,30 @@ export default function Note() {
         </div>
       </div>
       <div className={blocsContainer}>{renderedBlocs}</div>
+      <div className={blocksLinkedContainer}>
+        <div className={blocksBackwardNotesContainer}>
+          <h3 className={titleLinkedNote}>Notes liées :</h3>
+          {titleBackwaardNotes.map((note, i) => (
+            <NoteLink
+              key={i}
+              title={note.title}
+              noteId={note.id}
+              stylePage='forwardTitle'
+            />
+          ))}
+        </div>
+        <div className={blocksForwardNotesContainer}>
+          <h3 className={titleLinkedNote}>Notes reférencées :</h3>
+          {titleForwardNotes.map((note, i) => (
+            <NoteLink
+              key={i}
+              title={note.title}
+              noteId={note.id}
+              stylePage='forwardTitle'
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

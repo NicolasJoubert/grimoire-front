@@ -16,7 +16,7 @@ export default function ConnectedUser() {
 
   // REDUCER
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.value);
+  const user = useSelector((state) => state.user.value); 
 
   // FONCTION TO DISCONNECT USERS
   const handleLogout = () => {
@@ -25,6 +25,7 @@ export default function ConnectedUser() {
     dispatch(removeCurrentNote());
   };
 
+  
   // TODO FAIRE LA FONCTION DARK LIGHT MODE
   // turn on light or dark mode NOT ACTIVE
   const darkLightMode = () => {
