@@ -1,9 +1,14 @@
 import React from 'react';
 import { useState } from "react";
+import { Modal } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear,faHatWizard, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
+import Avatar from '../components/avatar';
+
+
 function Settings() {
+
 
     //ETATS
     const [email, setemail] = useState('');
@@ -13,7 +18,7 @@ function Settings() {
 
     
    return(
-    <div className='flex flex-1 '>
+    <div className='flex' >
 
         <div className='flex flex-col justify-around items-center w-3/12 bg-backgroundColor'>
             <div className='flex justify-center items-center '>
@@ -21,14 +26,18 @@ function Settings() {
                 <p className='text-darkPurple text-4xl font-bold '>Settings</p>
             </div>
             <div>
-            <FontAwesomeIcon icon={faHatWizard} size="4x" className='text-darkPurple' />
+                <FontAwesomeIcon icon={faHatWizard} size="4x" className='text-darkPurple' />
             </div>
          <p className='text-darkPurple'>Modifier votre Avatar</p>
-         <button>
-         <FontAwesomeIcon icon={faCirclePlus} size="2x" 
-         className='text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out' 
-         />
-         </button>
+         <div className='Modal for avatar settings'>
+         {/* <button>
+            <FontAwesomeIcon icon={faCirclePlus} size="2x" 
+            className='text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out' 
+            /> */}
+            <Avatar />
+
+         {/* </button> */}
+         </div>
          <input className=' w-8/12 rounded-md' type="text" placeholder='Email' onChange={(e) => setemail(e.target.value)} value={email}/>
          <input className=' w-8/12 rounded-md' type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} value={username}/>
          <input className=' w-8/12 rounded-md' type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/>
