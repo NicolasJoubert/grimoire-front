@@ -27,6 +27,7 @@ export default function Note() {
   const [blocCount, setBlocCount] = useState(1);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
+  const [tagCount, setTagCount] = useState(1);
   const [isTagInputVisible, setIsTagInputVisible] = useState(false);
   const [titleForwardNotes, setTitleForwardNotes] = useState([]);
   const [titleBackwaardNotes, setTitleBackwardNotes] = useState([]);
@@ -261,6 +262,7 @@ export default function Note() {
       if (result) {
         setTagInput(''); // Réinitialise le champ tag
         setIsTagInputVisible(false); // Masque le champ input
+        setTagCount((tagCount += 1)); 
         fetchTags();
       } else {
         console.error('Error adding tag: ', result.error);
@@ -269,6 +271,34 @@ export default function Note() {
       console.error('Error add tag', error);
     }
   };
+
+  /** Delete tag in database and fetch tags  */
+  const deleteTag = async (value) => {
+    try {
+        console.log('click')
+        const response = await fetch(
+            `${backendUrl}/tags/`,
+            {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    token: userId,
+                    noteId,
+                    value
+                   
+                 })
+             },
+            
+
+          );
+          const data = await response.json();
+          data.result && setTagCount((tagCount -= 1));
+          
+    } catch(error){
+        console.error('Error deleting tag:', error)
+    }
+
+}
 
   // ************ ALL USE EFFECTS *************
 
@@ -287,7 +317,7 @@ export default function Note() {
   /** Fetch tag when currentNote is changed */
   useEffect(() => {
     fetchTags();
-  }, [noteId]);
+  }, [noteId, tagCount] );
 
   /**Fetch forward linked note */
   useEffect(() => {
@@ -401,7 +431,7 @@ export default function Note() {
       <div className={metadataContainer}>
         <div className={tagsContainer}>
           {tags.map((t) => (
-            <Tag key={t._id}>{t.value}</Tag>
+            <Tag key={t._id} deleteTag={deleteTag}>{t.value}</Tag>
           ))}
           {isTagInputVisible && (
             <div className='flex items-center'>

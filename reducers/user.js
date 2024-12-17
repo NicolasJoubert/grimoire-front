@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: { 
-    token: null, 
+  value: {
+    token: null,
     username: null,
     profilePic: null,
     defaultDevLanguage: {
-      displayValue: "Javascript",
-      editorValue: "javascript",
-      apiValue: "nodejs",
-      isExecutable: true, 
+      displayValue: 'Javascript',
+      editorValue: 'javascript',
+      apiValue: 'nodejs',
+      isExecutable: true,
     },
     defaultEditorTheme: {
-      displayValue: "Monokaï",
-      editorValue: "monokai",
+      displayValue: 'Monokaï',
+      editorValue: 'monokai',
     },
   },
 };
@@ -25,6 +25,7 @@ export const userSlice = createSlice({
     login: (state, action) => {
       state.value.token = action.payload.token;
       state.value.username = action.payload.username;
+      state.value.profilePic = action.payload.profilePic;
       // Gérer le cas de l'image de profil
     },
     logout: (state) => {
@@ -43,17 +44,17 @@ export const userSlice = createSlice({
     },
     updateDefaultEditorThemeInStore: (state, action) => {
       state.value.defaultEditorTheme = action.payload;
-    }
+    },
   },
 });
 
-export const { 
-  login, 
-  logout, 
-  updateUsernameInStore, 
-  updateProfilePicInStore, 
+export const {
+  login,
+  logout,
+  updateUsernameInStore,
+  updateProfilePicInStore,
   updateDefaultDevLangInStore,
-  updateDefaultEditorThemeInStore 
+  updateDefaultEditorThemeInStore,
 } = userSlice.actions;
 
 export default userSlice.reducer;
