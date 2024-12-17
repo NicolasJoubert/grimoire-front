@@ -1,8 +1,8 @@
-// import './styles.scss'
 import clsx from 'clsx';
 import 'antd/dist/antd.css';
 import { Popover } from 'antd';
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 
 import AceEditor from "react-ace";
 
@@ -11,12 +11,15 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github_light_default";
 import "ace-builds/src-noconflict/theme-dracula";
 
+import "ace-builds/src-noconflict/mode-css";
+import "ace-builds/src-noconflict/mode-golang";
+import "ace-builds/src-noconflict/mode-html";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-python";
-import "ace-builds/src-noconflict/mode-golang";
-import "ace-builds/src-noconflict/mode-css";
 
 // import "ace-builds/src-noconflict/worker-javascript";
+
+import LanguageSelector from '../Selectors/LanguageSelector';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -24,7 +27,6 @@ const CodeBloc = ({
             blocId,
             noteId,
             type,
-            language,
             position,
             lineCount,
             content, 
@@ -32,22 +34,16 @@ const CodeBloc = ({
             addBloc,
         }) => {
 
+    const user = useSelector((state) => state.user.value);
+
     const [code, setCode] = useState(content);    // Set code content, initialized with bloc content in DB
     const [isRunCodeShown, setIsRunCodeShown] = useState(false)
     const [runResult, setRunResult] = useState("")
-    const [devLang, setDevLang] = useState(language)
     const [lineCounter, setLineCounter] = useState(lineCount);
     const [blocHeight, setBlocHeight] = useState('80px'); // not linked to backend
     const [isBlocHovered, setIsBlocHovered] = useState(false);   
 
-    const [selectedLanguage, setSelectedLanguage] = useState({ displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true })
-    const languages = [
-        { displayValue: "Javascript", editorValue: "javascript", apiValue: "nodejs", isExecutable: true },
-        { displayValue: "Python 3", editorValue: "python", apiValue: "python3", isExecutable: true },
-        { displayValue: "Go", editorValue: "golang", apiValue: "go", isExecutable: true },
-        { displayValue: "CSS", editorValue: "css", apiValue: null, isExecutable: false },
-        // to add: java, ruby, json, xml, shell script, html... => compare ace editor and jdoodle doc
-    ]
+    const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage)
 
     useEffect(() => {
         // increase blocHeight on every 5 lines added
@@ -83,24 +79,16 @@ const CodeBloc = ({
         saveBloc(newCode);
     };
 
-    // Handler for when selected language changes
-    const handleSelectedLanguageChange = (event) => {
-        setSelectedLanguage(
-            languages.find(language => language.displayValue === event.target.value)
-        );
-    };
-
     /** Exec code and display result */
     const runCode = async () => {
         setIsRunCodeShown(true)
 
-        const response = await fetch(`${backendUrl}/dev`, {
+        const response = await fetch(`${backendUrl}/dev/code`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ code, language: selectedLanguage.apiValue })
           })
           const apiResponse = await response.json()
-          console.log("apiResponse => ", apiResponse)
 
           if (apiResponse.result) {
             setRunResult(apiResponse.data.output)
@@ -139,6 +127,7 @@ const CodeBloc = ({
         <div className="">
           <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
           <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "internal link", noteId)}>Internal link</div>
         </div>
     );
 //`h-[${blocHeight}px]`
@@ -167,16 +156,13 @@ const CodeBloc = ({
             </Popover>
             <div className={codeblocContainer}>
                 <div className={editorContainer}>
-                <div>
-                    <select id="language-select" value={selectedLanguage.displayValue} onChange={handleSelectedLanguageChange}>
-                        {languages.map((language) => (
-                            <option key={language.displayValue} value={language.displayValue}>{language.displayValue}</option>
-                        ))}
-                    </select>
-                </div>
+                <LanguageSelector 
+                    selectedLanguage={selectedLanguage}
+                    setSelectedLanguage={setSelectedLanguage}/>
+
                     <AceEditor
                         mode={selectedLanguage.editorValue} // Language mode
-                        theme="dracula" // Theme
+                        theme={user.defaultEditorTheme.editorValue} // Theme
                         value={code} // Current code
                         onChange={handleCodeChange} // Update state on code change
                         onLoad={handleEditorLoad}

@@ -15,7 +15,7 @@ export default function ConnectedUser() {
 
   // REDUCER
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.value);
+  const user = useSelector((state) => state.user.value); 
 
   // FONCTION TO DISCONNECT USERS
   const handleLogout = () => {
@@ -23,6 +23,10 @@ export default function ConnectedUser() {
     dispatch(logout());
     dispatch(removeCurrentNote());
   };
+
+  const handleSettings = () => {
+    router.push('/settings')
+  }
 
   // TODO FAIRE LA FONCTION DARK LIGHT MODE
   // turn on light or dark mode NOT ACTIVE
@@ -38,7 +42,7 @@ export default function ConnectedUser() {
       </div>
 
       <div className='flex justify-normal items-center'>
-        <button onClick={darkLightMode}>
+        <button onClick={handleSettings}>
           <FontAwesomeIcon
             icon={faMoon}
             className='mr-2 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'

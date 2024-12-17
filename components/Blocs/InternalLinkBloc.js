@@ -5,11 +5,9 @@ import { useEffect, useState, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-// import ManageBlocsExtension from '../TipTap/ManageBlocsExtension'
-
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
-const TextBloc = ({ 
+const InternalLinkBloc = ({ 
             blocId,
             noteId,
             type,
@@ -153,4 +151,4 @@ const TextBloc = ({
     )
 }
 
-export default TextBloc
+export default InternalLinkBloc

@@ -83,6 +83,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
     fetchNotes();
   }, [currentNote, modifTitle]);
 
+
   return (
     <div className='h-full w-64 bg-backgroundColor flex flex-col'>
       {/* HEADER SIDEBAR */}
