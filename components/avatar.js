@@ -26,23 +26,40 @@ export default function Avatar () {
       </div>
       </Button>
       <Modal title="Avatars" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-      <div className='flex justify-center items-center'>
-      <div>
-      <img
-      src="/images/HatSorcerer.png"
-      alt="Chapeau de Sorcier"
-      style={{ width: '50%', height: '70%', objectFit: 'cover', borderRadius: '50%' }} 
-      />
-      <p>Chapeau de sorcier</p>
-      </div>
-      <div>
-      <img
-      src="/images/balaiDeSorcerer.png"
-      alt="Balai De Sorcière"
-      style={{ width: '50%', height: '70%', objectFit: 'cover', borderRadius: '50%' }} 
-      />
-      <p>Balai de sorcière</p>
-      </div>
+      <div className='flex justify-center'>
+        <div className='flex flex-col justify-center items-center'>
+          <img
+          src="/images/HatSorcerer.png"
+          alt="Chapeau de Sorcier"
+          style={{ width: '50%', height: '70%', objectFit: 'contain' }} 
+          />
+          <p>Hatty</p>
+        </div>
+        <div className='flex flex-col justify-center items-center'>
+          <img
+          src="/images/balaiDeSorcerer.png"
+          alt="Balai De Sorcière"
+          style={{ width: '50%', height: '70%', objectFit: 'contain'  }} 
+          />
+          <p>Broomy</p>
+        </div>
+        <div className='flex flex-col justify-center items-center'>
+          <img
+          src="/images/grimoire.png"
+          alt="Grimoire"
+          style={{ width: '50%', height: '70%', objectFit: 'contain'  }} 
+          />
+          <p>Booky</p>
+        </div>
+        <div className='flex flex-col justify-center items-center'>
+          <img
+          src="/images/dragon.png"
+          alt="Black Dragon"
+          style={{ width: '50%', height: '70%', objectFit: 'contain'  }} 
+          />
+          <p>Dragonny</p>
+        </div>
+      
       </div>
       </Modal>
     </>
