@@ -3,6 +3,7 @@ import {
   faMoon,
   faRightFromBracket,
   faHatWizard,
+  faGear
 } from '@fortawesome/free-solid-svg-icons';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -29,7 +30,11 @@ export default function ConnectedUser() {
   const darkLightMode = () => {
     console.log('clique sur le ligth dark mode');
   };
-
+  
+  // REDIRECTION PAGE SETTINGS
+  const handleSettings = () => {
+    router.push('/settings')
+  }
   return (
     <div className='flex justify-between items-center p-2 border-t border-gray-300'>
       <div className='flex items-center'>
@@ -38,6 +43,13 @@ export default function ConnectedUser() {
       </div>
 
       <div className='flex justify-normal items-center'>
+      <button onClick={handleSettings}>
+          <FontAwesomeIcon
+            icon={faGear}
+            className='mr-2 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
+          />
+        </button>
+
         <button onClick={darkLightMode}>
           <FontAwesomeIcon
             icon={faMoon}
