@@ -33,6 +33,7 @@ export default function Note() {
 
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.value.token);
+  const defaultDevLanguage = useSelector((state) => state.user.value.defaultDevLanguage);
   const noteId = useSelector((state) => state.currentNote.value);
 
   // ************ ALL FUNCTIONS *************
@@ -76,7 +77,6 @@ export default function Note() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
       if (data.result) {
         if (direction === 'forward') {
           setTitleForwardNotes(data.forwardNotes);
@@ -104,6 +104,7 @@ export default function Note() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       await response.json();
+      console.log("notedata,", noteData)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -151,10 +152,15 @@ export default function Note() {
 
       // After potential below blocs were displaced, we create the new bloc
       const newBlocPosition = position + 1; // new bloc has a position superior by one to the precedent
+      
+      // First we get defaultLanguage id
+      const responseLang = await fetch(`${backendUrl}/dev/languages/type/display/value/${defaultDevLanguage.displayValue.replace(" ", "_")}`)
+      const dataLang = await responseLang.json()
+
       const response = await fetch(`${backendUrl}/blocs/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ position: newBlocPosition, type, noteId }),
+        body: JSON.stringify({ position: newBlocPosition, type, noteId, language: dataLang.language._id }),
       });
       const data = await response.json();
       // update bloc count (used to fetch note)
@@ -314,6 +320,7 @@ export default function Note() {
                               blocId={bloc._id}
                               noteId={noteId}
                               type={bloc.type}
+                              language={bloc.language}
                               position={bloc.position}
                               lineCount={bloc.lineCount}
                               content={bloc.content}
@@ -340,7 +347,7 @@ export default function Note() {
   // ***************   STYLE MANAGEMENT   ***********************
 
   const container =
-    'flex flex-1 flex-col flex-start bg-white	 border-solid border border-black p-3 rounded-lg text-black w-auto ';
+    'flex flex-1 flex-col flex-start bg-whitePure border-solid border border-black p-3 rounded-lg text-black w-auto ';
   const topContainer = 'flex justify-between items-center w-full h-12';
   const title = 'text-2xl font-bold';
   const icons =

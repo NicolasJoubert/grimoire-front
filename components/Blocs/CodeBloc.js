@@ -27,6 +27,7 @@ const CodeBloc = ({
             blocId,
             noteId,
             type,
+            language,
             position,
             lineCount,
             content, 
@@ -45,10 +46,24 @@ const CodeBloc = ({
 
     const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage)
 
+    /** Manage bloc size depending on number of lines in ediotr */
     useEffect(() => {
         // increase blocHeight on every 5 lines added
         (lineCounter % 5 === 0) && setBlocHeight(`${(lineCounter + 4)*16}px`) 
     }, [lineCounter])
+
+    useEffect(() => {
+        getLanguage(language)
+    }, [])
+    
+    /** Get bloc language and format it */
+    const getLanguage = async (language) => { // fetch with bloc language id
+        console.log("lnaguag", language)
+        const response = await fetch(`${backendUrl}/dev/languages/type/id/value/${language}`)
+        const data = await response.json()
+        const languageObject = data.language
+        data.result && setSelectedLanguage(languageObject)
+    }
 
     /** Load editor and define custom commands */
     const handleEditorLoad = (editor) => {
@@ -106,8 +121,9 @@ const CodeBloc = ({
             const response = await fetch(`${backendUrl}/blocs/save`, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ blocId, type, content: newCode, language })
+                body: JSON.stringify({ blocId, type, content: newCode, language: selectedLanguage._id })
             });
+            console.log("selectedLanguage", selectedLanguage)
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
