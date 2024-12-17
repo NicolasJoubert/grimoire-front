@@ -12,6 +12,7 @@ import {
   faFileCirclePlus,
   faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons';
+import { Modal } from 'antd';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -27,6 +28,7 @@ export default function Searchbar({
   const [searchedNotes, setSearchedNotes] = useState([]);
   const [tag, setTag] = useState([]);
   const [isSearchResultVisible, setIsSearchResultVisible] = useState(false);
+  
   const token = useSelector((state) => state.user.value.token);
 
   //Input value gestion
@@ -106,6 +108,19 @@ export default function Searchbar({
 
   return (
     <div className='text-gray-900 flex flex-row justify-between items-center bg-backgroundColor sticky top-0 py-4'>
+      <Modal title="Basic Modal" open={isSearchResultVisible} /*onOk={handleOk} onCancel={handleCancel}*/>
+      <div
+            ref={elementRef}
+            className='absolute top-10 left-0 w-full max-w-screen-sm flex flex-col justify-center items-center'
+            >
+            <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
+              {tags}
+            </div>
+            <div className='w-full flex flex-col bg-white shadow-lg border-2 border-darkPurple rounded-lg p-4'>
+              {searchedNotes && notes}
+            </div>
+        </div>
+      </Modal>
       {/* Bouton pour afficher la Sidebar uniquement si elle est cachée */}
       {!isSidebarLeftVisible && (
         <button className='pb-8 pl-4 pr-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
@@ -124,21 +139,31 @@ export default function Searchbar({
       </button>
 
       {/* Search */}
-      <div className='flex flex-1 justify-center'>
-        <div className='flex border-b-2 border-darkPurple w-[80%]'>
+      <div className='flex flex-1 flex-row justify-center'>
+        <div className='flex border-b-2 border-darkPurple w-[80%] relative'>
           <input
             onChange={(e) => changeInput(e.target.value)}
             value={search}
             className='text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor'
-            placeholder='Search'
+            placeholder='Trouver une note'
           />
-          <button onClick={() => handleSubmit()}>
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              className='p-4 text-darkPurple text-xl hover:text-lightPurple transition duration-300 ease-in-out'
-            />
-          </button>
+          {/* Résultats de la recherche */}
+          {isSearchResultVisible && (
+          <div
+            ref={elementRef}
+            className='absolute top-10 left-0 w-full max-w-screen-sm flex flex-col justify-center items-center'
+            >
+            <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
+              {tags}
+            </div>
+            <div className='w-full flex flex-col bg-white shadow-lg border-2 border-darkPurple rounded-lg p-4'>
+              {searchedNotes && notes}
+            </div>
         </div>
+      )}
+          
+        </div>
+        
       </div>
 
       {/* Bouton pour afficher la Sidebar uniquement si elle est cachée */}
@@ -151,20 +176,6 @@ export default function Searchbar({
         </button>
       )}
 
-      {/* Résultats de la recherche */}
-      {isSearchResultVisible && (
-        <div
-          ref={elementRef}
-          className='absolute top-20 left-0 w-full max-w-screen-sm flex flex-col justify-center items-center'
-        >
-          <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
-            {tags}
-          </div>
-          <div className='w-full flex flex-col bg-lightPurple rounded-lg p-4'>
-            {searchedNotes && notes}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
