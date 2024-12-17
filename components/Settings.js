@@ -13,6 +13,8 @@ import Avatar from './avatar';
 import LanguageSelector from "./Selectors/LanguageSelector";
 import EditorThemeSelector from  "./Selectors/EditorThemeSelector";
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+
 const Settings = () => {
     const router = useRouter();
     const user = useSelector((state) => state.user.value);
@@ -75,6 +77,7 @@ const Settings = () => {
 
     const changeUserInfo = () => {
         ((username) && (username !== user.username)) && updateUsername()
+        console.log("user -> ", username, user.username)
         selectedLanguage !== user.defaultDevLanguage && updateDefaultDevLang()
         selectedEditorTheme !== user.defaultEditorTheme && updateDefaultEditorTheme()
         router.push("/home")
