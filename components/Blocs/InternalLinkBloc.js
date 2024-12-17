@@ -4,6 +4,7 @@ import { Popover } from 'antd';
 import { useEffect, useState, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import SearchbarBloc from '../SearchbarBloc';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -116,7 +117,7 @@ const InternalLinkBloc = ({
         }
     }
 
-    const popoverContentStyle = "flex w-full focus:outline-none bg-lightPurple text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 hover:cursor-pointer"
+    const popoverContentStyle = "flex w-full focus:outline-none text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 pb-1 px-2 mt-2 hover:cursor-pointer"
     const popoverContent = (
         <div className="">
           <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
@@ -143,10 +144,7 @@ const InternalLinkBloc = ({
                         onClick={() => addBloc(position, type, noteId)}>+</div>
                 </Popover>
 
-            <EditorContent 
-                ref={editorRef}
-                editor={editor}
-                className={inputStyle}/>
+                <SearchbarBloc/>
         </div>
     )
 }

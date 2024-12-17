@@ -27,12 +27,14 @@ export default function Note() {
   const [blocCount, setBlocCount] = useState(1);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
+  const [tagCount, setTagCount] = useState(1);
   const [isTagInputVisible, setIsTagInputVisible] = useState(false);
   const [titleForwardNotes, setTitleForwardNotes] = useState([]);
   const [titleBackwaardNotes, setTitleBackwardNotes] = useState([]);
 
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.value.token);
+  const defaultDevLanguage = useSelector((state) => state.user.value.defaultDevLanguage);
   const noteId = useSelector((state) => state.currentNote.value);
 
   // ************ ALL FUNCTIONS *************
@@ -76,7 +78,6 @@ export default function Note() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
       if (data.result) {
         if (direction === 'forward') {
           setTitleForwardNotes(data.forwardNotes);
@@ -104,6 +105,7 @@ export default function Note() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       await response.json();
+      console.log("notedata,", noteData)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -151,10 +153,15 @@ export default function Note() {
 
       // After potential below blocs were displaced, we create the new bloc
       const newBlocPosition = position + 1; // new bloc has a position superior by one to the precedent
+      
+      // First we get defaultLanguage id
+      const responseLang = await fetch(`${backendUrl}/dev/languages/type/display/value/${defaultDevLanguage.displayValue.replace(" ", "_")}`)
+      const dataLang = await responseLang.json()
+
       const response = await fetch(`${backendUrl}/blocs/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ position: newBlocPosition, type, noteId }),
+        body: JSON.stringify({ position: newBlocPosition, type, noteId, language: dataLang.language._id }),
       });
       const data = await response.json();
       // update bloc count (used to fetch note)
@@ -253,6 +260,7 @@ export default function Note() {
       if (result) {
         setTagInput(''); // Réinitialise le champ tag
         setIsTagInputVisible(false); // Masque le champ input
+        setTagCount((tagCount += 1)); 
         fetchTags();
       } else {
         console.error('Error adding tag: ', result.error);
@@ -261,6 +269,34 @@ export default function Note() {
       console.error('Error add tag', error);
     }
   };
+
+  /** Delete tag in database and fetch tags  */
+  const deleteTag = async (value) => {
+    try {
+        console.log('click')
+        const response = await fetch(
+            `${backendUrl}/tags/`,
+            {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    token: userId,
+                    noteId,
+                    value
+                   
+                 })
+             },
+            
+
+          );
+          const data = await response.json();
+          data.result && setTagCount((tagCount -= 1));
+          
+    } catch(error){
+        console.error('Error deleting tag:', error)
+    }
+
+}
 
   // ************ ALL USE EFFECTS *************
 
@@ -279,7 +315,7 @@ export default function Note() {
   /** Fetch tag when currentNote is changed */
   useEffect(() => {
     fetchTags();
-  }, [noteId]);
+  }, [noteId, tagCount] );
 
   /**Fetch forward linked note */
   useEffect(() => {
@@ -314,6 +350,7 @@ export default function Note() {
                               blocId={bloc._id}
                               noteId={noteId}
                               type={bloc.type}
+                              language={bloc.language}
                               position={bloc.position}
                               lineCount={bloc.lineCount}
                               content={bloc.content}
@@ -340,7 +377,7 @@ export default function Note() {
   // ***************   STYLE MANAGEMENT   ***********************
 
   const container =
-    'flex flex-1 flex-col flex-start border-solid border border-black p-3 rounded-lg text-black w-auto ';
+    'flex flex-1 flex-col flex-start bg-whitePure border-solid border border-black p-3 rounded-lg text-black w-auto ';
   const topContainer = 'flex justify-between items-center w-full h-12';
   const title = 'text-2xl font-bold';
   const icons =
@@ -392,7 +429,7 @@ export default function Note() {
       <div className={metadataContainer}>
         <div className={tagsContainer}>
           {tags.map((t) => (
-            <Tag key={t._id}>{t.value}</Tag>
+            <Tag key={t._id} deleteTag={deleteTag}>{t.value}</Tag>
           ))}
           {isTagInputVisible && (
             <div className='flex items-center'>

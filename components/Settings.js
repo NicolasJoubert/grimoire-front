@@ -9,7 +9,7 @@ import {
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear,faHatWizard, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import Avatar from './avatar';
+import Avatar from './Avatar';
 import LanguageSelector from "./Selectors/LanguageSelector";
 import EditorThemeSelector from  "./Selectors/EditorThemeSelector";
 import { imageConfigDefault } from "next/dist/shared/lib/image-config";
