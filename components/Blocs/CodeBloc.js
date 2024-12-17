@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 import { Popover } from 'antd';
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';

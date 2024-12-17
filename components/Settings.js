@@ -9,9 +9,9 @@ import {
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear,faHatWizard, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import { Modal } from 'antd';
-import Avatar from '../components/avatar';
-import { useDispatch, useSelector } from 'react-redux';
+import Avatar from './avatar';
+import LanguageSelector from "./Selectors/LanguageSelector";
+import EditorThemeSelector from  "./Selectors/EditorThemeSelector";
 
 const Settings = () => {
     const router = useRouter();
