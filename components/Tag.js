@@ -1,5 +1,26 @@
-const Tag = ({children}) => {
-    return <div className="mr-3 bg-lightPurple px-2 rounded-md"><span>#{children}</span></div>
+import { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import clsx from 'clsx'; // permet de faire du style conditionel avec tailwinds
+
+const Tag = ({children, deleteTag}) => {
+    const [isHovered, setIsHovered] = useState(false)
+
+    return (
+        <div 
+            className="mr-3 bg-lightPurple px-2 rounded-md cursor-pointer" 
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <span>#{children}</span>
+            <FontAwesomeIcon 
+                className={clsx(isHovered ? 'opacity-100' : 'opacity-0', 'mx-1 text-darkPurple')} 
+                icon={faCircleXmark}
+                onClick={()=>deleteTag(children)} 
+            />
+        </div>
+    )
+    
 }
 
 
