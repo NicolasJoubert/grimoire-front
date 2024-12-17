@@ -12,6 +12,11 @@ import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import storage from 'redux-persist/lib/storage';
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+const clientId =
+  '713388606117-hcnrsufui8347oe75c0ejarar29eqpdb.apps.googleusercontent.com';
+
 const reducers = combineReducers({ currentNote, user, changeStatus });
 const persistConfig = {
   key: 'grimoire', 
@@ -34,7 +39,9 @@ function App({ Component, pageProps }) {
         <Head>
           <title>Grimoire</title>
         </Head>
-        <Component {...pageProps} />
+        <GoogleOAuthProvider clientId={clientId}>
+          <Component {...pageProps} />
+        </GoogleOAuthProvider>
       </PersistGate>
     </Provider>
   );
