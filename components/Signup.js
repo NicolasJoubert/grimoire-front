@@ -13,7 +13,7 @@ import {
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
 import { GoogleLogin } from '@react-oauth/google';
-import jwtDecode from 'jwt-decode';
+
 function Signup() {
   const dispatch = useDispatch();
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;

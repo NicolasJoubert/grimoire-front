@@ -3,19 +3,20 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { login, logout } from '../reducers/user';
-// LOGIN WITH GOOGLE
 
-// import { GoogleLogin } from '@react-oauth/google';
-// import { jwtDecode } from 'jwt-decode';
+//LOGIN WITH GOOGLE
+
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
 
 import { useRouter } from 'next/router';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faGithub,
-  faGoogle,
-  faApple,
-} from '@fortawesome/free-brands-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import {
+//   faGithub,
+//   faGoogle,
+//   faApple,
+// } from '@fortawesome/free-brands-svg-icons';
 
 function Signin() {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -25,34 +26,39 @@ function Signin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [wrongPassword, setWrongPassword] = useState(false);
-  //   const [userInfoGoogle, setUserInfoGoogle] = useState(null);
+  const [userInfoGoogle, setUserInfoGoogle] = useState(null);
+
   //FUNCTIONS
-  const handleSubmit = () => {
-    fetch(`${backendUrl}/users/signin`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: username, password: password }),
-    })
+  const handleSubmit = (googleToken) => {
+    const url = `${backendUrl}/users/signin`;
+    const method = 'POST';
+    const headers = { 'Content-Type': 'application/json' };
+    const body = JSON.stringify({
+      googleToken: googleToken ?? null,
+      username: username,
+      password: password,
+    });
+
+    fetch(url, { method, headers, body })
       .then((response) => response.json())
       .then((data) => {
-        if (data.result) {
-          console.log(data);
-          dispatch(login({ username: username, token: data.token }));
-          setUsername('');
-          setPassword('');
-          console.log(data);
-          router.push('/home');
-        } else {
-          setWrongPassword(true);
-        }
+        if (!data.result) return alert(data.error);
+        dispatch(
+          login({
+            username: data.username,
+            token: data.token,
+            profilePic: data.profilePic,
+          })
+        );
+        router.push('/home');
+      })
+      .catch((e) => console.error(e))
+      .finally(() => {
+        setUsername('');
+        setPassword('');
       });
-    console.log('connexion');
   };
 
-  //   const handleLoginGoogle = (credentialResponse) => {
-  //     setUserInfoGoogle(jwtDecode(credentialResponse.credential));
-  //     router.push('/home');
-  //   };
   return (
     <div className=' flex flex-1'>
       {' '}
@@ -68,7 +74,7 @@ function Signin() {
         <div className='flex justify-around w-full'>
           {' '}
           {/* div qui contient les logo de connexion externe */}
-          <button>
+          {/* <button>
             <FontAwesomeIcon
               icon={faGithub}
               size='4x'
@@ -88,7 +94,13 @@ function Signin() {
               size='4x'
               className='text-darkPurple  text-bae  hover:text-lightPurple transition duration-300 ease-in-out'
             />
-          </button>
+          </button> */}
+          <GoogleLogin
+            onSuccess={(credentialResponse) =>
+              handleSubmit(credentialResponse.credential)
+            } // Passer le token Google a la fonction handleSubmit
+            onError={(error) => console.error(error)}
+          />
         </div>
         <div className='flex flex-col w-full h-1/5 items-center justify-center '>
           {' '}
@@ -100,12 +112,6 @@ function Signin() {
             onChange={(e) => setUsername(e.target.value)}
             value={username}
           />
-          {/* <GoogleLogin
-              onSuccess={(credentialResponse) =>
-                handleLoginGoogle(credentialResponse)
-              }
-              onError={(error) => console.error(error)}
-            /> */}
           <input
             className='mt-4 rounded-md w-4/5 h-1/5'
             type='password'
