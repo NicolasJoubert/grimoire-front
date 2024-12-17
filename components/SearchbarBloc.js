@@ -65,7 +65,7 @@ export default function SearchbarBloc() {
   }
 
   return (
-    <div className='text-gray-900 flex flex-row justify-between items-center bg-backgroundColor sticky top-0 py-4'>
+    <div className='text-gray-900 flex flex-row justify-between items-center bg-backgroundColor sticky top-0 py-4 w-full '>
     
 
       {/* Search */}
@@ -77,18 +77,18 @@ export default function SearchbarBloc() {
             className='text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor'
             placeholder='Search'
           />
-          <button onClick={() => handleSubmit()}>
-            <FontAwesomeIcon
+         
+            {/* <FontAwesomeIcon
               icon={faMagnifyingGlass}
               className='p-4 text-darkPurple text-xl hover:text-lightPurple transition duration-300 ease-in-out'
             />
-          </button>
+           */}
         </div>
       </div>
 
       {/* Résultats de la recherche */}
       {isSearchResultVisible && (
-        <div className='absolute top-20 left-0 w-full max-w-screen-sm flex flex-col justify-center items-center'>
+        <div className='absolute top-20 left-0 w-full max-w-screen-sm flex flex-col justify-center items-center z-40'>
           <div className='w-full flex flex-col bg-lightPurple rounded-lg p-4'>
             {searchedNotes && notes}
           </div>
