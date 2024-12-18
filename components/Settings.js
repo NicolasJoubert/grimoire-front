@@ -84,7 +84,6 @@ const Settings = () => {
 
     const changeUserInfo = () => {
         ((username) && (username !== user.username)) && updateUsername()
-        console.log("user -> ", username, user.username)
         selectedLanguage !== user.defaultDevLanguage && updateDefaultDevLang()
         selectedEditorTheme !== user.defaultEditorTheme && updateDefaultEditorTheme()
         router.push("/home")
