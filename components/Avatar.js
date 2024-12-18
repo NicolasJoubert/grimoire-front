@@ -25,7 +25,7 @@ export default function Avatar () {
         Choose your Avatar
       </div>
       </Button>
-      <Modal title="Avatars" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="Avatars" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
       <div className='flex justify-center items-center'>
       <div>
       <img

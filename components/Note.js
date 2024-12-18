@@ -404,7 +404,7 @@ export default function Note() {
             <div className='flex items-center'>
               <input
                 type='text'
-                placeholder='Ajoute un tag bro'
+                placeholder='Nouveau tag'
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
                 value={tagInput}

@@ -1,18 +1,18 @@
 import { useState, useRef, useEffect } from 'react';
-import NoteLink from './NoteLink';
-import Image from 'next/image';
+import { useSelector } from 'react-redux';
 import {
   TbLayoutSidebarLeftExpandFilled,
   TbLayoutSidebarRightExpandFilled,
 } from 'react-icons/tb';
-import { useSelector } from 'react-redux';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faFileCirclePlus,
   faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons';
-import { Modal } from 'antd';
+
+import NoteLink from './NoteLink';
+import Tag from './Tag'
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -24,9 +24,9 @@ export default function Searchbar({
   isSidebarRightVisible,
   onOutsideClick,
 }) {
-  const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
   const [searchedNotes, setSearchedNotes] = useState([]);
-  const [tag, setTag] = useState([]);
+  const [tags, setTags] = useState([]);
   const [isSearchResultVisible, setIsSearchResultVisible] = useState(false);
   
   const token = useSelector((state) => state.user.value.token);
@@ -34,20 +34,20 @@ export default function Searchbar({
   //Input value gestion
   const changeInput = (inputValue) => {
     if (inputValue === '') {
-      setSearch('');
+      setSearchInput('');
       setSearchedNotes([]);
       setIsSearchResultVisible(false);
       return;
     }
     //si dans valeur de l'input il existe le caractere "#"
     if (inputValue.includes('#')) {
-      const tabStringInput = inputValue.split(' '); //On crée un tableau a partir de la chaine de caractere avec le separeteur " "
+      const tabStringInput = inputValue.split(' '); //On crée un tableau a partir de la chaine de caractere avec le separateur " "
       const tabTag = tabStringInput.filter((el) => el.startsWith('#')); // On filtre que les element qui commence par "#"
-      setTag(tabTag); // on et a jour l'etat
+      setTags(tabTag); // on et a jour l'etat
       setIsSearchResultVisible(true);
     }
 
-    setSearch(inputValue);
+    setSearchInput(inputValue);
 
     fetch(`${backendUrl}/notes/search/${inputValue}/${token}`)
       .then((response) => response.json())
@@ -80,14 +80,9 @@ export default function Searchbar({
   //END gestion du click exterieur ************************/
 
   //HASTAG creation liste
-  let tags = tag.map((hastag, i) => {
+  let displayedTags = tags.map((tag, i) => {
     return (
-      <div
-        key={i}
-        className='border-black text-gray-900 bg-lightPurple rounded-lg text-center p-2 max-w-32 mx-2'
-      >
-        <span>{hastag}</span>
-      </div>
+      <Tag key={i}>{tag}</Tag>
     );
   });
 
@@ -108,19 +103,6 @@ export default function Searchbar({
 
   return (
     <div className='text-gray-900 flex flex-row justify-between items-center bg-backgroundColor sticky top-0 py-4'>
-      <Modal title="Basic Modal" open={isSearchResultVisible} /*onOk={handleOk} onCancel={handleCancel}*/>
-      <div
-            ref={elementRef}
-            className='absolute top-10 left-0 w-full max-w-screen-sm flex flex-col justify-center items-center'
-            >
-            <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
-              {tags}
-            </div>
-            <div className='w-full flex flex-col bg-white shadow-lg border-2 border-darkPurple rounded-lg p-4'>
-              {searchedNotes && notes}
-            </div>
-        </div>
-      </Modal>
       {/* Bouton pour afficher la Sidebar uniquement si elle est cachée */}
       {!isSidebarLeftVisible && (
         <button className='pb-8 pl-4 pr-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
@@ -139,30 +121,29 @@ export default function Searchbar({
       </button>
 
       {/* Search */}
-      <div className='flex flex-1 flex-row justify-center'>
-        <div className='flex border-b-2 border-darkPurple w-[80%] relative'>
+      <div className='flex flex-1 flex-col items-center justify-start'>
+        <div className='flex flex-col border-b-2 border-darkPurple w-[80%] relative'>
           <input
             onChange={(e) => changeInput(e.target.value)}
-            value={search}
+            value={searchInput}
             className='text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor'
             placeholder='Trouver une note'
           />
           {/* Résultats de la recherche */}
+            
           {isSearchResultVisible && (
           <div
             ref={elementRef}
-            className='absolute top-10 left-0 w-full max-w-screen-sm flex flex-col justify-center items-center'
+            className='absolute overflow-y top-14 left-0 w-full max-w-screen-sm  flex flex-col justify-center items-center'
             >
-            <div className='w-full max-w-screen-sm flex flex-row left-1/4'>
-              {tags}
-            </div>
-            <div className='w-full flex flex-col bg-white shadow-lg border-2 border-darkPurple rounded-lg p-4'>
+            <div className='w-full max-h-36 overflow-y-scroll flex flex-col bg-white shadow-lg border-2 border-darkPurple rounded-lg p-4'>
               {searchedNotes && notes}
             </div>
+          </div>)}
         </div>
-      )}
-          
-        </div>
+        <div className='flex justify-center items-center '>
+              {displayedTags}
+            </div>
         
       </div>
 
