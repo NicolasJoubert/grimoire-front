@@ -69,6 +69,7 @@ function Signup() {
               login({
                 username: data.username,
                 token: data.token,
+                profilePic: data.profilePic,
               })
             );
             console.log(data);
@@ -89,12 +90,19 @@ function Signup() {
             email: email,
             username: username,
             password: password,
+            profilePic: null,
           }),
         })
           .then((response) => response.json())
           .then((data) => {
             if (data.token) {
-              dispatch(login({ username: data.username, token: data.token }));
+              dispatch(
+                login({
+                  username: data.username,
+                  token: data.token,
+                  profilePic: data.profilePic,
+                })
+              );
               setEmail('');
               setUsername('');
               setPassword('');
