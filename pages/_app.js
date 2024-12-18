@@ -21,7 +21,7 @@ const reducers = combineReducers({ currentNote, user, changeStatus });
 const persistConfig = {
   key: 'grimoire',
   storage,
-  blacklist: ['user'],
+  blacklist: [], 
 };
 
 const store = configureStore({
