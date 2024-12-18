@@ -1,17 +1,17 @@
+import { Popover } from 'antd';
 import { useState, useEffect } from 'react';
 import NoteLink from './NoteLink.js';
 // REDUCER
 import { useSelector, useDispatch } from 'react-redux';
-
 import { useRouter } from 'next/router';
 
-//ICONES FONTAWESOME
+//ICONS FONTAWESOME
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBookmark,
   faFolderPlus,
   faFileCirclePlus,
-  faFilter,
+  faSort,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { TbLayoutSidebarLeftCollapseFilled } from 'react-icons/tb';
@@ -23,12 +23,10 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const [selectFavoris, setFavoris] = useState([]);
-  const [titleNotes, setTitleNote] = useState([]);
-
-  const router = useRouter();
-
+  const [titleNotes, setTitleNotes] = useState([]);
+  console.log("After =>", titleNotes);
+  
   // REDUCER
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
   const currentNote = useSelector((state) => state.currentNote.value);
   const isFavorite = useSelector((state) => state.changeStatus.value);
@@ -71,8 +69,8 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
         const data = await response.json();
         console.log(data);
 
-        if (data.result) {
-          setTitleNote(data.notes);
+        if (data.result) {          
+          setTitleNotes(data.notes);
         } else {
           console.error('Erreur lors de la récupération des notes', data.error);
         }
@@ -83,8 +81,27 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
     fetchNotes();
   }, [currentNote, modifTitle]);
 
+  const sortNotesAlphabetical = (order) => {
+    setTitleNotes((prev) => [...prev].sort((a, b) =>{
+      // if order != "asc" => switch to descending order
+      const o = order === "asc" ? a : b
+      const p = order === "asc" ? b : a
+      return o.title.localeCompare(p.title)
+    }));
+  }
 
 
+  const popoverContentStyle = "flex w-full focus:outline-none text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 pb-1 px-2 mt-2 hover:cursor-pointer"
+  const popoverContent = (
+      <div className="">
+        <div 
+          className={popoverContentStyle} 
+          onClick={() => sortNotesAlphabetical("asc")}>A 🠒 Z</div>
+        <div 
+          className={popoverContentStyle} 
+          onClick={() => sortNotesAlphabetical("desc")}>Z 🠒 A</div>
+      </div>
+  );
 
 
   const container = 'h-full w-64 bg-backgroundColor flex flex-col';
@@ -102,13 +119,6 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
   const iconAddNewNote = 'p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out';
   const iconFilter = 'p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out';
   const noteTitleContainer = 'flex-1 overflow-y-auto pl-4 mr-2';
-
-
-
-
-
-
-
 
   return (
     <div className={container}>
@@ -140,14 +150,14 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
         </div>
       </div>
 
-      {/* ICONES ADD AND FILTER */}
+      {/* ICONS ADD AND SORT */}
       <div className={addPlusFilterContainer}>
-        <button>
+        {/* <button>
           <FontAwesomeIcon
             icon={faFolderPlus}
             className={iconAddFolder}
           />
-        </button>
+        </button> */}
         <button>
           <FontAwesomeIcon
             icon={faFileCirclePlus}
@@ -155,12 +165,14 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
             onClick={() => createNote()}
           />
         </button>
-        <button>
-          <FontAwesomeIcon
-            icon={faFilter}
-            className={iconFilter}
-          />
-        </button>
+        <Popover placement="right" title="Ordre des notes" content={popoverContent} trigger="hover">
+          <button>
+            <FontAwesomeIcon
+              icon={faSort}
+              className={iconFilter}
+            />
+          </button>
+        </Popover>
       </div>
 
       {/* NOTES TITLE */}
