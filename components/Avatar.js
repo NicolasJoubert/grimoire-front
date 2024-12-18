@@ -1,51 +1,23 @@
-import { Button, Modal } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
+import Image from 'next/image';
 
-
-
-export default function Avatar () {
-
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    console.log("isModalOpen", isModalOpen);
-    
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+export default function Avatar(props) {
   return (
     <>
-      <Button type="ghost" onClick={() => setIsModalOpen(!isModalOpen)}>
-      <div className='flex text-white rounded-md bg-indigo-800 '>
-        Choose your Avatar
+      <div
+        className='flex flex-col justify-center items-center cursor-pointer'
+        onClick={props.onClick}
+      >
+        <Image
+          className='w-1/2 h-[70%] object-contain hover:border-2 hover:border-black hover:cursor-pointer'
+          src={props.src}
+          alt={props.alt}
+          width={100}
+          height={100}
+        />
+
+        <p>{props.name}</p>
       </div>
-      </Button>
-      <Modal title="Avatars" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-      <div className='flex justify-center items-center'>
-      <div>
-      <img
-      src="/images/HatSorcerer.png"
-      alt="Chapeau de Sorcier"
-      style={{ width: '50%', height: '70%', objectFit: 'cover', borderRadius: '50%' }} 
-      />
-      <p>Chapeau de sorcier</p>
-      </div>
-      <div>
-      <img
-      src="/images/balaiDeSorcerer.png"
-      alt="Balai De Sorcière"
-      style={{ width: '50%', height: '70%', objectFit: 'cover', borderRadius: '50%' }} 
-      />
-      <p>Balai de sorcière</p>
-      </div>
-      </div>
-      </Modal>
     </>
   );
-
 }

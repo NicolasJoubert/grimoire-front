@@ -37,7 +37,7 @@ export default function ConnectedUser() {
   return (
     <div className='flex justify-between items-center p-2 border-t border-gray-300 mx-2'>
       <div className='flex items-center'>
-        <FontAwesomeIcon icon={faHatWizard} className='text-darkPurple' />
+        <img className='h-[35px] rounded-[25px]' src={user.profilePic} />
 
         <p className='text-sm text-black mb-0 ml-2'>{user.username}</p>
       </div>

@@ -105,7 +105,6 @@ export default function Note() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       await response.json();
-      console.log("notedata,", noteData)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -379,7 +378,7 @@ export default function Note() {
   // ***************   STYLE MANAGEMENT   ***********************
 
   const container =
-    'flex flex-1 flex-col flex-start bg-whitePure border-solid border border-black p-3 rounded-lg text-black w-auto ';
+    'flex flex-1 flex-col flex-start bg-whitePure shadow-xl p-3 rounded-lg text-black w-auto';
   const topContainer = 'flex justify-between items-center w-full h-12';
   const title = 'text-2xl font-bold';
   const icons =
@@ -437,7 +436,7 @@ export default function Note() {
             <div className='flex items-center'>
               <input
                 type='text'
-                placeholder='Ajoute un tag bro'
+                placeholder='Nouveau tag'
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
                 value={tagInput}
