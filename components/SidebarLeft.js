@@ -83,30 +83,57 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
     fetchNotes();
   }, [currentNote, modifTitle]);
 
+
+
+
+
+  const container = 'h-full w-64 bg-backgroundColor flex flex-col';
+  const headerContainer = 'flex justify-start pl-4';
+  const btnHideSidebarleft = 'pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out';
+  const logoContainer = 'flex justify-center';
+  const logoImage ='w-20 h-20 m-4';
+  const bookmarkFavorisContainer = 'border-b-2 border-solid border-gray pl-4 pb-4';
+  const bookmarkContainer = 'flex items-center justify-normal ml-10';
+  const iconBookmark = 'text-darkPurple';
+  const favorisStyle = 'items-center text-darkPurple mt-0 mb-0 ml-2 font-bold';
+  const newNoteFavoris = 'ml-12 overflow-y-auto max-h-[150px] mr-2';
+  const addPlusFilterContainer = 'flex justify-around';
+  const iconAddFolder = 'p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out';
+  const iconAddNewNote = 'p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out';
+  const iconFilter = 'p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out';
+  const noteTitleContainer = 'flex-1 overflow-y-auto pl-4 mr-2';
+
+
+
+
+
+
+
+
   return (
-    <div className='h-full w-64 bg-backgroundColor flex flex-col'>
+    <div className={container}>
       {/* HEADER SIDEBAR */}
-      <div className='flex justify-start pl-4'>
-        <button className='pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
+      <div className={headerContainer}>
+        <button className={btnHideSidebarleft}>
           <TbLayoutSidebarLeftCollapseFilled
             size={24}
             onClick={toggleSidebarLeft}
           />
         </button>
       </div>
-      <div className='flex justify-center'>
-        <img src='logofinal.png' alt='logo' className='w-20 h-20 m-4'></img>
+      <div className={logoContainer}>
+        <img src='logofinal.png' alt='logo' className={logoImage}></img>
       </div>
 
       {/* FAVORIS */}
-      <div className='border-b-2 border-solid border-gray pl-4 pb-4 '>
-        <div className='flex items-center justify-normal ml-10'>
-          <FontAwesomeIcon icon={faBookmark} className='text-darkPurple' />
-          <p className='items-center text-darkPurple mt-0 mb-0 ml-2 font-bold'>
+      <div className={bookmarkFavorisContainer}>
+        <div className={bookmarkContainer}>
+          <FontAwesomeIcon icon={faBookmark} className={iconBookmark} />
+          <p className={favorisStyle}>
             Favoris
           </p>
         </div>
-        <div className='ml-12 overflow-y-auto max-h-[150px] mr-2'>
+        <div className={newNoteFavoris}>
           {selectFavoris.map((favoris, i) => (
             <NoteLink key={i} title={favoris.title} noteId={favoris.id} />
           ))}
@@ -114,30 +141,30 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       </div>
 
       {/* ICONES ADD AND FILTER */}
-      <div className='flex justify-around'>
+      <div className={addPlusFilterContainer}>
         <button>
           <FontAwesomeIcon
             icon={faFolderPlus}
-            className='p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
+            className={iconAddFolder}
           />
         </button>
         <button>
           <FontAwesomeIcon
             icon={faFileCirclePlus}
-            className='p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
+            className={iconAddNewNote}
             onClick={() => createNote()}
           />
         </button>
         <button>
           <FontAwesomeIcon
             icon={faFilter}
-            className='p-4 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
+            className={iconFilter}
           />
         </button>
       </div>
 
       {/* NOTES TITLE */}
-      <div className='flex-1 overflow-y-auto pl-4 mr-2'>
+      <div className={noteTitleContainer}>
         {titleNotes.map((note, i) => (
           <NoteLink
             key={i}
