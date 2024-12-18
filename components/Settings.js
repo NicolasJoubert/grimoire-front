@@ -1,156 +1,228 @@
-import { useState } from "react";
+import { useState } from 'react';
+import { Button, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { 
-    updateUsernameInStore, 
-    updateProfilePicInStore, 
-    updateDefaultDevLangInStore,
-    updateDefaultEditorThemeInStore
- } from '../reducers/user';
+import {
+  updateUsernameInStore,
+  updateProfilePicInStore,
+  updateDefaultDevLangInStore,
+  updateDefaultEditorThemeInStore,
+} from '../reducers/user';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear,faHatWizard, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import Avatar from './Avatar';
-import LanguageSelector from "./Selectors/LanguageSelector";
-import EditorThemeSelector from  "./Selectors/EditorThemeSelector";
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
-import Image from "next/image";
+import { faGear } from '@fortawesome/free-solid-svg-icons';
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+import Avatar from './Avatar';
+import LanguageSelector from './Selectors/LanguageSelector';
+import EditorThemeSelector from './Selectors/EditorThemeSelector';
+import { imageConfigDefault } from 'next/dist/shared/lib/image-config';
+import Image from 'next/image';
+
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const Settings = () => {
-    const router = useRouter();
-    const user = useSelector((state) => state.user.value);
-    
-    const dispatch = useDispatch()
-    const [username, setUsername] = useState('');
-    const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage)
-    const [selectedEditorTheme, setSelectedEditorTheme] = useState(user.defaultEditorTheme)
-    const [avatarPic, setAvatarPic] = useState('/images/HatSorcerer.png');
+  // GESTION DE LA REDIRECTION
+  const router = useRouter();
 
+  // GESTION DE LA MODAL ET DES AVATARS
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const avatarsData = [
+    {
+      src: '/images/HatSorcerer.png',
+      name: 'Hatty',
+      alt: 'Chapeau de Sorcier',
+    },
+    {
+      src: '/images/balaiDeSorcerer.png',
+      name: 'Broomy',
+      alt: 'Balai de Sorcier',
+    },
+    { src: '/images/grimoire.png', name: 'Booky', alt: 'Grimoire' },
+    { src: '/images/dragon.png', name: 'Dragony', alt: 'Dragon' },
+  ];
 
+  const avatars = avatarsData.map((data, i) => (
+    <Avatar
+      key={i}
+      src={data.src}
+      name={data.name}
+      alt={data.alt}
+      onClick={() => {
+        setAvatarPic(data.src);
+        setIsModalOpen(false);
+      }}
+    />
+  ));
 
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
+  // REDUCERS
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
 
-    /** Change username in database and updates reducer */
-    const updateUsername = async () => {
-        // Update user in database
-        try {
-            const response = await fetch(`${backendUrl}/users/update/username`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: user.token, username }),
-            });
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const data = await response.json();
-            data.result && dispatch(updateUsernameInStore(username)) 
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
-
-    /** Change default lang in database and updates reducer */
-    const updateDefaultDevLang = async () => {
-        // Update user in database
-        try {
-            const response = await fetch(`${backendUrl}/users/update/devlang`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: user.token, defaultDevLang: selectedLanguage.displayValue }),
-            });
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const data = await response.json();
-            data.result && dispatch(updateDefaultDevLangInStore(selectedLanguage)) 
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
-
-    /** Change default editor theme in database and updates reducer */
-    const updateDefaultEditorTheme = async () => {
-        // Update user in database
-        try {
-            const response = await fetch(`${backendUrl}/users/update/editorTheme`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: user.token, defaultEditorTheme: selectedEditorTheme.displayValue }),
-            });
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const data = await response.json();
-            data.result && dispatch(updateDefaultEditorThemeInStore(selectedEditorTheme)) 
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
-
-    const changeUserInfo = () => {
-        ((username) && (username !== user.username)) && updateUsername()
-        console.log("user -> ", username, user.username)
-        selectedLanguage !== user.defaultDevLanguage && updateDefaultDevLang()
-        selectedEditorTheme !== user.defaultEditorTheme && updateDefaultEditorTheme()
-        router.push("/home")
+  // LES ETATS
+  const [username, setUsername] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState(
+    user.defaultDevLanguage
+  );
+  const [selectedEditorTheme, setSelectedEditorTheme] = useState(
+    user.defaultEditorTheme
+  );
+  const [avatarPic, setAvatarPic] = useState('/images/HatSorcerer.png');
+  // LES FONCTIONS
+  /** Change username in database and updates reducer */
+  const updateUsername = async () => {
+    // Update user in database
+    try {
+      const response = await fetch(`${backendUrl}/users/update/username`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: user.token, username }),
+      });
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      data.result && dispatch(updateUsernameInStore(username));
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
+  };
 
-    return(
-        <div className='flex flex-1 '>
+  /** Change default lang in database and updates reducer */
+  const updateDefaultDevLang = async () => {
+    // Update user in database
+    try {
+      const response = await fetch(`${backendUrl}/users/update/devlang`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: user.token,
+          defaultDevLang: selectedLanguage.displayValue,
+        }),
+      });
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      data.result && dispatch(updateDefaultDevLangInStore(selectedLanguage));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-            {/* Settings Container */}
-            <div className='flex flex-col justify-around items-center w-3/12 bg-backgroundColor'>
+  /** Change default editor theme in database and updates reducer */
+  const updateDefaultEditorTheme = async () => {
+    // Update user in database
+    try {
+      const response = await fetch(`${backendUrl}/users/update/editorTheme`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },git
+        body: JSON.stringify({
+          token: user.token,
+          defaultEditorTheme: selectedEditorTheme.displayValue,
+        }),
+      });
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      data.result &&
+        dispatch(updateDefaultEditorThemeInStore(selectedEditorTheme));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-                {/* Title */}
-                <div className='flex justify-center items-center '>
-                    <FontAwesomeIcon icon={faGear} size="3x" className='text-darkPurple'/>
-                    <p className='text-darkPurple text-4xl font-bold '>Settings</p>
-                </div>
+  const changeUserInfo = () => {
+    username && username !== user.username && updateUsername();
+    console.log('user -> ', username, user.username);
+    selectedLanguage !== user.defaultDevLanguage && updateDefaultDevLang();
+    selectedEditorTheme !== user.defaultEditorTheme &&
+      updateDefaultEditorTheme();
+    router.push('/home');
+  };
 
-                {/* Modification de l'avatar */}
-                <div className="flex flex-col justify-center items-center">
-                    {/* <FontAwesomeIcon icon={faHatWizard} size="4x" className='text-darkPurple mb-3' />
-                    <p className='text-darkPurple'>Modifiez votre Avatar</p> */}
-                    <Image 
-                        src={avatarPic} 
-                        alt="image"
-                        width={100}
-                        height={100} 
-                        />
-                    <Avatar setAvatarPic={setAvatarPic} />
-                </div>
-
-                {/* Modification du username */}
-                <div className='flex flex-col items-center'>
-                    <p className='text-darkPurple font-bold'>Nouveau username</p>
-                    <input 
-                        className=' w-8/12 rounded-md' 
-                        type="text" 
-                        placeholder='Username' 
-                        onChange={(e) => setUsername(e.target.value)} value={username}/>
-                </div>  
-
-                {/* Choix du language de dev */}
-                <div className='flex flex-col justify-between items-center'>
-                    <p className='text-darkPurple font-bold'>Langage par défault</p>
-                    <LanguageSelector 
-                        selectedLanguage={selectedLanguage}
-                        setSelectedLanguage={setSelectedLanguage}/>
-                </div> 
-
-                {/* Choix du thèmes de l'éditeur de code*/}
-                <div className='flex flex-col items-center'>
-                    <p className='text-darkPurple font-bold'>Thème</p>
-                    <EditorThemeSelector 
-                        selectedEditorTheme={selectedEditorTheme}
-                        setSelectedEditorTheme={setSelectedEditorTheme}/>
-                </div>  
-
-                {/* Confirmer les changements */}
-                <button
-                    className='bg-darkPurple text-white mb-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out'
-                    onClick={changeUserInfo}
-                    >Confirmation
-                </button>
-            </div>
-            {/*image de fond */}
-            <div className="bg-backImg-settings bg-cover bg-center h-screen w-9/12"></div>
+  return (
+    <div className='flex flex-1 '>
+      {/* Settings Container */}
+      <div className='flex flex-col justify-around items-center w-3/12 bg-backgroundColor'>
+        {/* Title */}
+        <div className='flex justify-center items-center '>
+          <FontAwesomeIcon
+            icon={faGear}
+            size='3x'
+            className='text-darkPurple'
+          />
+          <h1 className='text-darkPurple text-4xl font-bold '>Settings</h1>
         </div>
-   ) 
-}
-export default Settings;    
+        <Image
+          src={avatarPic}
+          alt='Avatar sélectionné'
+          width={100}
+          height={100}
+        />
+        {/* Modification de l'avatar */}
+        <div className='flex flex-col justify-center items-center'>
+          <Button type='ghost' onClick={() => setIsModalOpen(!isModalOpen)}>
+            <p className='flex text-white rounded-md bg-darkPurple mt-6 p-2'>
+              Choose your Avatar
+            </p>
+          </Button>
+        </div>
+
+        <Modal
+          title='Avatars'
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={null}
+        >
+          <div className='flex flex-wrap justify-center gap-6'>{avatars}</div>
+        </Modal>
+
+        {/* Modification du username */}
+        <div className='flex flex-col items-center'>
+          <p className='text-darkPurple font-bold'>Nouveau username</p>
+          <input
+            className=' w-8/12 rounded-md'
+            type='text'
+            placeholder='Username'
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+          />
+        </div>
+
+        {/* Choix du language de dev */}
+        <div className='flex flex-col justify-between items-center'>
+          <p className='text-darkPurple font-bold'>Langage par défault</p>
+          <LanguageSelector
+            selectedLanguage={selectedLanguage}
+            setSelectedLanguage={setSelectedLanguage}
+          />
+        </div>
+
+        {/* Choix du thèmes de l'éditeur de code*/}
+        <div className='flex flex-col items-center'>
+          <p className='text-darkPurple font-bold'>Thème</p>
+          <EditorThemeSelector
+            selectedEditorTheme={selectedEditorTheme}
+            setSelectedEditorTheme={setSelectedEditorTheme}
+          />
+        </div>
+
+        {/* Confirmer les changements */}
+        <button
+          className='bg-darkPurple text-white mb-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out'
+          onClick={changeUserInfo}
+        >
+          Confirmation
+        </button>
+      </div>
+      {/*image de fond */}
+      <div className='bg-backImg-settings bg-cover bg-center h-screen w-9/12'></div>
+    </div>
+  );
+};
+export default Settings;

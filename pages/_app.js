@@ -19,7 +19,7 @@ const clientId =
 
 const reducers = combineReducers({ currentNote, user, changeStatus });
 const persistConfig = {
-  key: 'grimoire', 
+  key: 'grimoire',
   storage,
   blacklist: ['user'],
 };
