@@ -81,23 +81,13 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
     fetchNotes();
   }, [currentNote, modifTitle]);
 
-  const sortNotes = (order) => {
-    console.log(titleNotes);
-    
-    // let ascending = 0
-    // let _________
-
-    // console.log("titleNotes", titleNotes)
-    // const sortedNotes = titleNotes.sort((a, b) => a.title - b.title)
-    // console.log("sortedNotes", sortedNotes)
-    console.log("coucou");
-    
+  const sortNotesAlphabetical = (order) => {
     setTitleNotes((prev) => [...prev].sort((a, b) =>{
+      // if order != "asc" => switch to descending order
       const o = order === "asc" ? a : b
       const p = order === "asc" ? b : a
       return o.title.localeCompare(p.title)
     }));
-
   }
 
 
@@ -106,10 +96,10 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       <div className="">
         <div 
           className={popoverContentStyle} 
-          onClick={() => sortNotes("asc")}>A 🠒 Z</div>
+          onClick={() => sortNotesAlphabetical("asc")}>A 🠒 Z</div>
         <div 
           className={popoverContentStyle} 
-          onClick={() => sortNotes("desc")}>Z 🠒 A</div>
+          onClick={() => sortNotesAlphabetical("desc")}>Z 🠒 A</div>
       </div>
   );
 
