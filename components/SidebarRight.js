@@ -142,8 +142,6 @@ export default function SidebarRight({ toggleSidebarRight }) {
 
 
 
-
-
   return (
     <div className={container}>
       <div className={headerContainer}>
