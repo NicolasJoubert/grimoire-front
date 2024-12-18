@@ -165,7 +165,7 @@ const CodeBloc = ({
             onMouseEnter={() => setIsBlocHovered(true)}
             onMouseLeave={() => setIsBlocHovered(false)}
             >  
-            <Popover title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
+            <Popover placement="bottomRight" title="Type de bloc" content={popoverContent} className={popoverStyle} trigger="hover">
                 <div 
                     className={buttonStyle}
                     onClick={() => addBloc(position, type, noteId)}>+</div>
