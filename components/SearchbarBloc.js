@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -7,7 +8,6 @@ import {
   faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons';
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function SearchbarBloc() {
   const [search, setSearch] = useState('');
