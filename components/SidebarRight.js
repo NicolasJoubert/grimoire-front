@@ -121,10 +121,33 @@ export default function SidebarRight({ toggleSidebarRight }) {
     <NoteLink key={index} title={update.title} noteId={update.id} />
   ));
 
+
+  const container = 'h-full w-64 bg-backgroundColor flex flex-col';
+  const headerContainer = 'flex justify-start';
+  const btnHideSidebarRight = 'pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out';
+  const changeDateContainer = 'flex items-center justify-center gap-4 mb-4 mt-12';
+  const btnBackwardDateArrow = 'text-black hover:text-darkPurple';
+  const iconFaChevronLeft = 'p4 text-darkPurple text-sm hover:text-lightPurple transition duration-300 ease-in-out';
+  const todayDate = 'text-base font-bold text-darkPurple mb-0';
+  const btnForwardDateArrow = 'text-black hover:text-darkPurple';
+  const iconFaChevronRight = 'p4 text-darkPurple text-sm hover:text-lightPurple transition duration-300 ease-in-out';
+  const todayNotesContainer = 'border-b-2 border-solid border-gray pl-4';
+  const todayNotesStyle = 'font-bold text-darkPurple';
+  const todayNotesList = 'list-disc list-inside text-black overflow-y-auto min-h-[160px] max-h-[160px] mr-4';
+  const calendarContainer = 'top-[80%] p-2 w-[100%]';
+  const daysOfTheWeek = 'grid grid-cols-7 gap-2 text-center text-sm font-medium';
+  const eachDayStyle = 'text-black bg-lightPurple rounded';
+  const calendarDatesStyle = 'grid grid-cols-7 gap-2 mt-2';
+
+
+
+
+
+
   return (
-    <div className='h-full w-64 bg-backgroundColor flex flex-col'>
-      <div className='flex justify-start'>
-        <button className='pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
+    <div className={container}>
+      <div className={headerContainer}>
+        <button className={btnHideSidebarRight}>
           <TbLayoutSidebarRightCollapseFilled
             size={24}
             onClick={toggleSidebarRight}
@@ -133,41 +156,41 @@ export default function SidebarRight({ toggleSidebarRight }) {
       </div>
 
       {/* Header avec navigation entre les jours */}
-      <div className='flex items-center justify-center gap-4 mb-4 mt-12'>
+      <div className={changeDateContainer}>
         {/* Bouton pour le jour précédent */}
         <button
           onClick={handlePrevDay}
-          className='text-black hover:text-darkPurple'
+          className={btnBackwardDateArrow}
         >
           <FontAwesomeIcon
             icon={faChevronLeft}
-            className='p4 text-darkPurple text-sm hover:text-lightPurple transition duration-300 ease-in-out'
+            className={iconFaChevronLeft}
           />
         </button>
 
         {/* Affichage de la date sélectionnée */}
-        <h2 className='text-base font-bold text-darkPurple mb-0'>
+        <h2 className={todayDate}>
           {formatDate(selectedDate)}
         </h2>
 
         {/* Bouton pour le jour suivant */}
         <button
           onClick={handleNextDay}
-          className='text-black hover:text-darkPurple'
+          className={btnForwardDateArrow}
         >
           <FontAwesomeIcon
             icon={faChevronRight}
-            className='p4 text-darkPurple text-sm hover:text-lightPurple transition duration-300 ease-in-out'
+            className={iconFaChevronRight}
           />
         </button>
       </div>
 
       {/* Section des Notes du jour */}
-      <div className='border-b-2 border-solid border-gray pl-4 '>
-        <h3 className=' font-bold text-darkPurple'>
+      <div className={todayNotesContainer}>
+        <h3 className={todayNotesStyle}>
           Note{notes.length > 0 && 's'} du jour
         </h3>
-        <ul className='list-disc list-inside text-black overflow-y-auto min-h-[160px] max-h-[160px] mr-4'>
+        <ul className={todayNotesList}>
           {/* Affichage de chaque note */}
           {notes.length > 0 ? listNote : 'Aucune note aujourdhui'}
         </ul>
@@ -176,9 +199,9 @@ export default function SidebarRight({ toggleSidebarRight }) {
       {/* Section des Mises à jour */}
 
       {updates.length > 0 && (
-        <div className='border-b-2 border-solid border-gray pl-4'>
-          <h3 className=' font-bold text-darkPurple'>Mise à jour</h3>
-          <ul className='list-disc list-inside text-black overflow-y-auto min-h-[160px] max-h-[160px] mr-4'>
+        <div className={todayNotesContainer}>
+          <h3 className={todayNotesStyle}>Mise à jour</h3>
+          <ul className={todayNotesList}>
             {/* Affichage de chaque mise à jour */}
             {listUpdatedNote}
           </ul>
@@ -186,18 +209,18 @@ export default function SidebarRight({ toggleSidebarRight }) {
       )}
 
       {/* Calendrier */}
-      <div className='top-[80%] p-2 w-[100%]'>
+      <div className={calendarContainer}>
         {/* Jours de la semaine */}
-        <div className='grid grid-cols-7 gap-2 text-center text-sm font-medium'>
+        <div className={daysOfTheWeek}>
           {daysOfWeek.map((day, index) => (
-            <div key={index} className='text-black bg-lightPurple rounded'>
+            <div key={index} className={eachDayStyle}>
               {day}
             </div>
           ))}
         </div>
 
         {/* Jours du mois */}
-        <div className='grid grid-cols-7 gap-2 mt-2'>
+        <div className={calendarDatesStyle}>
           {Array.from({ length: daysInMonth }, (_, index) => {
             const day = index + 1; // Jour actuel
             const isSelected =
