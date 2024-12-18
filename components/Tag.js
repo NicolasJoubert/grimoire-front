@@ -8,13 +8,13 @@ const Tag = ({children, deleteTag}) => {
 
     return (
         <div 
-            className="mr-3 bg-lightPurple px-2 rounded-md cursor-pointer" 
+            className="mr-2 bg-lightPurple px-2 rounded-md cursor-pointer" 
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <span>#{children}</span>
+            <span>{children}</span>
             <FontAwesomeIcon 
-                className={clsx(isHovered ? 'opacity-100' : 'opacity-0', 'mx-1 text-darkPurple')} 
+                className={clsx(isHovered ? 'opacity-100' : 'opacity-50', 'ml-1 text-darkPurple')} 
                 icon={faCircleXmark}
                 onClick={()=>deleteTag(children)} 
             />

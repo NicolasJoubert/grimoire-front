@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { replaceCurrentNote } from '../reducers/currentNote';
+import { replaceCurrentNote, removeCurrentNote } from '../reducers/currentNote';
 
 import SidebarLeft from './SidebarLeft';
 import SidebarRight from './SidebarRight';
@@ -37,6 +37,7 @@ export default function Home() {
     if (!user || !user.token) {
       router.push('/');
     }
+    return (() => dispatch(removeCurrentNote()))
   }, [user, router]);
 
   const createNote = async () => {
