@@ -43,6 +43,8 @@ function Signin() {
       .then((response) => response.json())
       .then((data) => {
         if (!data.result) return alert(data.error);
+        console.log(data);
+
         dispatch(
           login({
             username: data.username,

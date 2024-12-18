@@ -14,7 +14,7 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
 import Avatar from './Avatar';
 import LanguageSelector from './Selectors/LanguageSelector';
 import EditorThemeSelector from './Selectors/EditorThemeSelector';
-import { imageConfigDefault } from 'next/dist/shared/lib/image-config';
+
 import Image from 'next/image';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -47,7 +47,7 @@ const Settings = () => {
       name={data.name}
       alt={data.alt}
       onClick={() => {
-        setAvatarPic(data.src);
+        setSelectedPictureProfil(data.src);
         setIsModalOpen(false);
       }}
     />
@@ -72,7 +72,10 @@ const Settings = () => {
   const [selectedEditorTheme, setSelectedEditorTheme] = useState(
     user.defaultEditorTheme
   );
-  const [avatarPic, setAvatarPic] = useState('/images/HatSorcerer.png');
+  const [selectedPictureProfil, setSelectedPictureProfil] = useState(
+    user.profilePic || '/images/HatSorcerer.png'
+  );
+
   // LES FONCTIONS
   /** Change username in database and updates reducer */
   const updateUsername = async () => {
@@ -114,6 +117,7 @@ const Settings = () => {
   };
 
   /** Change default editor theme in database and updates reducer */
+
   const updateDefaultEditorTheme = async () => {
     // Update user in database
     try {
@@ -135,12 +139,40 @@ const Settings = () => {
     }
   };
 
+  /** Change avatar in database and updates reducer */
+  const updateProfilePicture = async () => {
+    try {
+      const response = await fetch(
+        `${backendUrl}/users/update/profilePicture`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            token: user.token,
+            newProfilePic: selectedPictureProfil,
+          }),
+        }
+      );
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      if (data.result) {
+        dispatch(updateProfilePicInStore(selectedPictureProfil)); // Mets à jour Redux
+        console.log('Profile picture updated in Redux:', selectedPictureProfil);
+      } else {
+        console.error('Failed to update profile picture:', data.error);
+      }
+    } catch (error) {
+      console.error('Error fecthing data :', error);
+    }
+  };
+
   const changeUserInfo = () => {
     username && username !== user.username && updateUsername();
-    console.log('user -> ', username, user.username);
     selectedLanguage !== user.defaultDevLanguage && updateDefaultDevLang();
     selectedEditorTheme !== user.defaultEditorTheme &&
       updateDefaultEditorTheme();
+    selectedPictureProfil !== user.profilePic && updateProfilePicture();
     router.push('/home');
   };
 
@@ -158,7 +190,7 @@ const Settings = () => {
           <h1 className='text-darkPurple text-4xl font-bold '>Settings</h1>
         </div>
         <Image
-          src={avatarPic}
+          src={selectedPictureProfil}
           alt='Avatar sélectionné'
           width={100}
           height={100}
