@@ -119,7 +119,7 @@ const Settings = () => {
     try {
       const response = await fetch(`${backendUrl}/users/update/editorTheme`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },git
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           token: user.token,
           defaultEditorTheme: selectedEditorTheme.displayValue,
