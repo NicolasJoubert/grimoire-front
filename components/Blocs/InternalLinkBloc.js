@@ -179,10 +179,9 @@ const InternalLinkBloc = ({
                     </div>
                     )}
                 </div>
-            </Modal> 
+            </Modal>
             <div className='flex flex-row justify-start items-center w-full'>
-                
-                {internalLinkId !== '' && (<NoteLink title={internalLinkTitle} noteId={internalLinkId} />)}
+                {internalLinkId !== '' && (<NoteLink title={internalLinkTitle} noteId={internalLinkId} />) }
             </div>
         </div>
     )
