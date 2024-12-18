@@ -26,6 +26,7 @@ export default function Searchbar({
 }) {
   const [searchInput, setSearchInput] = useState('');
   const [searchedNotes, setSearchedNotes] = useState([]);
+  const [fetchedTagNotes, setFetchedTagNotes] = useState([])
   const [tags, setTags] = useState([]);
   const [isSearchResultVisible, setIsSearchResultVisible] = useState(false);
   
@@ -39,30 +40,81 @@ export default function Searchbar({
       setIsSearchResultVisible(false);
       return;
     }
-    //si dans valeur de l'input il existe le caractere "#"
-    if (inputValue.includes('#')) {
-      const tabStringInput = inputValue.split(' '); //On crée un tableau a partir de la chaine de caractere avec le separateur " "
-      const tabTag = tabStringInput.filter((el) => el.startsWith('#')); // On filtre que les element qui commence par "#"
-      setTags(tabTag); // on et a jour l'etat
-      setIsSearchResultVisible(true);
-    }
 
     setSearchInput(inputValue);
 
-    fetch(`${backendUrl}/notes/search/${inputValue}/${token}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setSearchedNotes(data);
-        if (data.length > 0) {
-          setIsSearchResultVisible(true);
-        }
-      });
+    if (!inputValue.includes('#')) { // if no hashtags are in the input, fetch note by title
+      fetchNotesByTitle(inputValue)
+      searchedNotes.length > 0 ? setIsSearchResultVisible(true) : setIsSearchResultVisible(false)
+      return
+    } 
+
+
+    extractTags(inputValue) // first we get the tags in the searchBar
+    filterNotesByTags()
+    searchedNotes.length > 0 ? setIsSearchResultVisible(true) : setIsSearchResultVisible(false)
   };
 
-  const deleteTag = (value) => {
-    const newTags = tags.filter(tag => tag !== value)
-    setTags(newTags)
+  /** Get all words that start with a "#" */
+  const extractTags = (input) => {
+    const regex = new RegExp('#\\w+', 'g');
+        console.log("input", input)
+    const matches = input.match(regex);
+    console.log("matches", matches)
+    
+    setTags(matches || []);
+}
+
+  /** Recherche des notes par titre */
+  const fetchNotesByTitle = async (inputValue) => {
+    const response = await fetch(`${backendUrl}/notes/search/${inputValue}/${token}`)
+    const data = await response.json()
+    data.result && setSearchedNotes(data.notes)
+    data.notes.length > 0 && setIsSearchResultVisible(true)
   }
+
+  /** Recherche des notes pour un tag */
+  const fetchNotesByTag = async (tagValue) => {
+    const response = await fetch(`${backendUrl}/tags/notes/${tagValue}/${token}`)
+    const data = await response.json()
+    if (data.result) {
+      setFetchedTagNotes(data.notes)
+    } else {
+      setFetchedTagNotes([])
+    }
+  }
+
+  /** Filtrage des notes par tag */
+  const filterNotesByTags = async () => {
+
+    let filteredTagNotes = []
+
+    for (let i=0; i < tags.length; i++) {
+      fetchNotesByTag(tags[i].slice(1)) // fetch tag without the "#"
+      
+      if (i === 0) {
+          filteredTagNotes.push(...fetchedTagNotes) // si c'est la première recherche, on mets toutes les notes récupérées dans tempNotes
+          console.log("filteredTagNotes", filteredTagNotes, "index", i)
+      } else {
+        const tempNotes = []
+        for (let note of fetchedTagNotes) {
+          
+            if (filteredTagNotes.some(data => data.title === note.title)) {
+              tempNotes.push(note) // si la note avait déjà été récupérée, on la conserve
+            } 
+            filteredTagNotes = tempNotes // on met à jour les filteredNotes avec les notes filtrée lors de la dernière itération
+          };
+          if (filteredTagNotes.length === 0) return // si le tableau des notes filtrées est vide, inutile de continuer la recherche
+      }
+      setSearchedNotes(filteredTagNotes)
+    }
+  }
+
+  // /** Retire le tag du tableau tags */
+  // const deleteTag = (value) => {
+  //   const newTags = tags.filter(tag => tag !== value)
+  //   setTags(newTags)
+  // }
 
   //gestion du click exterieur ************************/
   const elementRef = useRef(null);
@@ -85,11 +137,11 @@ export default function Searchbar({
   //END gestion du click exterieur ************************/
 
   //HASTAG creation liste
-  let displayedTags = tags.map((tag, i) => {
-    return (
-      <Tag key={i} deleteTag={deleteTag}>{tag}</Tag>
-    );
-  });
+  // let displayedTags = tags.map((tag, i) => {
+  //   return (
+  //     <Tag key={i} deleteTag={deleteTag}>{tag}</Tag>
+  //   );
+  // });
 
   //noteLink creation liste
   let notes = [];
@@ -146,9 +198,9 @@ export default function Searchbar({
             </div>
           </div>)}
         </div>
-        <div className='flex justify-center items-center '>
+        {/* <div className='flex justify-center items-center '>
               {displayedTags}
-            </div>
+            </div> */}
         
       </div>
 
