@@ -24,7 +24,7 @@ const LanguageSelector = ({ selectedLanguage, setSelectedLanguage }) => {
       if (!data.result)
         throw new Error('Error retrieving languages from backedn');
 
-      setLanguages(data.dev_languages);
+      setLanguages(data.dev_languages.sort((a, b) => a.displayValue.localeCompare(b.displayValue)));
     } catch (err) {
       console.log(err.message);
     }
