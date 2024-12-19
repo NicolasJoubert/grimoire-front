@@ -29,6 +29,7 @@ export default function Note() {
   const [tags, setTags] = useState([]);
   const [tagCount, setTagCount] = useState(1);
   const [isTagInputVisible, setIsTagInputVisible] = useState(false);
+  const [isSearchInternalModalOpen, setIsSearchInternalModalOpen] = useState(false);
   const [titleForwardNotes, setTitleForwardNotes] = useState([]);
   const [titleBackwaardNotes, setTitleBackwardNotes] = useState([]);
 
@@ -167,6 +168,9 @@ export default function Note() {
       const data = await response.json();
       // update bloc count (used to fetch note)
       data.result && setBlocCount((blocCount += 1));
+      if (data.result && type === "internal link") {
+        setIsSearchInternalModalOpen(true)
+      }
     }
   };
 
@@ -369,6 +373,8 @@ export default function Note() {
                             height={bloc.height}
                             addBloc={addBloc}
                             deleteBloc={deleteBloc}
+                            isSearchInternalModalOpen={isSearchInternalModalOpen}
+                            setIsSearchInternalModalOpen={setIsSearchInternalModalOpen}
                         />
     }
 

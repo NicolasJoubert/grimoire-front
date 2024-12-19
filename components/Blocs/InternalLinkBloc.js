@@ -15,11 +15,13 @@ const InternalLinkBloc = ({
     content,
     position,
     deleteBloc,
-    addBloc
+    addBloc,
+    isSearchInternalModalOpen,
+    setIsSearchInternalModalOpen,
 }) => {
     
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [isSearchInternalModalOpen, setIsSearchInternalModalOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [searchedNotes, setSearchedNotes] = useState([]);
     const [isSearchResultVisible, setIsSearchResultVisible] = useState(false);
@@ -65,11 +67,6 @@ const InternalLinkBloc = ({
         }
     }
 
-    const addBlocActiveModal = ()=>{
-        addBloc(position, "internal link", noteId)
-        setIsModalOpen(true)
-    }
-
     const container = clsx("flex justify-between items-start")
     const buttonStyle = clsx(
         isBlocHovered ? "bg-lightPurple" : "bg-transparent",
@@ -78,7 +75,7 @@ const InternalLinkBloc = ({
 
 
     const handleCancel = () => {
-     setIsModalOpen(false);
+     setIsSearchInternalModalOpen(false);
     };
   
     //Input value gestion
@@ -95,8 +92,8 @@ const InternalLinkBloc = ({
       fetch(`${backendUrl}/notes/search/${inputValue}/${token}`)
         .then((response) => response.json())
         .then((data) => {
-          setSearchedNotes(data);
-          if (data.length > 0) {
+          setSearchedNotes(data.notes);
+          if (data.notes.length > 0) {
             setIsSearchResultVisible(true);
           }
         });
@@ -105,17 +102,17 @@ const InternalLinkBloc = ({
     // add id refenced note to BDD and link inside note
     const addReferenceNote = async(refNoteId, refNoteIdTitle)=>{
         //add id refenced note to BDD 
-      const response = await fetch(`${backendUrl}/blocs/referenceLink`, {
+      const response = await fetch(`${backendUrl}/notes/linked`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ currentNoteId: noteId, refNoteId: refNoteId }),
       })
 
       // Addlink inside note
-      setIsModalOpen(false);
+      saveBloc(refNoteId.toString(), refNoteIdTitle)
+      setIsSearchInternalModalOpen(false);
     //   setInternalLinkId(refNoteId.toString())
     //   setInternalLinkTitle(refNoteIdTitle)
-      saveBloc(refNoteId.toString(), refNoteIdTitle)
       
     }
   
@@ -140,7 +137,7 @@ const InternalLinkBloc = ({
         <div className="">
           <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
           <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
-          <div className={popoverContentStyle} onClick={() => addBlocActiveModal()}>Internal link</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "internal link", noteId)}>Internal link</div>
         </div>
     );
      
@@ -155,7 +152,7 @@ const InternalLinkBloc = ({
                     onClick={() => addBloc(position, type, noteId)}>+</div>
             </Popover>
 
-             <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
+             <Modal open={isSearchInternalModalOpen} onCancel={handleCancel} footer={null}>
                 <div className='text-gray-900 flex flex-col justify-between items-center bg-backgroundColor w-full '>
                     {/* Search */}
                     <div className='w-[80%]'>

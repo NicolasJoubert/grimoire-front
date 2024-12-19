@@ -28,7 +28,7 @@ export default function Searchbar({
   
   const token = useSelector((state) => state.user.value.token);
 
-  /// ****** FONCTIONS ******** /////
+  /// ****** FONCTIONS ********/////
 
   //Input value gestion
   const changeInput = (inputValue) => {
@@ -67,6 +67,7 @@ export default function Searchbar({
     const response = await fetch(`${backendUrl}/notes/search/${inputValue}/${token}`)
     const data = await response.json()
     data.result && setSearchedNotes(data.notes)
+    console.log(data)
     data.notes.length > 0 && setIsSearchResultVisible(true)
   }
 
@@ -76,7 +77,7 @@ export default function Searchbar({
     const data = await response.json()
     if (data.result) {
       setFetchedTagNotes(data.notes)
-    } else { 
+    } else {
       setFetchedTagNotes([])
     }
   }
