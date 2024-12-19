@@ -1,8 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  // faMoon,
   faRightFromBracket,
-  faHatWizard,
   faGear,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -20,15 +18,10 @@ export default function ConnectedUser() {
 
   // FONCTION TO DISCONNECT USERS
   const handleLogout = () => {
-    router.push('/');
     dispatch(logout());
     dispatch(removeCurrentNote());
+    !user.token && router.push('/');
   };
-
-  // // turn on light or dark mode NOT ACTIVE
-  // const darkLightMode = () => {
-  //   console.log('clique sur le ligth dark mode');
-  // };
 
   // REDIRECTION PAGE SETTINGS
   const handleSettings = () => {
@@ -49,13 +42,6 @@ export default function ConnectedUser() {
             className='mr-2 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
           />
         </button>
-
-        {/* <button onClick={darkLightMode}>
-          <FontAwesomeIcon
-            icon={faMoon}
-            className='mr-2 text-darkPurple text-base hover:text-lightPurple transition duration-300 ease-in-out'
-          />
-        </button> */}
 
         <button onClick={handleLogout}>
           <FontAwesomeIcon
