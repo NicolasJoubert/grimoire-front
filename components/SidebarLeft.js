@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import NoteLink from './NoteLink.js';
 // REDUCER
 import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
+import { updateNoteSortingInStore } from '../reducers/user.js';
 
 //ICONS FONTAWESOME
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,62 +24,58 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
 
   const [selectFavoris, setFavoris] = useState([]);
   const [titleNotes, setTitleNotes] = useState([]);
-  console.log("After =>", titleNotes);
   
   // REDUCER
+
+  const dispatch = useDispatch()
+
   const user = useSelector((state) => state.user.value);
   const currentNote = useSelector((state) => state.currentNote.value);
   const isFavorite = useSelector((state) => state.changeStatus.value);
   const modifTitle = useSelector((state) => state.currentNote.title);
 
-  // FETCH FAVORITE NOTE TITLE WITH USER TOKEN
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const response = await fetch(
-          backendUrl + `/notes/favorites/${user.token}`
-        );
+  const fetchNotes = async () => {
+    try {
+      const response = await fetch(backendUrl + `/notes/user/${user.token}`);
 
-        const data = await response.json();
+      const data = await response.json();
+      console.log(data);
 
-        if (data.result) {
-          setFavoris(data.favorites);
-        } else {
-          console.error(
-            'Erreur lors de la récupération des favoris',
-            data.error
-          );
-        }
-      } catch (err) {
+      if (data.result) {          
+        setTitleNotes(data.notes);
+        user.noteSorting === "alpha-asc" && sortNotesAlphabetical("asc") // Sort note based on user preferences
+        user.noteSorting === "alpha-desc" && sortNotesAlphabetical("desc") // Sort note based on user preferences
+      } else {
+        console.error('Erreur lors de la récupération des notes', data.error);
+      }
+    } catch (err) {
+      console.error('Erreur lors de la récupération des notes', err.message);
+    }
+  };
+
+  const fetchFavorites = async () => {
+    try {
+      const response = await fetch(
+        backendUrl + `/notes/favorites/${user.token}`
+      );
+
+      const data = await response.json();
+
+      if (data.result) {
+        setFavoris(data.favorites);
+      } else {
         console.error(
           'Erreur lors de la récupération des favoris',
-          err.message
+          data.error
         );
       }
-    };
-    fetchFavorites();
-  }, [isFavorite, currentNote, modifTitle]);
-
-  // FETCH NOTE TITLE WITH USER TOKEN
-  useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const response = await fetch(backendUrl + `/notes/user/${user.token}`);
-
-        const data = await response.json();
-        console.log(data);
-
-        if (data.result) {          
-          setTitleNotes(data.notes);
-        } else {
-          console.error('Erreur lors de la récupération des notes', data.error);
-        }
-      } catch (err) {
-        console.error('Erreur lors de la récupération des notes', err.message);
-      }
-    };
-    fetchNotes();
-  }, [currentNote, modifTitle]);
+    } catch (err) {
+      console.error(
+        'Erreur lors de la récupération des favoris',
+        err.message
+      );
+    }
+  };
 
   const sortNotesAlphabetical = (order) => {
     setTitleNotes((prev) => [...prev].sort((a, b) =>{
@@ -90,16 +86,28 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
     }));
   }
 
+  // FETCH FAVORITE NOTE TITLE WITH USER TOKEN
+  useEffect(() => {
+    fetchFavorites();
+  }, [isFavorite, currentNote, modifTitle]);
+
+  // FETCH NOTE TITLE WITH USER TOKEN
+  useEffect(() => {
+    fetchNotes();
+  }, [currentNote, modifTitle, user]);
+
+
+
 
   const popoverContentStyle = "flex w-full focus:outline-none text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 pb-1 px-2 mt-2 hover:cursor-pointer"
   const popoverContent = (
       <div className="">
         <div 
           className={popoverContentStyle} 
-          onClick={() => sortNotesAlphabetical("asc")}>A 🠒 Z</div>
+          onClick={() => dispatch(updateNoteSortingInStore("alpha-asc"))}>A 🠒 Z</div>
         <div 
           className={popoverContentStyle} 
-          onClick={() => sortNotesAlphabetical("desc")}>Z 🠒 A</div>
+          onClick={() => dispatch(updateNoteSortingInStore("alpha-desc"))}>Z 🠒 A</div>
       </div>
   );
 
