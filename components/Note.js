@@ -10,7 +10,7 @@ import { toggleFavorite } from '../reducers/changeStatus.js';
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
 import CodeBloc from './Blocs/CodeBloc';
-import InternalLinkBloc from './Blocs/InternalLinkBloc.js'
+import InternalLinkBloc from './Blocs/InternalLinkBloc.js';
 import NoteLink from './NoteLink.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -34,7 +34,9 @@ export default function Note() {
 
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.value.token);
-  const defaultDevLanguage = useSelector((state) => state.user.value.defaultDevLanguage);
+  const defaultDevLanguage = useSelector(
+    (state) => state.user.value.defaultDevLanguage
+  );
   const noteId = useSelector((state) => state.currentNote.value);
 
   // ************ ALL FUNCTIONS *************
@@ -134,7 +136,7 @@ export default function Note() {
 
   /** Add a bloc below the one which created it */
   const addBloc = async (position, type, noteId) => {
-    console.log("click")
+    console.log('click');
     // Get blocs in the note that have a position superior to the one creating it
     const response = await fetch(`${backendUrl}/blocs/${noteId}/${position}`);
     const data = await response.json();
@@ -149,20 +151,25 @@ export default function Note() {
           body: JSON.stringify({ blocsIds }),
         });
         await response.json();
-
       }
 
       // After potential below blocs were displaced, we create the new bloc
       const newBlocPosition = position + 1; // new bloc has a position superior by one to the precedent
       // First we get defaultLanguage id
-      const responseLang = await fetch(`${backendUrl}/dev/languages/type/display/value/${defaultDevLanguage.displayValue.replace(" ", "_")}`)
-      const dataLang = await responseLang.json()
-
+      const responseLang = await fetch(
+        `${backendUrl}/dev/languages/type/display/value/${defaultDevLanguage.displayValue.replace(' ', '_')}`
+      );
+      const dataLang = await responseLang.json();
 
       const response = await fetch(`${backendUrl}/blocs/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ position: newBlocPosition, type, noteId, language: dataLang.language._id }),
+        body: JSON.stringify({
+          position: newBlocPosition,
+          type,
+          noteId,
+          language: dataLang.language._id,
+        }),
       });
       const data = await response.json();
       // update bloc count (used to fetch note)
@@ -261,7 +268,7 @@ export default function Note() {
       if (result) {
         setTagInput(''); // Réinitialise le champ tag
         setIsTagInputVisible(false); // Masque le champ input
-        setTagCount((tagCount += 1)); 
+        setTagCount((tagCount += 1));
         fetchTags();
       } else {
         console.error('Error adding tag: ', result.error);
@@ -274,30 +281,22 @@ export default function Note() {
   /** Delete tag in database and fetch tags  */
   const deleteTag = async (value) => {
     try {
-        console.log('click')
-        const response = await fetch(
-            `${backendUrl}/tags/`,
-            {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    token: userId,
-                    noteId,
-                    value
-                   
-                 })
-             },
-            
-
-          );
-          const data = await response.json();
-          data.result && setTagCount((tagCount -= 1));
-          
-    } catch(error){
-        console.error('Error deleting tag:', error)
+      console.log('click');
+      const response = await fetch(`${backendUrl}/tags/`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: userId,
+          noteId,
+          value,
+        }),
+      });
+      const data = await response.json();
+      data.result && setTagCount((tagCount -= 1));
+    } catch (error) {
+      console.error('Error deleting tag:', error);
     }
-
-}
+  };
 
   // ************ ALL USE EFFECTS *************
 
@@ -316,7 +315,7 @@ export default function Note() {
   /** Fetch tag when currentNote is changed */
   useEffect(() => {
     fetchTags();
-  }, [noteId, tagCount] );
+  }, [noteId, tagCount]);
 
   /**Fetch forward linked note */
   useEffect(() => {
@@ -344,32 +343,36 @@ export default function Note() {
           deleteBloc={deleteBloc}
           // switchBlocs={(e) => switchBlocs(e, i)}
           // setBlocsValue={setBlocsValue}
-                          />)
-
-      } else if (bloc.type === "code") {
-        blocComponent =  <CodeBloc 
-                              blocId={bloc._id}
-                              noteId={noteId}
-                              type={bloc.type}
-                              language={bloc.language}
-                              position={bloc.position}
-                              lineCount={bloc.lineCount}
-                              content={bloc.content}
-                              addBloc={addBloc}
-                              deleteBloc={deleteBloc}
+        />
+      );
+    } else if (bloc.type === 'code') {
+      blocComponent = (
+        <CodeBloc
+          blocId={bloc._id}
+          noteId={noteId}
+          type={bloc.type}
+          language={bloc.language}
+          position={bloc.position}
+          lineCount={bloc.lineCount}
+          content={bloc.content}
+          addBloc={addBloc}
+          deleteBloc={deleteBloc}
           // setBlocsValue={setBlocsValue}
         />
-    } else if (bloc.type === "internal link") {
-      blocComponent =  <InternalLinkBloc 
-                            blocId={bloc._id}
-                            noteId={noteId}
-                            type={bloc.type}
-                            content={bloc.content}
-                            position={bloc.position}
-                            height={bloc.height}
-                            addBloc={addBloc}
-                            deleteBloc={deleteBloc}
-                        />
+      );
+    } else if (bloc.type === 'internal link') {
+      blocComponent = (
+        <InternalLinkBloc
+          blocId={bloc._id}
+          noteId={noteId}
+          type={bloc.type}
+          content={bloc.content}
+          position={bloc.position}
+          height={bloc.height}
+          addBloc={addBloc}
+          deleteBloc={deleteBloc}
+        />
+      );
     }
 
     return <div key={bloc._id}>{blocComponent}</div>;
@@ -378,22 +381,27 @@ export default function Note() {
   // ***************   STYLE MANAGEMENT   ***********************
 
   const container =
-    'flex flex-1 flex-col flex-start bg-whitePure shadow-xl p-3 rounded-lg text-black w-auto';
+    'flex flex-1 flex-col flex-start bg-whitePure shadow-xl shadow-lightPurple p-3 rounded-lg pl-4 text-black w-auto max-h-[87%] mr-4 ml-4';
   const topContainer = 'flex justify-between items-center w-full h-12';
   const title = 'text-2xl font-bold';
   const icons =
     'p-4 text-lightPurple text-base hover:text-darkPurple transition duration-300 ease-in-out';
   const metadataContainer =
-    'flex flex-row justify-between items-center w-full h-12';
+    'flex flex-row justify-between items-center w-full h-12 text-sm pr-4';
   const tagsContainer = 'flex justify-start items-center';
+  const buttonTag =
+    'text-xs hover:text-darkPurple hover:bg-lightPurple transition duration-300 ease-in-out bg-darkPurple text-whitePure font-bold p-1 pl-2 pr-2 rounded';
+  const inputTag =
+    'border-b-2 border-gray-300 focus:border-darkPurple focus:outline-none w-full w-[100px] mr-4 text-center';
   const dates = 'flex flex-col justify-center items-end';
   const blocsContainer =
-    'flex-1 flex-col justify-start items start py-3 overflow-y-auto max-h-[60vh]';
-  const blocksLinkedContainer =
-    'flex flex-row justify-between h-[15%] border-solid border border-black rounded';
-  const blocksBackwardNotesContainer = 'w-[50%] p-1  ';
-  const blocksForwardNotesContainer = 'w-[50%] border-l-2 border-grey p-1 ';
-  const titleLinkedNote = 'text-xs underline';
+    'flex-1 flex-col justify-start items start py-3 overflow-y-auto max-h-[60vh] mb-2';
+  const blocksLinkedContainer = 'flex flex-row justify-between h-[15%] ';
+  const blocksBackwardNotesContainer =
+    'w-[50%] p-1 mr-2 pl-2  rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor';
+  const blocksForwardNotesContainer =
+    'w-[50%] p-1 ml-2 pr-2  rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor text-right';
+  const titleLinkedNote = ' text-xs font-bold text-black shadow-2xl';
 
   // ***************   NOTE DISPLAY  ***********************
 
@@ -430,7 +438,9 @@ export default function Note() {
       <div className={metadataContainer}>
         <div className={tagsContainer}>
           {tags.map((t) => (
-            <Tag key={t._id} deleteTag={deleteTag}>{t.value}</Tag>
+            <Tag key={t._id} deleteTag={deleteTag}>
+              {t.value}
+            </Tag>
           ))}
           {isTagInputVisible && (
             <div className='flex items-center'>
@@ -440,19 +450,15 @@ export default function Note() {
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
                 value={tagInput}
-                className='border p-2 rounded mr-2 '
+                className={inputTag}
               />
               {/* <button onClick={addTag} className="p-2 bg-darkPurple text-white rounded">
                     <FontAwesomeIcon icon={faCircleCheck} />
                   </button> */}
             </div>
           )}
-          <button>
-            <FontAwesomeIcon
-              icon={faCirclePlus}
-              className={icons}
-              onClick={displayTagInput}
-            />
+          <button className={buttonTag} onClick={displayTagInput}>
+            + Tag
           </button>
         </div>
         <div className={dates}>
