@@ -176,31 +176,28 @@ const Settings = () => {
     router.push('/home');
   };
 
-
-
+  // STYLE CSS
   const container = 'flex flex-1';
-  const leftSideContainer = 'flex flex-col justify-around items-center w-3/12 bg-backgroundColor';
-  const headerContent = 'flex justify-center items-center';
-  const iconSettings = 'text-darkPurple';
-  const settingsTitle ='text-darkPurple text-4xl font-bold';
+  const leftSideContainer =
+    'flex flex-col justify-around items-center w-3/12 bg-backgroundColor';
+  const headerContent = 'flex justify-center items-center ';
+  const iconSettings = 'text-darkPurple text-3xl';
+  const settingsTitle = 'pl-2 text-darkPurple text-3xl font-bold';
   const chooseYourAvatarContainer = 'flex flex-col justify-center items-center';
-  const btnChooseYourAvatar = 'flex text-white rounded-md bg-darkPurple mt-6 p-2';
+  const pictureProfil = 'rounded-[100px] h-40 w-40';
+  const btnChooseYourAvatar =
+    'flex text-white rounded-md bg-darkPurple mt-8 p-2 text-xs hover:text-darkPurple hover:bg-lightPurple transition duration-300 ease-in-out bg-darkPurple';
   const modalAvatarsContainer = 'flex flex-wrap justify-center gap-6';
-  const nouveauUsernameContainer= 'flex flex-col items-center';
-  const nouveauUsernameStyle = 'text-darkPurple font-bold';
-  const champsUsername = 'w-8/12 rounded-md';
-  const languageContainer = 'flex flex-col justify-between items-center';
-  const languageStyle = 'text-darkPurple font-bold';
-  const themeContainer = 'flex flex-col items-center';
-  const themeStyle = 'text-darkPurple font-bold';
-  const btnConfirmation = 'bg-darkPurple text-white mb-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out';
+  const nouveauUsernameContainer = 'flex flex-col items-center -mt-8 ';
+  const subtitleSettings = 'text-darkPurple font-bold pb-2';
+  const champsUsername =
+    'border rounded-md text-center p-1 bold text-darkPurple focus:border-darkPurple focus:outline-none w-[200px]';
+  const languageContainer = 'flex flex-col justify-between items-center -mt-8';
+
+  const themeContainer = 'flex flex-col items-center -mt-8';
+  const btnConfirmation =
+    'flex text-white rounded-md bg-darkPurple mt-6 p-2 text-xs hover:text-darkPurple hover:bg-lightPurple transition duration-300 ease-in-out bg-darkPurple -mt-8';
   const imageDeFond = 'bg-backImg-settings bg-cover bg-center h-screen w-9/12';
-  
-
-
-
-
-
 
   return (
     <div className={container}>
@@ -208,26 +205,23 @@ const Settings = () => {
       <div className={leftSideContainer}>
         {/* Title */}
         <div className={headerContent}>
-          <FontAwesomeIcon
-            icon={faGear}
-            size='3x'
-            className={iconSettings}
-          />
+          <FontAwesomeIcon icon={faGear} size='3x' className={iconSettings} />
           <h1 className={settingsTitle}>Settings</h1>
         </div>
-        <Image
-          src={selectedPictureProfil}
-          alt='Avatar sélectionné'
-          width={100}
-          height={100}
-        />
-        {/* Modification de l'avatar */}
         <div className={chooseYourAvatarContainer}>
-          <Button type='ghost' onClick={() => setIsModalOpen(!isModalOpen)}>
-            <p className={btnChooseYourAvatar}>
-              Choose your Avatar
-            </p>
-          </Button>
+          <Image
+            src={selectedPictureProfil}
+            className={pictureProfil}
+            alt='Avatar sélectionné'
+            width={120}
+            height={120}
+          />
+          {/* Modification de l'avatar */}
+          <div>
+            <Button type='ghost' onClick={() => setIsModalOpen(!isModalOpen)}>
+              <p className={btnChooseYourAvatar}>Changer d'avatar</p>
+            </Button>
+          </div>
         </div>
 
         <Modal
@@ -242,7 +236,7 @@ const Settings = () => {
 
         {/* Modification du username */}
         <div className={nouveauUsernameContainer}>
-          <p className={nouveauUsernameStyle}>Nouveau username</p>
+          <p className={subtitleSettings}>Nouveau username</p>
           <input
             className={champsUsername}
             type='text'
@@ -254,7 +248,7 @@ const Settings = () => {
 
         {/* Choix du language de dev */}
         <div className={languageContainer}>
-          <p className={languageStyle}>Langage par défault</p>
+          <p className={subtitleSettings}>Langage par défault</p>
           <LanguageSelector
             selectedLanguage={selectedLanguage}
             setSelectedLanguage={setSelectedLanguage}
@@ -263,18 +257,14 @@ const Settings = () => {
 
         {/* Choix du thèmes de l'éditeur de code*/}
         <div className={themeContainer}>
-          <p className={themeStyle}>Thème</p>
+          <p className={subtitleSettings}>Thème</p>
           <EditorThemeSelector
             selectedEditorTheme={selectedEditorTheme}
             setSelectedEditorTheme={setSelectedEditorTheme}
           />
         </div>
-
         {/* Confirmer les changements */}
-        <button
-          className={btnConfirmation}
-          onClick={changeUserInfo}
-        >
+        <button className={btnConfirmation} onClick={changeUserInfo}>
           Confirmation
         </button>
       </div>
