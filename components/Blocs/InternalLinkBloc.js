@@ -76,6 +76,7 @@ const InternalLinkBloc = ({
 
     const handleCancel = () => {
      setIsSearchInternalModalOpen(false);
+     deleteBloc(blocId)
     };
   
     //Input value gestion
@@ -113,8 +114,12 @@ const InternalLinkBloc = ({
       setIsSearchInternalModalOpen(false);
     //   setInternalLinkId(refNoteId.toString())
     //   setInternalLinkTitle(refNoteIdTitle)
-      
     }
+
+    // const handleDelete = () => {
+    //   deleteBloc(blocId)
+
+    // }
   
     //noteLink creation liste
     let notes = [];
@@ -173,11 +178,14 @@ const InternalLinkBloc = ({
                     )}
                 </div>
             </Modal>
-            <div className='flex flex-row ml-2 justify-start items-center w-full'>
+            <div className='relative flex flex-row ml-2 justify-start items-center w-full'>
                 {internalLinkId !== '' && (<NoteLink 
                                               title={internalLinkTitle} 
                                               noteId={internalLinkId} 
                                               stylePage='internal_link'/>) }
+                <button 
+                  className="absolute top-1 right-4 w-4 h-4 flex justify-center items-center text-white hover:text-darkPurple hover:cursor-pointer hover:font-bold"
+                  onClick={() => deleteBloc(blocId)}>x</button>
             </div>
         </div>
     )
