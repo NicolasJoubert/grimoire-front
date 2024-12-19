@@ -10,6 +10,7 @@ function NoteLinks({ title, noteId, isCurrent, stylePage, isSearch }) {
     
   };
   const restrictTitle = () => {
+    // restreint la longueur du titre sur les composants sidebar left/right
     if ((stylePage !== 'search') &&
         (stylePage !== 'internal_link') && 
         (stylePage !== 'forwardTitle') &&
