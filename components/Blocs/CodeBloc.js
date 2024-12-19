@@ -195,7 +195,7 @@ const CodeBloc = ({
     </div>
   );
   //`h-[${blocHeight}px]`
-  const container = 'flex flex-1 justify-between items-start mt-1 mb-4';
+  const container = 'flex flex-1 justify-between items-start mt-1 mb-4 mr-10px';
   const popoverStyle = '';
   const buttonStyle = clsx(
     isBlocHovered ? 'bg-lightPurple' : 'bg-transparent',
@@ -212,7 +212,7 @@ const CodeBloc = ({
   const executedCodeContainer =
     'flex w-[93%] min-h-8 font-mono text-xs justify-start items-start bg-white rounded-md px-2 mb-1';
   const containerInputChoice = 'mb-2 mt-2';
-  const aceEditorStyle = "rounded-md";
+  const aceEditorStyle = 'rounded-md';
 
   return (
     <div
