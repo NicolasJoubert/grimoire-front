@@ -62,30 +62,6 @@ export default function Note() {
     }
   };
 
-  /**Retrieve linked note forward */
-  const fetchLinkedNotes = async (direction) => {
-    try {
-      const response = await fetch(
-        backendUrl + `/notes/linked/${direction}/${noteId}`
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (data.result) {
-        if (direction === 'forward') {
-          setTitleForwardNotes(data.forwardNotes);
-        } else if (direction === 'backward') {
-          setTitleBackwardNotes(data.backwardNotes);
-        }
-      } else {
-        console.error('Erreur lors de la récupération des notes', err.message);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
   /** Save note when title is changed and update updatedAt  */
   const saveNote = async () => {
     // IMPORTANT : do not save blocs, only updated last modified and title
@@ -300,7 +276,7 @@ export default function Note() {
    */
   useEffect(() => {
     fetchNote();
-  }, [noteId, blocCount]);
+  }, [noteId, blocCount, isSearchInternalModalOpen]);
 
   /** Updates note in database when noteData is changed */
   useEffect(() => {
@@ -312,13 +288,6 @@ export default function Note() {
     fetchTags();
   }, [noteId, tagCount]);
 
-  /**Fetch forward linked note */
-  useEffect(() => {
-    if (noteId) {
-      fetchLinkedNotes('forward');
-      fetchLinkedNotes('backward');
-    }
-  }, [noteId]);
 
   // ***************   BLOCS RENDERER   ***********************
 
@@ -464,7 +433,7 @@ export default function Note() {
       <div className={blocksLinkedContainer}>
         <div className={blocksBackwardNotesContainer}>
           <h3 className={titleLinkedNote}>Notes liées :</h3>
-          {titleBackwaardNotes.map((note, i) => (
+          {noteData?.backwardNotes?.map((note, i) => (
             <NoteLink
               key={i}
               title={note.title}
@@ -475,7 +444,7 @@ export default function Note() {
         </div>
         <div className={blocksForwardNotesContainer}>
           <h3 className={titleLinkedNote}>Notes reférencées :</h3>
-          {titleForwardNotes.map((note, i) => (
+          {noteData?.forwardNotes?.map((note, i) => (
             <NoteLink
               key={i}
               title={note.title}
