@@ -6,13 +6,9 @@ import {
 } from 'react-icons/tb';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faFileCirclePlus,
-  faMagnifyingGlass,
-} from '@fortawesome/free-solid-svg-icons';
+import { faFileCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
 import NoteLink from './NoteLink';
-import Tag from './Tag'
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -32,6 +28,8 @@ export default function Searchbar({
   
   const token = useSelector((state) => state.user.value.token);
 
+  /// ****** FONCTIONS ******** /////
+
   //Input value gestion
   const changeInput = (inputValue) => {
     if (inputValue === '') {
@@ -48,7 +46,6 @@ export default function Searchbar({
       searchedNotes.length > 0 ? setIsSearchResultVisible(true) : setIsSearchResultVisible(false)
       return
     } 
-
 
     extractTags(inputValue) // first we get the tags in the searchBar
     filterNotesByTags()
@@ -79,7 +76,7 @@ export default function Searchbar({
     const data = await response.json()
     if (data.result) {
       setFetchedTagNotes(data.notes)
-    } else {
+    } else { 
       setFetchedTagNotes([])
     }
   }
@@ -110,11 +107,6 @@ export default function Searchbar({
     }
   }
 
-  // /** Retire le tag du tableau tags */
-  // const deleteTag = (value) => {
-  //   const newTags = tags.filter(tag => tag !== value)
-  //   setTags(newTags)
-  // }
 
   //gestion du click exterieur ************************/
   const elementRef = useRef(null);
@@ -136,12 +128,6 @@ export default function Searchbar({
   }, [onOutsideClick]);
   //END gestion du click exterieur ************************/
 
-  //HASTAG creation liste
-  // let displayedTags = tags.map((tag, i) => {
-  //   return (
-  //     <Tag key={i} deleteTag={deleteTag}>{tag}</Tag>
-  //   );
-  // });
 
   //noteLink creation liste
   let notes = [];
