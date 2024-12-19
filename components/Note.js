@@ -448,7 +448,7 @@ export default function Note() {
             <NoteLink
               key={i}
               title={note.title}
-              noteId={note.id}
+              noteId={note._id}
               stylePage='forwardTitle'
             />
           ))}
