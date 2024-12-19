@@ -193,6 +193,8 @@ const InternalLinkBloc = ({
                 <button 
                   className="absolute top-1 right-4 w-4 h-4 flex justify-center items-center text-white hover:text-darkPurple hover:cursor-pointer hover:font-bold"
                   onClick={() => deleteBloc(blocId)}>x</button>
+
+            
             </div>
         </div>
     )
