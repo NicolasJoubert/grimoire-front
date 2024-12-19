@@ -360,7 +360,7 @@ export default function Note() {
   const dates = 'flex flex-col justify-center items-end';
   const blocsContainer =
     'flex-1 flex-col justify-start items start py-3 overflow-y-auto max-h-[60vh] mb-2';
-  const blocksLinkedContainer = clsx( 'flex flex-row h-[15%]', titleBackwaardNotes.length > 0 ? 'justify-between':'justify-end');
+  const blocksLinkedContainer = clsx( 'flex flex-row h-[15%]', noteData?.backwardNotes?.length > 0 ? 'justify-between':'justify-end');
   const blocksBackwardNotesContainer =
     'w-[50%] p-1 mr-2 pl-2 rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor';
   const blocksForwardNotesContainer =
