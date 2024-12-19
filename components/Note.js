@@ -353,7 +353,7 @@ export default function Note() {
           addBloc={addBloc}
           deleteBloc={deleteBloc}
           // setBlocsValue={setBlocsValue}
-        />
+        />)
     } else if (bloc.type === "internal link") {
       blocComponent =  <InternalLinkBloc 
                             blocId={bloc._id}
