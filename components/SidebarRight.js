@@ -33,7 +33,7 @@ export default function SidebarRight({ toggleSidebarRight }) {
         });
 
         const data = await response.json();
-        console.log("data :",data)
+        console.log('data :', data);
         if (data.result && data.notes.length > 0) {
           setNotes(data.notes);
         } else {
@@ -121,26 +121,28 @@ export default function SidebarRight({ toggleSidebarRight }) {
     <NoteLink key={index} title={update.title} noteId={update.id} />
   ));
 
-
   const container = 'h-full w-64 bg-backgroundColor flex flex-col';
   const headerContainer = 'flex justify-start';
-  const btnHideSidebarRight = 'pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out';
-  const changeDateContainer = 'flex items-center justify-center gap-4 mb-4 mt-12';
+  const btnHideSidebarRight =
+    'pt-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out';
+  const changeDateContainer =
+    'flex items-center justify-center gap-4 mb-4 mt-12';
   const btnBackwardDateArrow = 'text-black hover:text-darkPurple';
-  const iconFaChevronLeft = 'p4 text-darkPurple text-sm hover:text-lightPurple transition duration-300 ease-in-out';
+  const iconFaChevronLeft =
+    'p4 text-darkPurple text-sm hover:text-lightPurple transition duration-300 ease-in-out';
   const todayDate = 'text-base font-bold text-darkPurple mb-0';
   const btnForwardDateArrow = 'text-black hover:text-darkPurple';
-  const iconFaChevronRight = 'p4 text-darkPurple text-sm hover:text-lightPurple transition duration-300 ease-in-out';
+  const iconFaChevronRight =
+    'p4 text-darkPurple text-sm hover:text-lightPurple transition duration-300 ease-in-out';
   const todayNotesContainer = 'border-b-2 border-solid border-gray pl-4';
   const todayNotesStyle = 'font-bold text-darkPurple';
-  const todayNotesList = 'list-disc list-inside text-black overflow-y-auto min-h-[160px] max-h-[160px] mr-4';
+  const todayNotesList =
+    'list-disc list-inside text-black overflow-y-auto min-h-[160px] max-h-[160px] mr-4';
   const calendarContainer = 'top-[80%] p-2 w-[100%]';
-  const daysOfTheWeek = 'grid grid-cols-7 gap-2 text-center text-sm font-medium';
+  const daysOfTheWeek =
+    'grid grid-cols-7 gap-2 text-center text-sm font-medium';
   const eachDayStyle = 'text-black bg-lightPurple rounded';
   const calendarDatesStyle = 'grid grid-cols-7 gap-2 mt-2';
-
-
-
 
   return (
     <div className={container}>
@@ -156,26 +158,15 @@ export default function SidebarRight({ toggleSidebarRight }) {
       {/* Header avec navigation entre les jours */}
       <div className={changeDateContainer}>
         {/* Bouton pour le jour précédent */}
-        <button
-          onClick={handlePrevDay}
-          className={btnBackwardDateArrow}
-        >
-          <FontAwesomeIcon
-            icon={faChevronLeft}
-            className={iconFaChevronLeft}
-          />
+        <button onClick={handlePrevDay} className={btnBackwardDateArrow}>
+          <FontAwesomeIcon icon={faChevronLeft} className={iconFaChevronLeft} />
         </button>
 
         {/* Affichage de la date sélectionnée */}
-        <h2 className={todayDate}>
-          {formatDate(selectedDate)}
-        </h2>
+        <h2 className={todayDate}>{formatDate(selectedDate)}</h2>
 
         {/* Bouton pour le jour suivant */}
-        <button
-          onClick={handleNextDay}
-          className={btnForwardDateArrow}
-        >
+        <button onClick={handleNextDay} className={btnForwardDateArrow}>
           <FontAwesomeIcon
             icon={faChevronRight}
             className={iconFaChevronRight}

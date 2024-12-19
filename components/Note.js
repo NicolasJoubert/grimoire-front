@@ -1,11 +1,7 @@
 import moment from 'moment';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  removeCurrentNote,
-  replaceCurrentNote,
-  updateTitleNote,
-} from '../reducers/currentNote.js';
+import { removeCurrentNote, updateTitleNote } from '../reducers/currentNote.js';
 import { toggleFavorite } from '../reducers/changeStatus.js';
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
@@ -13,12 +9,7 @@ import CodeBloc from './Blocs/CodeBloc';
 import InternalLinkBloc from './Blocs/InternalLinkBloc.js';
 import NoteLink from './NoteLink.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faBookmark,
-  faTrashCan,
-  faCirclePlus,
-  faCircleCheck,
-} from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
