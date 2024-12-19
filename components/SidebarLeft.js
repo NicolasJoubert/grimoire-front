@@ -136,7 +136,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       </div>
 
       {/* FAVORIS */}
-      <div className={bookmarkFavorisContainer}>
+      {selectFavoris.length > 0 && (<div className={bookmarkFavorisContainer}>
         <div className={bookmarkContainer}>
           <FontAwesomeIcon icon={faBookmark} className={iconBookmark} />
           <p className={favorisStyle}>
@@ -148,7 +148,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
             <NoteLink key={i} title={favoris.title} noteId={favoris.id} />
           ))}
         </div>
-      </div>
+      </div>)}
 
       {/* ICONS ADD AND SORT */}
       <div className={addPlusFilterContainer}>
