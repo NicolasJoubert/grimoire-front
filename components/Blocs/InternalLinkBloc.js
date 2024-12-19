@@ -37,10 +37,6 @@ const InternalLinkBloc = ({
         }
     }, [content]); 
 
-    useEffect(() => {
-      setIsModalOpen(true)
-    }, [])
-
     /** Save Bloc in database */
     const saveBloc = async (idRef, titleRef) => {
         try {
@@ -67,6 +63,11 @@ const InternalLinkBloc = ({
         } catch (error) {
             console.error('Error fetching data:', error);
         }
+    }
+
+    const addBlocActiveModal = ()=>{
+        addBloc(position, "internal link", noteId)
+        setIsModalOpen(true)
     }
 
     const container = clsx("flex justify-between items-start")
@@ -139,7 +140,7 @@ const InternalLinkBloc = ({
         <div className="">
           <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
           <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
-          <div className={popoverContentStyle} onClick={() => addBloc(position, "internal link", noteId)}>Internal link</div>
+          <div className={popoverContentStyle} onClick={() => addBlocActiveModal()}>Internal link</div>
         </div>
     );
      
