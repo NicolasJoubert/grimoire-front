@@ -14,7 +14,6 @@ const InternalLinkBloc = ({
     type,
     content,
     position,
-    height, 
     deleteBloc,
     addBloc
 }) => {
@@ -37,6 +36,10 @@ const InternalLinkBloc = ({
             setInternalLinkTitle(contentTab[1]);
         }
     }, [content]); 
+
+    useEffect(() => {
+      setIsModalOpen(true)
+    }, [])
 
     /** Save Bloc in database */
     const saveBloc = async (idRef, titleRef) => {
@@ -65,33 +68,16 @@ const InternalLinkBloc = ({
             console.error('Error fetching data:', error);
         }
     }
-    
-                
-    const popoverContentStyle = "flex w-full focus:outline-none text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 pb-1 px-2 mt-2 hover:cursor-pointer"
-    const popoverContent = (
-        <div className="">
-          <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
-          <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
-          <div className={popoverContentStyle} onClick={() => addBlocActiveModal()}>Internal link</div>
-        </div>
-    );
-
-    const addBlocActiveModal = ()=>{
-        addBloc(position, "internal link", noteId)
-        setIsModalOpen(true)
-    }
 
     const container = clsx("flex justify-between items-start")
     const buttonStyle = clsx(
         isBlocHovered ? "bg-lightPurple" : "bg-transparent",
         "rounded-full w-6 h-6 text-center cursor-pointer text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200")
-    const inputStyle = clsx("w-full ml-2.5 text-black")// border-solid border border-black rounded-md 
+    // const inputStyle = clsx("w-full ml-2.5 text-black")// border-solid border border-black rounded-md 
 
-
-    
 
     const handleCancel = () => {
-    setIsModalOpen(false);
+     setIsModalOpen(false);
     };
   
     //Input value gestion
@@ -147,6 +133,15 @@ const InternalLinkBloc = ({
         }
       );
     }
+
+    const popoverContentStyle = "flex w-full focus:outline-none text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 pb-1 px-2 mt-2 hover:cursor-pointer"
+    const popoverContent = (
+        <div className="">
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "internal link", noteId)}>Internal link</div>
+        </div>
+    );
      
     return (
         <div 
