@@ -134,6 +134,7 @@ export default function Note() {
 
   /** Add a bloc below the one which created it */
   const addBloc = async (position, type, noteId) => {
+    console.log("click")
     // Get blocs in the note that have a position superior to the one creating it
     const response = await fetch(`${backendUrl}/blocs/${noteId}/${position}`);
     const data = await response.json();
@@ -148,14 +149,15 @@ export default function Note() {
           body: JSON.stringify({ blocsIds }),
         });
         await response.json();
+
       }
 
       // After potential below blocs were displaced, we create the new bloc
       const newBlocPosition = position + 1; // new bloc has a position superior by one to the precedent
-      
       // First we get defaultLanguage id
       const responseLang = await fetch(`${backendUrl}/dev/languages/type/display/value/${defaultDevLanguage.displayValue.replace(" ", "_")}`)
       const dataLang = await responseLang.json()
+
 
       const response = await fetch(`${backendUrl}/blocs/`, {
         method: 'POST',
