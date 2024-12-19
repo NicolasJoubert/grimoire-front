@@ -118,19 +118,44 @@ function Signup() {
       }
     }
   };
+
+
+  const signupContainer = 'flex flex-1';
+  const signupImageLeftSide = 'bg-backImg-signup bg-cover bg-center h-screen w-9/12';
+  const signupImageRightSide = 'flex flex-col justify-around items-center w-3/12 bg-backgroundColor';
+  const googleLoginContainer = 'flex justify-around w-full';
+  const iconFaCirclePlus = 'text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out';
+  const signupInputFieldsContainer = 'flex flex-col w-full items-center';
+  const emailInputFieldStyle = 'w-8/12 rounded-md';
+  const emailErrorStyle = 'text-red-500 ';
+  const usernameInputFieldStyle = 'mt-4 w-8/12 rounded-md';
+  const passwordInputFieldStyle = 'mt-4 w-8/12 rounded-md';
+  const passwordConfirmationInputFieldStyle = 'mt-4 w-8/12 rounded-md';
+  const passwordErrorInputFieldStyle = 'text-red-500 ';
+  const btnInscription = 'bg-darkPurple text-white mt-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out';
+
+
+
+
+
+
+
+
+
+
   return (
-    <div className=' flex flex-1'>
+    <div className={signupContainer}>
       {' '}
       {/* div qui contient tout l'écran */}
-      <div className='bg-backImg-signup bg-cover bg-center h-screen w-9/12'>
+      <div className={signupImageLeftSide}>
         {' '}
         {/* image de fond */}
       </div>
-      <div className='flex flex-col justify-around items-center w-3/12 bg-backgroundColor'>
+      <div className={signupImageRightSide}>
         {' '}
         {/*div qui contient tout l'élément de droite */}
         <img src='/assets/logofinal.png' alt='logo' />
-        <div className='flex justify-around w-full'>
+        <div className={googleLoginContainer}>
           {' '}
           {/*div qui contient les logo de connexion externe */}
           {/* <button>
@@ -165,46 +190,46 @@ function Signup() {
           <FontAwesomeIcon
             icon={faCirclePlus}
             size='3x'
-            className='text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'
+            className={iconFaCirclePlus}
           />
         </button>
-        <div className='flex flex-col w-full items-center'>
+        <div className={signupInputFieldsContainer}>
           {' '}
           {/*div qui contient tout les input et bouttons*/}
           <input
-            className='w-8/12 rounded-md'
+            className={emailInputFieldStyle}
             type='text'
             placeholder='Mail'
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
-          {emailError && <p className='text-red-500 '>Email incorrect !</p>}
+          {emailError && <p className={emailErrorStyle}>Email incorrect !</p>}
           <input
-            className='mt-4 w-8/12 rounded-md'
+            className={usernameInputFieldStyle}
             type='text'
             placeholder='Username'
             onChange={(e) => setUsername(e.target.value)}
             value={username}
           />
           <input
-            className='mt-4 w-8/12 rounded-md'
+            className={passwordInputFieldStyle}
             type='password'
             placeholder='Password'
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
           <input
-            className='mt-4 w-8/12 rounded-md'
+            className={passwordConfirmationInputFieldStyle}
             type='password'
             placeholder='Confirm password'
             onChange={(e) => setConfirmPassword(e.target.value)}
             value={confirmpassword}
           />
           {passwordError && (
-            <p className='text-red-500 '>Mot de passe incorrect !</p>
+            <p className={passwordErrorInputFieldStyle}>Mot de passe incorrect !</p>
           )}
           <button
-            className='bg-darkPurple text-white mt-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out'
+            className={btnInscription}
             onClick={() => handleSubmit()}
           >
             Inscription

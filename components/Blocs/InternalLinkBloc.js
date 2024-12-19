@@ -136,6 +136,13 @@ const InternalLinkBloc = ({
         }
       );
     }
+     
+    const inputFieldLinkContainer = 'w-[80%]';
+    const inputFieldLinkStyle = 'text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor p-2';
+    const isSearchResultVisibleContainer = 'w-full max-w-screen-sm flex flex-col justify-center items-center';
+    const searchedNotesStyle = 'w-full flex flex-col bg-lightPurple rounded-lg p-4 my-4';
+    const modalContainer = 'text-gray-900 flex flex-col justify-between items-center bg-backgroundColor w-full ';
+    const internalLinkStyle = 'flex flex-row justify-start items-center w-full';
 
     const popoverContentStyle = "flex w-full focus:outline-none text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 pb-1 px-2 mt-2 hover:cursor-pointer"
     const popoverContent = (
@@ -145,7 +152,7 @@ const InternalLinkBloc = ({
           <div className={popoverContentStyle} onClick={() => addBloc(position, "internal link", noteId)}>Internal link</div>
         </div>
     );
-     
+
     return (
         <div 
             className={container}
@@ -158,27 +165,27 @@ const InternalLinkBloc = ({
             </Popover>
 
              <Modal open={isSearchInternalModalOpen} onCancel={handleCancel} footer={null}>
-                <div className='text-gray-900 flex flex-col justify-between items-center bg-backgroundColor w-full '>
+                <div className={modalContainer}>
                     {/* Search */}
-                    <div className='w-[80%]'>
+                    <div className={inputFieldLinkContainer}>
                         <input
                         onChange={(e) => changeInput(e.target.value)}
                         value={search}
-                        className='text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor p-2'
+                        className={inputFieldLinkStyle}
                         placeholder='Lien vers une note'
                         />
                     </div>
                     {/* Résultats de la recherche */}
                     {isSearchResultVisible && (
-                    <div className='w-full max-w-screen-sm flex flex-col justify-center items-center'>
-                        <div className='w-full flex flex-col bg-lightPurple rounded-lg p-4 my-4'>
+                    <div className={isSearchResultVisibleContainer}>
+                        <div className={searchedNotesStyle}>
                         {searchedNotes && notes}
                         </div>
                     </div>
                     )}
                 </div>
             </Modal>
-            <div className='relative flex flex-row ml-2 justify-start items-center w-full'>
+            <div className={internalLinkStyle}>
                 {internalLinkId !== '' && (<NoteLink 
                                               title={internalLinkTitle} 
                                               noteId={internalLinkId} 
