@@ -354,7 +354,7 @@ export default function Note() {
     'flex flex-row justify-between items-center w-full h-12 text-sm pr-4';
   const tagsContainer = 'flex justify-start items-center';
   const buttonTag =
-    'text-xs hover:text-darkPurple hover:bg-lightPurple transition duration-300 ease-in-out bg-darkPurple text-whitePure font-bold p-1 pl-2 pr-2 rounded';
+    'text-xs hover:text-darkPurple hover:bg-lightPurple transition duration-300 ease-in-out bg-darkPurple text-whitePure font-bold  p-1 pl-2 pr-2 rounded';
   const inputTag =
     'border-b-2 border-gray-300 focus:border-darkPurple focus:outline-none w-full w-[100px] mr-4 text-center';
   const dates = 'flex flex-col justify-center items-end';

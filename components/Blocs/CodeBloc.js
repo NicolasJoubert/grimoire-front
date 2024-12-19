@@ -203,7 +203,7 @@ const CodeBloc = ({
   );
 
   const codeblocContainer =
-    'flex flex-col justify-between items-center rounded-md bg-lightPurple w-[94%] p-1 px-2';
+    'flex flex-col justify-between items-center rounded-md bg-lightPurple w-full mx-2 p-1 px-2';
   const editorContainer =
     'flex w-full flex-col justify-center items-start mb-2';
   const executionContainer = 'flex w-full justify-between items-start ';
