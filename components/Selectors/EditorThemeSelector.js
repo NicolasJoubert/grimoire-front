@@ -39,9 +39,9 @@ const EditorThemeSelector = ({
   useEffect(() => {
     fetchThemes();
   }, []);
-  const container = 'flex w-[100%] ';
+  const container = 'flex w-[100%] justify-center';
   const selector =
-    'border rounded-md text-center p-1 bold text-darkPurple focus:border-darkPurple focus:outline-none w-[150px] ';
+    'border rounded-md text-center p-1 bold text-darkPurple focus:border-darkPurple focus:outline-none w-[120px] text-xs';
 
   return (
     <div className={container}>
