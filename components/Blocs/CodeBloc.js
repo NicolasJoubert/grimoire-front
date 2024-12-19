@@ -199,7 +199,7 @@ const CodeBloc = ({
   const popoverStyle = '';
   const buttonStyle = clsx(
     isBlocHovered ? 'bg-lightPurple' : 'bg-transparent',
-    'flex rounded-full w-6 h-6 text-center cursor-pointer text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200'
+    'flex p-0 items-center justify-center rounded-full w-6 h-6 text-center cursor-pointer text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200'
   );
 
   const codeblocContainer =
