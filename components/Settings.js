@@ -262,11 +262,11 @@ const Settings = () => {
             selectedEditorTheme={selectedEditorTheme}
             setSelectedEditorTheme={setSelectedEditorTheme}
           />
+          {/* Confirmer les changements */}
+          <button className={btnConfirmation} onClick={changeUserInfo}>
+            Confirmation
+          </button>
         </div>
-        {/* Confirmer les changements */}
-        <button className={btnConfirmation} onClick={changeUserInfo}>
-          Confirmation
-        </button>
       </div>
       {/*image de fond */}
       <div className={imageDeFond}></div>
