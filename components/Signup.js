@@ -1,15 +1,10 @@
 import React from 'react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { login, logout } from '../reducers/user';
+import { login } from '../reducers/user';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faGithub,
-  faGoogle,
-  faApple,
-} from '@fortawesome/free-brands-svg-icons';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
 import { GoogleLogin } from '@react-oauth/google';
@@ -26,7 +21,7 @@ function Signup() {
   const [confirmpassword, setConfirmPassword] = useState(''); //pour singn up
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [userGoogle, setUserGoogle] = useState(null);
+
   //regex email
   const EMAIL_REGEX =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -119,85 +114,34 @@ function Signup() {
     }
   };
 
-
   const signupContainer = 'flex flex-1';
-  const signupImageLeftSide = 'bg-backImg-signup bg-cover bg-center h-screen w-9/12';
-  const signupImageRightSide = 'flex flex-col justify-around items-center w-3/12 bg-backgroundColor';
-  const googleLoginContainer = 'flex justify-around w-full';
-  const iconFaCirclePlus = 'text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out';
-  const signupInputFieldsContainer = 'flex flex-col w-full items-center';
-  const emailInputFieldStyle = 'w-8/12 rounded-md';
+  const signupImageLeftSide =
+    'bg-backImg-signup bg-cover bg-center h-screen w-9/12';
+  const signupImageRightSide =
+    'flex flex-col justify-around items-center w-3/12 bg-backgroundColor';
+  const googleLoginContainer = 'flex justify-around w-full mt-8';
+
+  const signupInputFieldsContainer = 'flex flex-col w-full items-center mb-12';
+  const inputStyle =
+    'border mb-4 rounded-md text-center p-1 bold text-darkPurple focus:border-darkPurple focus:outline-none w-[200px] text-sm';
   const emailErrorStyle = 'text-red-500 ';
-  const usernameInputFieldStyle = 'mt-4 w-8/12 rounded-md';
-  const passwordInputFieldStyle = 'mt-4 w-8/12 rounded-md';
-  const passwordConfirmationInputFieldStyle = 'mt-4 w-8/12 rounded-md';
   const passwordErrorInputFieldStyle = 'text-red-500 ';
-  const btnInscription = 'bg-darkPurple text-white mt-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out';
-
-
-
-
-
-
-
-
-
+  const btnInscription =
+    'flex justify-center items-center text-white rounded-md bg-darkPurple p-2 text-xs hover:text-darkPurple hover:bg-lightPurple transition duration-300 ease-in-out w-[200px]';
 
   return (
     <div className={signupContainer}>
       {' '}
       {/* div qui contient tout l'écran */}
-      <div className={signupImageLeftSide}>
-        {' '}
-        {/* image de fond */}
-      </div>
+      <div className={signupImageLeftSide}> {/* image de fond */}</div>
       <div className={signupImageRightSide}>
-        {' '}
         {/*div qui contient tout l'élément de droite */}
         <img src='/assets/logofinal.png' alt='logo' />
-        <div className={googleLoginContainer}>
-          {' '}
-          {/*div qui contient les logo de connexion externe */}
-          {/* <button>
-            <FontAwesomeIcon
-              icon={faGithub}
-              size='4x'
-              className='text-darkPurple  text-bae  hover:text-lightPurple transition duration-300 ease-in-out'
-            />
-          </button>
-          <button>
-            <FontAwesomeIcon
-              icon={faApple}
-              size='4x'
-              className='text-darkPurple  text-bae  hover:text-lightPurple transition duration-300 ease-in-out'
-            />
-          </button>
-          <button>
-            <FontAwesomeIcon
-              icon={faGoogle}
-              size='4x'
-              className='text-darkPurple  text-bae  hover:text-lightPurple transition duration-300 ease-in-out'
-            />
-          </button> */}
-          <GoogleLogin
-            onSuccess={(credentialResponse) =>
-              handleSubmit(credentialResponse.credential)
-            } // Passer le token Google a la fonction handleSubmit
-            onError={() => console.error('Google Login Error')}
-          />
-        </div>
-        <button>
-          <FontAwesomeIcon
-            icon={faCirclePlus}
-            size='3x'
-            className={iconFaCirclePlus}
-          />
-        </button>
+
         <div className={signupInputFieldsContainer}>
-          {' '}
           {/*div qui contient tout les input et bouttons*/}
           <input
-            className={emailInputFieldStyle}
+            className={inputStyle}
             type='text'
             placeholder='Mail'
             onChange={(e) => setEmail(e.target.value)}
@@ -205,35 +149,42 @@ function Signup() {
           />
           {emailError && <p className={emailErrorStyle}>Email incorrect !</p>}
           <input
-            className={usernameInputFieldStyle}
+            className={inputStyle}
             type='text'
             placeholder='Username'
             onChange={(e) => setUsername(e.target.value)}
             value={username}
           />
           <input
-            className={passwordInputFieldStyle}
+            className={inputStyle}
             type='password'
             placeholder='Password'
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
           <input
-            className={passwordConfirmationInputFieldStyle}
+            className={inputStyle}
             type='password'
             placeholder='Confirm password'
             onChange={(e) => setConfirmPassword(e.target.value)}
             value={confirmpassword}
           />
           {passwordError && (
-            <p className={passwordErrorInputFieldStyle}>Mot de passe incorrect !</p>
+            <p className={passwordErrorInputFieldStyle}>
+              Mot de passe incorrect !
+            </p>
           )}
-          <button
-            className={btnInscription}
-            onClick={() => handleSubmit()}
-          >
+          <button className={btnInscription} onClick={() => handleSubmit()}>
             Inscription
           </button>
+          <div className={googleLoginContainer}>
+            <GoogleLogin
+              onSuccess={(credentialResponse) =>
+                handleSubmit(credentialResponse.credential)
+              } // Passer le token Google a la fonction handleSubmit
+              onError={() => console.error('Google Login Error')}
+            />
+          </div>
         </div>
       </div>
     </div>
