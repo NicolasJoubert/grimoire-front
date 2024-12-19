@@ -26,7 +26,8 @@ const EditorThemeSelector = ({ selectedEditorTheme, setSelectedEditorTheme }) =>
 
             const data = await response.json()
             if (!data.result) throw new Error('Error retrieving editor themes from backend')
-            setEditorThemes(data.editor_themes)
+            setEditorThemes(data.editor_themes.sort((a, b) => a.displayValue.localeCompare(b.displayValue)))
+
 
         } catch(err) {
             console.log(err.message)
