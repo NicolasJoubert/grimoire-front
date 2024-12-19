@@ -1,14 +1,25 @@
 import { useDispatch } from 'react-redux';
 import { replaceCurrentNote } from '../reducers/currentNote';
 
-function NoteLinks({ title, noteId, isCurrent, stylePage }) {
+function NoteLinks({ title, noteId, isCurrent, stylePage, isSearch }) {
   const dispatch = useDispatch();
-
+  
   const handleClick = () => {
     dispatch(replaceCurrentNote(noteId));
     //console.log('cliqué sur' + noteId);
+    
   };
+  const restrictTitle = () => {
+    if ((stylePage !== 'search') &&
+        (stylePage !== 'internal_link') && 
+        (stylePage !== 'forwardTitle') &&
+        (stylePage !== 'backwardTitle') &&
+          title.length > 21){
 
+     return title.substring(0, 21) + "..."
+    }
+      return title
+  }
   // variable pour le style de base dut titre de la note
   const baseStyle =
     'cursor-pointer transition duration-300 hover:text-lightPurple ease-in-out rounded-md text-darkPurple w-auto ml-1 mr-1 pl-2';
@@ -26,7 +37,7 @@ function NoteLinks({ title, noteId, isCurrent, stylePage }) {
       className={`${baseStyle} ${styleAccordingToThePage[stylePage]}`}
       onClick={handleClick}
     >
-      <span>{title}</span>
+      <span>{restrictTitle()}</span>
     </div>
   );
 }
