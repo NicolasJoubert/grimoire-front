@@ -5,6 +5,7 @@ const initialState = {
     token: null,
     username: null,
     profilePic: null,
+    noteSorting: null,
     defaultDevLanguage: {
       displayValue: 'Javascript',
       editorValue: 'javascript',
@@ -32,12 +33,16 @@ export const userSlice = createSlice({
       state.value.token = null;
       state.value.username = null;
       state.value.profilePic = null;
+      state.value.noteSorting = null;
     },
     updateUsernameInStore: (state, action) => {
       state.value.username = action.payload;
     },
     updateProfilePicInStore: (state, action) => {
       state.value.profilePic = action.payload;
+    },
+    updateNoteSortingInStore: (state, action) => {
+      state.value.noteSorting = action.payload;
     },
     updateDefaultDevLangInStore: (state, action) => {
       state.value.defaultDevLanguage = action.payload;
@@ -53,6 +58,7 @@ export const {
   logout,
   updateUsernameInStore,
   updateProfilePicInStore,
+  updateNoteSortingInStore,
   updateDefaultDevLangInStore,
   updateDefaultEditorThemeInStore,
 } = userSlice.actions;

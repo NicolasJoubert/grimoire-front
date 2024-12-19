@@ -2,11 +2,7 @@ import moment from 'moment';
 import clsx from 'clsx';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  removeCurrentNote,
-  replaceCurrentNote,
-  updateTitleNote,
-} from '../reducers/currentNote.js';
+import { removeCurrentNote, updateTitleNote } from '../reducers/currentNote.js';
 import { toggleFavorite } from '../reducers/changeStatus.js';
 import Tag from './Tag';
 import TextBloc from './Blocs/TextBloc';
@@ -14,12 +10,7 @@ import CodeBloc from './Blocs/CodeBloc';
 import InternalLinkBloc from './Blocs/InternalLinkBloc.js';
 import NoteLink from './NoteLink.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faBookmark,
-  faTrashCan,
-  faCirclePlus,
-  faCircleCheck,
-} from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -30,6 +21,7 @@ export default function Note() {
   const [tags, setTags] = useState([]);
   const [tagCount, setTagCount] = useState(1);
   const [isTagInputVisible, setIsTagInputVisible] = useState(false);
+  const [isSearchInternalModalOpen, setIsSearchInternalModalOpen] = useState(false);
   const [titleForwardNotes, setTitleForwardNotes] = useState([]);
   const [titleBackwaardNotes, setTitleBackwardNotes] = useState([]);
 
@@ -65,30 +57,6 @@ export default function Note() {
           //user => on l'inclue ?
         });
         setBlocCount(data.note.blocs.length);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  /**Retrieve linked note forward */
-  const fetchLinkedNotes = async (direction) => {
-    try {
-      const response = await fetch(
-        backendUrl + `/notes/linked/${direction}/${noteId}`
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (data.result) {
-        if (direction === 'forward') {
-          setTitleForwardNotes(data.forwardNotes);
-        } else if (direction === 'backward') {
-          setTitleBackwardNotes(data.backwardNotes);
-        }
-      } else {
-        console.error('Erreur lors de la récupération des notes', err.message);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -175,6 +143,9 @@ export default function Note() {
       const data = await response.json();
       // update bloc count (used to fetch note)
       data.result && setBlocCount((blocCount += 1));
+      if (data.result && type === "internal link") {
+        setIsSearchInternalModalOpen(true)
+      }
     }
   };
 
@@ -306,7 +277,7 @@ export default function Note() {
    */
   useEffect(() => {
     fetchNote();
-  }, [noteId, blocCount]);
+  }, [noteId, blocCount, isSearchInternalModalOpen]);
 
   /** Updates note in database when noteData is changed */
   useEffect(() => {
@@ -318,13 +289,6 @@ export default function Note() {
     fetchTags();
   }, [noteId, tagCount]);
 
-  /**Fetch forward linked note */
-  useEffect(() => {
-    if (noteId) {
-      fetchLinkedNotes('forward');
-      fetchLinkedNotes('backward');
-    }
-  }, [noteId]);
 
   // ***************   BLOCS RENDERER   ***********************
 
@@ -359,21 +323,20 @@ export default function Note() {
           addBloc={addBloc}
           deleteBloc={deleteBloc}
           // setBlocsValue={setBlocsValue}
-        />
-      );
-    } else if (bloc.type === 'internal link') {
-      blocComponent = (
-        <InternalLinkBloc
-          blocId={bloc._id}
-          noteId={noteId}
-          type={bloc.type}
-          content={bloc.content}
-          position={bloc.position}
-          height={bloc.height}
-          addBloc={addBloc}
-          deleteBloc={deleteBloc}
-        />
-      );
+        />)
+    } else if (bloc.type === "internal link") {
+      blocComponent =  <InternalLinkBloc 
+                            blocId={bloc._id}
+                            noteId={noteId}
+                            type={bloc.type}
+                            content={bloc.content}
+                            position={bloc.position}
+                            height={bloc.height}
+                            addBloc={addBloc}
+                            deleteBloc={deleteBloc}
+                            isSearchInternalModalOpen={isSearchInternalModalOpen}
+                            setIsSearchInternalModalOpen={setIsSearchInternalModalOpen}
+                        />
     }
 
     return <div key={bloc._id}>{blocComponent}</div>;
@@ -471,7 +434,7 @@ export default function Note() {
       <div className={blocksLinkedContainer}>
         {titleBackwaardNotes.length > 0 && (<div className={blocksBackwardNotesContainer}>
           <h3 className={titleLinkedNote}>Notes liées :</h3>
-          {titleBackwaardNotes.map((note, i) => (
+          {noteData?.backwardNotes?.map((note, i) => (
             <NoteLink
               key={i}
               title={note.title}
@@ -482,11 +445,11 @@ export default function Note() {
         </div>)}
         {titleForwardNotes.length > 0 && (<div className={blocksForwardNotesContainer}>
           <h3 className={titleLinkedNote}>Notes reférencées :</h3>
-          {titleForwardNotes.map((note, i) => (
+          {noteData?.forwardNotes?.map((note, i) => (
             <NoteLink
               key={i}
               title={note.title}
-              noteId={note.id}
+              noteId={note._id}
               stylePage='forwardTitle'
             />
           ))}

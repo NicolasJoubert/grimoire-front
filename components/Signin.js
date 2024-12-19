@@ -61,19 +61,33 @@ function Signin() {
       });
   };
 
+
+  const signinContainer = 'flex flex-1';
+  const signinImageLeftSide = 'bg-backImg-signin bg-cover bg-center h-screen w-9/12';
+  const signinImageRightSide = 'flex flex-col justify-around items-center w-3/12 bg-backgroundColor';
+  const googleLoginContainer = 'flex justify-around w-full';
+  const connexionContainer = 'flex flex-col w-full h-1/5 items-center justify-center ';
+  const usernameInputFieldStyle = 'rounded-md w-4/5 h-1/5';
+  const passwordInputFieldStyle = 'mt-4 rounded-md w-4/5 h-1/5';
+  const passwordErrorInputFieldStyle = 'text-red-500 ';
+  const btnConnexion = 'bg-darkPurple text-white mt-6 rounded-md w-3/5 h-1/5 hover:bg-lightPurple transition duration-300 ease-in-out';
+  const inscriptionContainer = ' flex flex-col items-center w-full';
+  const btnInscription = 'bg-darkPurple text-white w-2/6 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out';
+  
+
   return (
-    <div className=' flex flex-1'>
+    <div className={signinContainer}>
       {' '}
       {/* div qui contient tout l'écran */}
-      <div className='bg-backImg-signin bg-cover bg-center h-screen w-9/12'>
+      <div className={signinImageLeftSide}>
         {' '}
         {/*image de fond */}
       </div>
-      <div className='flex flex-col justify-around items-center w-3/12 bg-backgroundColor'>
+      <div className={signinImageRightSide}>
         {' '}
         {/*div qui contient tout l'élément de droite */}
         <img src='/assets/logofinal.png' alt='logo' />
-        <div className='flex justify-around w-full'>
+        <div className={googleLoginContainer}>
           {' '}
           {/* div qui contient les logo de connexion externe */}
           {/* <button>
@@ -104,41 +118,41 @@ function Signin() {
             onError={(error) => console.error(error)}
           />
         </div>
-        <div className='flex flex-col w-full h-1/5 items-center justify-center '>
+        <div className={connexionContainer}>
           {' '}
           {/* div qui contient les input et boutton sign in */}
           <input
-            className='rounded-md w-4/5 h-1/5'
+            className={usernameInputFieldStyle}
             type='text'
             placeholder='Username'
             onChange={(e) => setUsername(e.target.value)}
             value={username}
           />
           <input
-            className='mt-4 rounded-md w-4/5 h-1/5'
+            className={passwordInputFieldStyle}
             type='password'
             placeholder='Password'
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
           {wrongPassword && (
-            <p className='text-red-500 '>
+            <p className={passwordErrorInputFieldStyle}>
               Utilisateur introuvable ou mot de passe incorrect
             </p>
           )}
           <button
-            className='bg-darkPurple text-white mt-6 rounded-md w-3/5 h-1/5 hover:bg-lightPurple transition duration-300 ease-in-out'
+            className={btnConnexion}
             onClick={() => handleSubmit()}
           >
             Connexion
           </button>
         </div>
-        <div className=' flex flex-col items-center w-full'>
+        <div className={inscriptionContainer}>
           {' '}
           {/*div qui contient les éléments signup */}
           <p>Pas encore inscrit</p>
           <button
-            className='bg-darkPurple text-white w-2/6 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out'
+            className={btnInscription}
             onClick={() => router.push('/signup')}
           >
             Inscription

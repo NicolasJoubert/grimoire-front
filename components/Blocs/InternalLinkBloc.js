@@ -14,13 +14,14 @@ const InternalLinkBloc = ({
     type,
     content,
     position,
-    height, 
     deleteBloc,
-    addBloc
+    addBloc,
+    isSearchInternalModalOpen,
+    setIsSearchInternalModalOpen,
 }) => {
     
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [isSearchInternalModalOpen, setIsSearchInternalModalOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [searchedNotes, setSearchedNotes] = useState([]);
     const [isSearchResultVisible, setIsSearchResultVisible] = useState(false);
@@ -65,33 +66,17 @@ const InternalLinkBloc = ({
             console.error('Error fetching data:', error);
         }
     }
-    
-                
-    const popoverContentStyle = "flex w-full focus:outline-none text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 pb-1 px-2 mt-2 hover:cursor-pointer"
-    const popoverContent = (
-        <div className="">
-          <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
-          <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
-          <div className={popoverContentStyle} onClick={() => addBlocActiveModal()}>Internal link</div>
-        </div>
-    );
-
-    const addBlocActiveModal = ()=>{
-        addBloc(position, "internal link", noteId)
-        setIsModalOpen(true)
-    }
 
     const container = clsx("flex justify-between items-start")
     const buttonStyle = clsx(
         isBlocHovered ? "bg-lightPurple" : "bg-transparent",
         "rounded-full w-6 h-6 text-center cursor-pointer text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200")
-    const inputStyle = clsx("w-full ml-2.5 text-black")// border-solid border border-black rounded-md 
+    // const inputStyle = clsx("w-full ml-2.5 text-black")// border-solid border border-black rounded-md 
 
-
-    
 
     const handleCancel = () => {
-    setIsModalOpen(false);
+     setIsSearchInternalModalOpen(false);
+     deleteBloc(blocId)
     };
   
     //Input value gestion
@@ -108,8 +93,8 @@ const InternalLinkBloc = ({
       fetch(`${backendUrl}/notes/search/${inputValue}/${token}`)
         .then((response) => response.json())
         .then((data) => {
-          setSearchedNotes(data);
-          if (data.length > 0) {
+          setSearchedNotes(data.notes);
+          if (data.notes.length > 0) {
             setIsSearchResultVisible(true);
           }
         });
@@ -118,19 +103,23 @@ const InternalLinkBloc = ({
     // add id refenced note to BDD and link inside note
     const addReferenceNote = async(refNoteId, refNoteIdTitle)=>{
         //add id refenced note to BDD 
-      const response = await fetch(`${backendUrl}/blocs/referenceLink`, {
+      const response = await fetch(`${backendUrl}/notes/linked`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ currentNoteId: noteId, refNoteId: refNoteId }),
       })
 
       // Addlink inside note
-      setIsModalOpen(false);
+      saveBloc(refNoteId.toString(), refNoteIdTitle)
+      setIsSearchInternalModalOpen(false);
     //   setInternalLinkId(refNoteId.toString())
     //   setInternalLinkTitle(refNoteIdTitle)
-      saveBloc(refNoteId.toString(), refNoteIdTitle)
-      
     }
+
+    // const handleDelete = () => {
+    //   deleteBloc(blocId)
+
+    // }
   
     //noteLink creation liste
     let notes = [];
@@ -148,6 +137,23 @@ const InternalLinkBloc = ({
       );
     }
      
+    const inputFieldLinkContainer = 'w-[80%]';
+    const inputFieldLinkStyle = 'text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor p-2';
+    const isSearchResultVisibleContainer = 'w-full max-w-screen-sm flex flex-col justify-center items-center';
+    const searchedNotesStyle = 'w-full flex flex-col bg-lightPurple rounded-lg p-4 my-4';
+    const modalContainer = 'text-gray-900 flex flex-col justify-between items-center bg-backgroundColor w-full ';
+    const internalLinkStyle = 'relative flex flex-row justify-start items-center w-full';
+    const deleteButtonStyle = "absolute top-1 right-4 w-4 h-4 flex justify-center items-center text-white hover:text-darkPurple hover:cursor-pointer hover:font-bold";
+
+    const popoverContentStyle = "flex w-full focus:outline-none text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 pb-1 px-2 mt-2 hover:cursor-pointer"
+    const popoverContent = (
+        <div className="">
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "text", noteId)}>Texte</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "code", noteId)}>Code</div>
+          <div className={popoverContentStyle} onClick={() => addBloc(position, "internal link", noteId)}>Internal link</div>
+        </div>
+    );
+
     return (
         <div 
             className={container}
@@ -159,29 +165,37 @@ const InternalLinkBloc = ({
                     onClick={() => addBloc(position, type, noteId)}>+</div>
             </Popover>
 
-             <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
-                <div className='text-gray-900 flex flex-col justify-between items-center bg-backgroundColor w-full '>
+             <Modal open={isSearchInternalModalOpen} onCancel={handleCancel} footer={null}>
+                <div className={modalContainer}>
                     {/* Search */}
-                    <div className='w-[80%]'>
+                    <div className={inputFieldLinkContainer}>
                         <input
                         onChange={(e) => changeInput(e.target.value)}
                         value={search}
-                        className='text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor p-2'
+                        className={inputFieldLinkStyle}
                         placeholder='Lien vers une note'
                         />
                     </div>
                     {/* Résultats de la recherche */}
                     {isSearchResultVisible && (
-                    <div className='w-full max-w-screen-sm flex flex-col justify-center items-center'>
-                        <div className='w-full flex flex-col bg-lightPurple rounded-lg p-4 my-4'>
+                    <div className={isSearchResultVisibleContainer}>
+                        <div className={searchedNotesStyle}>
                         {searchedNotes && notes}
                         </div>
                     </div>
                     )}
                 </div>
             </Modal>
-            <div className='flex flex-row justify-start items-center w-full'>
-                {internalLinkId !== '' && (<NoteLink title={internalLinkTitle} noteId={internalLinkId} />) }
+            <div className={internalLinkStyle}>
+                {internalLinkId !== '' && (<NoteLink 
+                                              title={internalLinkTitle} 
+                                              noteId={internalLinkId} 
+                                              stylePage='internal_link'/>) }
+                <button 
+                  className={deleteButtonStyle}
+                  onClick={() => deleteBloc(blocId)}>x</button>
+
+            
             </div>
         </div>
     )
