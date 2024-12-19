@@ -176,18 +176,44 @@ const Settings = () => {
     router.push('/home');
   };
 
+
+
+  const container = 'flex flex-1';
+  const leftSideContainer = 'flex flex-col justify-around items-center w-3/12 bg-backgroundColor';
+  const headerContent = 'flex justify-center items-center';
+  const iconSettings = 'text-darkPurple';
+  const settingsTitle ='text-darkPurple text-4xl font-bold';
+  const chooseYourAvatarContainer = 'flex flex-col justify-center items-center';
+  const btnChooseYourAvatar = 'flex text-white rounded-md bg-darkPurple mt-6 p-2';
+  const modalAvatarsContainer = 'flex flex-wrap justify-center gap-6';
+  const nouveauUsernameContainer= 'flex flex-col items-center';
+  const nouveauUsernameStyle = 'text-darkPurple font-bold';
+  const champsUsername = 'w-8/12 rounded-md';
+  const languageContainer = 'flex flex-col justify-between items-center';
+  const languageStyle = 'text-darkPurple font-bold';
+  const themeContainer = 'flex flex-col items-center';
+  const themeStyle = 'text-darkPurple font-bold';
+  const btnConfirmation = 'bg-darkPurple text-white mb-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out';
+  const imageDeFond = 'bg-backImg-settings bg-cover bg-center h-screen w-9/12';
+  
+
+
+
+
+
+
   return (
-    <div className='flex flex-1 '>
+    <div className={container}>
       {/* Settings Container */}
-      <div className='flex flex-col justify-around items-center w-3/12 bg-backgroundColor'>
+      <div className={leftSideContainer}>
         {/* Title */}
-        <div className='flex justify-center items-center '>
+        <div className={headerContent}>
           <FontAwesomeIcon
             icon={faGear}
             size='3x'
-            className='text-darkPurple'
+            className={iconSettings}
           />
-          <h1 className='text-darkPurple text-4xl font-bold '>Settings</h1>
+          <h1 className={settingsTitle}>Settings</h1>
         </div>
         <Image
           src={selectedPictureProfil}
@@ -196,9 +222,9 @@ const Settings = () => {
           height={100}
         />
         {/* Modification de l'avatar */}
-        <div className='flex flex-col justify-center items-center'>
+        <div className={chooseYourAvatarContainer}>
           <Button type='ghost' onClick={() => setIsModalOpen(!isModalOpen)}>
-            <p className='flex text-white rounded-md bg-darkPurple mt-6 p-2'>
+            <p className={btnChooseYourAvatar}>
               Choose your Avatar
             </p>
           </Button>
@@ -211,14 +237,14 @@ const Settings = () => {
           onCancel={handleCancel}
           footer={null}
         >
-          <div className='flex flex-wrap justify-center gap-6'>{avatars}</div>
+          <div className={modalAvatarsContainer}>{avatars}</div>
         </Modal>
 
         {/* Modification du username */}
-        <div className='flex flex-col items-center'>
-          <p className='text-darkPurple font-bold'>Nouveau username</p>
+        <div className={nouveauUsernameContainer}>
+          <p className={nouveauUsernameStyle}>Nouveau username</p>
           <input
-            className=' w-8/12 rounded-md'
+            className={champsUsername}
             type='text'
             placeholder='Username'
             onChange={(e) => setUsername(e.target.value)}
@@ -227,8 +253,8 @@ const Settings = () => {
         </div>
 
         {/* Choix du language de dev */}
-        <div className='flex flex-col justify-between items-center'>
-          <p className='text-darkPurple font-bold'>Langage par défault</p>
+        <div className={languageContainer}>
+          <p className={languageStyle}>Langage par défault</p>
           <LanguageSelector
             selectedLanguage={selectedLanguage}
             setSelectedLanguage={setSelectedLanguage}
@@ -236,8 +262,8 @@ const Settings = () => {
         </div>
 
         {/* Choix du thèmes de l'éditeur de code*/}
-        <div className='flex flex-col items-center'>
-          <p className='text-darkPurple font-bold'>Thème</p>
+        <div className={themeContainer}>
+          <p className={themeStyle}>Thème</p>
           <EditorThemeSelector
             selectedEditorTheme={selectedEditorTheme}
             setSelectedEditorTheme={setSelectedEditorTheme}
@@ -246,14 +272,14 @@ const Settings = () => {
 
         {/* Confirmer les changements */}
         <button
-          className='bg-darkPurple text-white mb-6 w-2/5 rounded-md hover:bg-lightPurple transition duration-300 ease-in-out'
+          className={btnConfirmation}
           onClick={changeUserInfo}
         >
           Confirmation
         </button>
       </div>
       {/*image de fond */}
-      <div className='bg-backImg-settings bg-cover bg-center h-screen w-9/12'></div>
+      <div className={imageDeFond}></div>
     </div>
   );
 };
