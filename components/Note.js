@@ -354,7 +354,7 @@ export default function Note() {
     'flex flex-row justify-between items-center w-full h-12 text-sm pr-4';
   const tagsContainer = 'flex justify-start items-center';
   const buttonTag =
-    'text-xs hover:text-darkPurple hover:bg-lightPurple transition duration-300 ease-in-out bg-darkPurple text-whitePure font-bold  p-1 pl-2 pr-2 rounded';
+    'text-xs hover:text-darkPurple hover:bg-lightPurple transition duration-300 ease-in-out bg-darkPurple text-whitePure font-bold p-1 pl-2 pr-2 rounded';
   const inputTag =
     'border-b-2 border-gray-300 focus:border-darkPurple focus:outline-none w-full w-[100px] mr-4 text-center';
   const dates = 'flex flex-col justify-center items-end';
@@ -432,18 +432,18 @@ export default function Note() {
       </div>
       <div className={blocsContainer}>{renderedBlocs}</div>
       <div className={blocksLinkedContainer}>
-        {titleBackwaardNotes.length > 0 && (<div className={blocksBackwardNotesContainer}>
+        {noteData?.backwardNotes?.length > 0 && (<div className={blocksBackwardNotesContainer}>
           <h3 className={titleLinkedNote}>Notes liées :</h3>
           {noteData?.backwardNotes?.map((note, i) => (
             <NoteLink
               key={i}
               title={note.title}
-              noteId={note.id}
+              noteId={note._id}
               stylePage='forwardTitle'
             />
           ))}
         </div>)}
-        {titleForwardNotes.length > 0 && (<div className={blocksForwardNotesContainer}>
+        {noteData?.forwardNotes.length > 0 && (<div className={blocksForwardNotesContainer}>
           <h3 className={titleLinkedNote}>Notes reférencées :</h3>
           {noteData?.forwardNotes?.map((note, i) => (
             <NoteLink
