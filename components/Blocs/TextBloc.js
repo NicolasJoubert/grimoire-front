@@ -133,7 +133,7 @@ const TextBloc = ({
     const buttonStyle = clsx(
         isBlocHovered ? "bg-lightPurple" : "bg-transparent",
         "rounded-full w-6 h-6 text-center cursor-pointer text-white hover:bg-darkPurple hover:opacity-100 transition-opacity duration-200")
-    const inputStyle = clsx("w-full ml-2.5 text-black")// border-solid border border-black rounded-md 
+    const inputStyle = clsx("w-full mr-1 ml-2.5 text-black")// border-solid border border-black rounded-md 
     return (
         <div 
             className={container}

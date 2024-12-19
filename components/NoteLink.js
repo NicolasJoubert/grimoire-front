@@ -18,6 +18,7 @@ function NoteLinks({ title, noteId, isCurrent, stylePage }) {
     // nom de la page -> props ensuite pour dynamiser si note courante
     sidebar: isCurrent && 'bg-darkPurple text-white w-auto',
     forwardTitle: 'italic text-xs overflow-y-auto',
+    internal_link: 'shadow-md	pb-1 hover:bg-darkPurple hover:text-white w-full mb-2'
   };
 
   return (

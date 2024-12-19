@@ -173,8 +173,11 @@ const InternalLinkBloc = ({
                     )}
                 </div>
             </Modal>
-            <div className='flex flex-row justify-start items-center w-full'>
-                {internalLinkId !== '' && (<NoteLink title={internalLinkTitle} noteId={internalLinkId} />) }
+            <div className='flex flex-row ml-2 justify-start items-center w-full'>
+                {internalLinkId !== '' && (<NoteLink 
+                                              title={internalLinkTitle} 
+                                              noteId={internalLinkId} 
+                                              stylePage='internal_link'/>) }
             </div>
         </div>
     )
