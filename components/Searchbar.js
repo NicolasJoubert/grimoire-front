@@ -138,7 +138,7 @@ export default function Searchbar({
           onClick={() => setIsSearchResultVisible(false)}
           className='text-left'
         >
-          <NoteLink key={i} title={note.title} noteId={note._id} />
+          <NoteLink key={i} stylePage="search" title={note.title} noteId={note._id} />
         </button>
       );
     });

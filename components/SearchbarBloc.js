@@ -76,6 +76,7 @@ export default function SearchbarBloc() {
             value={search}
             className='text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor'
             placeholder='Search'
+            isSearch={true}
           />
          
             {/* <FontAwesomeIcon
