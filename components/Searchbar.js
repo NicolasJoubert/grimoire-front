@@ -144,11 +144,25 @@ export default function Searchbar({
     });
   }
 
+
+
+  const searchBarcontainer = 'text-gray-900 flex flex-row justify-between items-center bg-backgroundColor sticky top-0 py-4';
+  const btnShowSidebarleft = 'pb-8 pl-4 pr-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out';
+  const iconAddNewNote = 'p-4 text-darkPurple text-xl hover:text-lightPurple transition duration-300 ease-in-out';
+  const searchContainer = 'flex flex-1 flex-col items-center justify-start';
+  const inputFieldContainer = 'flex flex-col border-b-2 border-darkPurple w-[80%] relative';
+  const inputFieldStyle = 'text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor';
+  const isSearchResultVisibleContainer = 'absolute overflow-y top-14 left-0 w-full max-w-screen-sm  flex flex-col justify-center items-center';
+  const searchedNotesStyle = 'w-full max-h-36 overflow-y-scroll flex flex-col bg-white shadow-lg border-2 border-darkPurple rounded-lg p-4';
+
+
+
+
   return (
-    <div className='text-gray-900 flex flex-row justify-between items-center bg-backgroundColor sticky top-0 py-4'>
+    <div className={searchBarcontainer}>
       {/* Bouton pour afficher la Sidebar uniquement si elle est cachée */}
       {!isSidebarLeftVisible && (
-        <button className='pb-8 pl-4 pr-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
+        <button className={btnShowSidebarleft}>
           <TbLayoutSidebarLeftExpandFilled
             size={24}
             onClick={toggleSidebarLeft}
@@ -159,17 +173,17 @@ export default function Searchbar({
       <button onClick={() => createNote()}>
         <FontAwesomeIcon
           icon={faFileCirclePlus}
-          className='p-4 text-darkPurple text-xl hover:text-lightPurple transition duration-300 ease-in-out'
+          className={iconAddNewNote}
         />
       </button>
 
       {/* Search */}
-      <div className='flex flex-1 flex-col items-center justify-start'>
-        <div className='flex flex-col border-b-2 border-darkPurple w-[80%] relative'>
+      <div className={searchContainer}>
+        <div className={inputFieldContainer}>
           <input
             onChange={(e) => changeInput(e.target.value)}
             value={searchInput}
-            className='text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor'
+            className={inputFieldStyle}
             placeholder='Trouver une note'
           />
           {/* Résultats de la recherche */}
@@ -177,9 +191,9 @@ export default function Searchbar({
           {isSearchResultVisible && (
           <div
             ref={elementRef}
-            className='absolute overflow-y top-14 left-0 w-full max-w-screen-sm  flex flex-col justify-center items-center'
+            className={isSearchResultVisibleContainer}
             >
-            <div className='w-full max-h-36 overflow-y-scroll flex flex-col bg-white shadow-lg border-2 border-darkPurple rounded-lg p-4'>
+            <div className={searchedNotesStyle}>
               {searchedNotes && notes}
             </div>
           </div>)}
@@ -192,7 +206,7 @@ export default function Searchbar({
 
       {/* Bouton pour afficher la Sidebar uniquement si elle est cachée */}
       {!isSidebarRightVisible && (
-        <button className='pb-8 pl-4 pr-4 text-darkPurple hover:text-lightPurple transition duration-300 ease-in-out'>
+        <button className={btnShowSidebarleft}>
           <TbLayoutSidebarRightExpandFilled
             size={24}
             onClick={toggleSidebarRight}
