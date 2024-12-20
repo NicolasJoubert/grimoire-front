@@ -142,7 +142,8 @@ const InternalLinkBloc = ({
     const isSearchResultVisibleContainer = 'w-full max-w-screen-sm flex flex-col justify-center items-center';
     const searchedNotesStyle = 'w-full flex flex-col bg-lightPurple rounded-lg p-4 my-4';
     const modalContainer = 'text-gray-900 flex flex-col justify-between items-center bg-backgroundColor w-full ';
-    const internalLinkStyle = 'flex flex-row justify-start items-center w-full';
+    const internalLinkStyle = 'relative flex flex-row justify-start items-center w-full';
+    const deleteButtonStyle = "absolute top-1 right-4 w-4 h-4 flex justify-center items-center text-white hover:text-darkPurple hover:cursor-pointer hover:font-bold";
 
     const popoverContentStyle = "flex w-full focus:outline-none text-darkPurple hover:bg-darkPurple hover:text-white rounded-sm pt-0.5 pb-1 px-2 mt-2 hover:cursor-pointer"
     const popoverContent = (
@@ -191,8 +192,10 @@ const InternalLinkBloc = ({
                                               noteId={internalLinkId} 
                                               stylePage='internal_link'/>) }
                 <button 
-                  className="absolute top-1 right-4 w-4 h-4 flex justify-center items-center text-white hover:text-darkPurple hover:cursor-pointer hover:font-bold"
+                  className={deleteButtonStyle}
                   onClick={() => deleteBloc(blocId)}>x</button>
+
+            
             </div>
         </div>
     )

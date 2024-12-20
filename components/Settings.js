@@ -191,7 +191,7 @@ const Settings = () => {
   const nouveauUsernameContainer = 'flex flex-col items-center -mt-8 ';
   const subtitleSettings = 'text-darkPurple font-bold pb-2';
   const champsUsername =
-    'border rounded-md text-center p-1 bold text-darkPurple focus:border-darkPurple focus:outline-none w-[200px]';
+    'border rounded-md text-center p-1 bold text-darkPurple focus:border-darkPurple focus:outline-none w-[200px] text-sm';
   const languageContainer = 'flex flex-col justify-between items-center -mt-8';
 
   const themeContainer = 'flex flex-col items-center -mt-8';
@@ -262,11 +262,11 @@ const Settings = () => {
             selectedEditorTheme={selectedEditorTheme}
             setSelectedEditorTheme={setSelectedEditorTheme}
           />
+          {/* Confirmer les changements */}
+          <button className={btnConfirmation} onClick={changeUserInfo}>
+            Confirmation
+          </button>
         </div>
-        {/* Confirmer les changements */}
-        <button className={btnConfirmation} onClick={changeUserInfo}>
-          Confirmation
-        </button>
       </div>
       {/*image de fond */}
       <div className={imageDeFond}></div>

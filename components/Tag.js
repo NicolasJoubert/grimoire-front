@@ -8,7 +8,7 @@ const Tag = ({children, deleteTag}) => {
 
     return (
         <div 
-            className="mr-2 bg-lightPurple px-2 rounded-md cursor-pointer" 
+            className="mr-2 text-xs p-1 pl-2 pr-2 bg-lightPurple px-2 rounded cursor-pointer" 
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
