@@ -27,6 +27,36 @@ const Settings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const avatarsData = [
     {
+      src: '/images/mickey.jpg',
+      name: 'Joachim le puissant',
+      alt: 'Joachim',
+    },
+    {
+      src: '/images/kiki.png',
+      name: 'Kiki',
+      alt: 'kiki',
+    },
+    {
+      src: '/images/joa.jpg',
+      name: 'Joachim le puissant',
+      alt: 'Joachim',
+    },
+    {
+      src: '/images/rick.png',
+      name: 'Rick',
+      alt: 'Rick',
+    },
+    {
+      src: '/images/voldyy.png',
+      name: 'Voldemort',
+      alt: 'Voldemort',
+    },
+    {
+      src: '/images/gandalf.png',
+      name: 'Gandalf',
+      alt: 'Gandalf',
+    },
+    {
       src: '/images/HatSorcerer.png',
       name: 'Hatty',
       alt: 'Chapeau de Sorcier',
