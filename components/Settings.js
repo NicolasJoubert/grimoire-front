@@ -28,7 +28,7 @@ const Settings = () => {
   const avatarsData = [
     {
       src: '/images/mickey.jpg',
-      name: 'Joachim le puissant',
+      name: "L'Empire",
       alt: 'Joachim',
     },
     {
