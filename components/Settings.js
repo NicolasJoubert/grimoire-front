@@ -56,18 +56,7 @@ const Settings = () => {
       name: 'Gandalf',
       alt: 'Gandalf',
     },
-    {
-      src: '/images/HatSorcerer.png',
-      name: 'Hatty',
-      alt: 'Chapeau de Sorcier',
-    },
-    {
-      src: '/images/balaiDeSorcerer.png',
-      name: 'Broomy',
-      alt: 'Balai de Sorcier',
-    },
-    { src: '/images/grimoire.png', name: 'Booky', alt: 'Grimoire' },
-    { src: '/images/dragon.png', name: 'Dragony', alt: 'Dragon' },
+   
   ];
 
   const avatars = avatarsData.map((data, i) => (
