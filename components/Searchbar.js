@@ -153,8 +153,8 @@ export default function Searchbar({
   const searchContainer = 'flex flex-1 flex-col items-center justify-start';
   const inputFieldContainer = 'flex flex-col border-b-2 border-darkPurple w-[80%] relative';
   const inputFieldStyle = 'text-lg text-gray-900 w-full focus:outline-none bg-backgroundColor';
-  const isSearchResultVisibleContainer = 'absolute overflow-y top-14 left-0 w-full max-w-screen-sm  flex flex-col justify-center items-center';
-  const searchedNotesStyle = 'w-full max-h-36 overflow-y-scroll flex flex-col bg-white shadow-lg border-2 border-darkPurple rounded-lg p-4';
+  const isSearchResultVisibleContainer = 'absolute overflow-y top-14 left-0 w-full max-w-screen-sm z-[1000000] flex flex-col justify-center items-center';
+  const searchedNotesStyle = 'w-full max-h-36 overflow-y-scroll z-[1000000] flex flex-col bg-white shadow-lg border-2 border-darkPurple rounded-lg p-4';
 
 
 

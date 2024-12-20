@@ -27,17 +27,36 @@ const Settings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const avatarsData = [
     {
-      src: '/images/HatSorcerer.png',
-      name: 'Hatty',
-      alt: 'Chapeau de Sorcier',
+      src: '/images/mickey.jpg',
+      name: 'Joachim le puissant',
+      alt: 'Joachim',
     },
     {
-      src: '/images/balaiDeSorcerer.png',
-      name: 'Broomy',
-      alt: 'Balai de Sorcier',
+      src: '/images/kiki.png',
+      name: 'Kiki',
+      alt: 'kiki',
     },
-    { src: '/images/grimoire.png', name: 'Booky', alt: 'Grimoire' },
-    { src: '/images/dragon.png', name: 'Dragony', alt: 'Dragon' },
+    {
+      src: '/images/joa.jpg',
+      name: 'Joachim le puissant',
+      alt: 'Joachim',
+    },
+    {
+      src: '/images/rick.png',
+      name: 'Rick',
+      alt: 'Rick',
+    },
+    {
+      src: '/images/voldyy.png',
+      name: 'Voldemort',
+      alt: 'Voldemort',
+    },
+    {
+      src: '/images/gandalf.png',
+      name: 'Gandalf',
+      alt: 'Gandalf',
+    },
+   
   ];
 
   const avatars = avatarsData.map((data, i) => (
@@ -262,11 +281,11 @@ const Settings = () => {
             selectedEditorTheme={selectedEditorTheme}
             setSelectedEditorTheme={setSelectedEditorTheme}
           />
+          {/* Confirmer les changements */}
+          <button className={btnConfirmation} onClick={changeUserInfo}>
+            Confirmation
+          </button>
         </div>
-        {/* Confirmer les changements */}
-        <button className={btnConfirmation} onClick={changeUserInfo}>
-          Confirmation
-        </button>
       </div>
       {/*image de fond */}
       <div className={imageDeFond}></div>

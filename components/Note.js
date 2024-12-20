@@ -21,7 +21,8 @@ export default function Note() {
   const [tags, setTags] = useState([]);
   const [tagCount, setTagCount] = useState(1);
   const [isTagInputVisible, setIsTagInputVisible] = useState(false);
-  const [isSearchInternalModalOpen, setIsSearchInternalModalOpen] = useState(false);
+  const [isSearchInternalModalOpen, setIsSearchInternalModalOpen] =
+    useState(false);
   const [titleForwardNotes, setTitleForwardNotes] = useState([]);
   const [titleBackwaardNotes, setTitleBackwardNotes] = useState([]);
 
@@ -143,8 +144,8 @@ export default function Note() {
       const data = await response.json();
       // update bloc count (used to fetch note)
       data.result && setBlocCount((blocCount += 1));
-      if (data.result && type === "internal link") {
-        setIsSearchInternalModalOpen(true)
+      if (data.result && type === 'internal link') {
+        setIsSearchInternalModalOpen(true);
       }
     }
   };
@@ -289,7 +290,6 @@ export default function Note() {
     fetchTags();
   }, [noteId, tagCount]);
 
-
   // ***************   BLOCS RENDERER   ***********************
 
   const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
@@ -323,20 +323,23 @@ export default function Note() {
           addBloc={addBloc}
           deleteBloc={deleteBloc}
           // setBlocsValue={setBlocsValue}
-        />)
-    } else if (bloc.type === "internal link") {
-      blocComponent =  <InternalLinkBloc 
-                            blocId={bloc._id}
-                            noteId={noteId}
-                            type={bloc.type}
-                            content={bloc.content}
-                            position={bloc.position}
-                            height={bloc.height}
-                            addBloc={addBloc}
-                            deleteBloc={deleteBloc}
-                            isSearchInternalModalOpen={isSearchInternalModalOpen}
-                            setIsSearchInternalModalOpen={setIsSearchInternalModalOpen}
-                        />
+        />
+      );
+    } else if (bloc.type === 'internal link') {
+      blocComponent = (
+        <InternalLinkBloc
+          blocId={bloc._id}
+          noteId={noteId}
+          type={bloc.type}
+          content={bloc.content}
+          position={bloc.position}
+          height={bloc.height}
+          addBloc={addBloc}
+          deleteBloc={deleteBloc}
+          isSearchInternalModalOpen={isSearchInternalModalOpen}
+          setIsSearchInternalModalOpen={setIsSearchInternalModalOpen}
+        />
+      );
     }
 
     return <div key={bloc._id}>{blocComponent}</div>;
@@ -345,13 +348,13 @@ export default function Note() {
   // ***************   STYLE MANAGEMENT   ***********************
 
   const container =
-    'flex flex-1 flex-col flex-start bg-whitePure shadow-xl shadow-lightPurple p-3 rounded-lg pl-4 text-black w-auto max-h-[87%] mr-4 ml-4';
+    'flex flex-1 flex-col flex-start bg-whitePure shadow-xl shadow-lightPurple p-4 rounded-lg text-black w-auto max-h-[87%] mr-4 ml-4';
   const topContainer = 'flex justify-between items-center w-full h-12';
-  const title = 'text-2xl font-bold';
+  const title = 'text-2xl font-bold w-[75%] ml-5';
   const icons =
     'p-4 text-lightPurple text-base hover:text-darkPurple transition duration-300 ease-in-out';
   const metadataContainer =
-    'flex flex-row justify-between items-center w-full h-12 text-sm pr-4';
+    'flex flex-row justify-between items-center w-full h-12 text-sm p-5';
   const tagsContainer = 'flex justify-start items-center';
   const buttonTag =
     'text-xs hover:text-darkPurple hover:bg-lightPurple transition duration-300 ease-in-out bg-darkPurple text-whitePure font-bold p-1 pl-2 pr-2 rounded';
@@ -359,15 +362,18 @@ export default function Note() {
     'border-b-2 border-gray-300 focus:border-darkPurple focus:outline-none w-full w-[100px] mr-4 text-center';
   const dates = 'flex flex-col justify-center items-end';
   const blocsContainer =
-    'flex-1 flex-col justify-start items start py-3 overflow-y-auto max-h-[60vh] mb-2';
-  const blocksLinkedContainer = clsx( 'flex flex-row h-[15%]', noteData?.backwardNotes?.length > 0 ? 'justify-between':'justify-end');
+    'flex-1 flex-col justify-start items start py-3 overflow-y-auto max-h-[70vh] mb-2';
+  const blocksLinkedContainer = clsx(
+    'flex flex-row h-[15%]',
+    noteData?.backwardNotes?.length > 0 ? 'justify-between' : 'justify-end',
+  );
   const blocksBackwardNotesContainer =
-    'w-[50%] p-1 mr-2 pl-2 rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor';
+    'absolute left-5 bottom-5 w-[45%] p-3 mr-2 rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor';
   const blocksForwardNotesContainer =
-    'w-[50%] p-1 ml-2 pr-2 rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor text-right';
+    'absolute right-5 bottom-5 w-[45%] p-3 ml-2 rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor text-right';
   const titleLinkedNote = ' text-xs font-bold text-black shadow-2xl';
 
-  // ***************   NOTE DISPLAY  ***********************
+  // ***   NOTE DISPLAY  ***
 
   return (
     <div className={container}>
@@ -422,39 +428,47 @@ export default function Note() {
             </div>
           )}
           <button className={buttonTag} onClick={displayTagInput}>
-            + Tag
-          </button>
-        </div>
-        <div className={dates}>
-          <span>Créée le {noteData.createdAt}</span>
-          <span>Modifiée le {noteData.updatedAt}</span>
-        </div>
-      </div>
-      <div className={blocsContainer}>{renderedBlocs}</div>
-      <div className={blocksLinkedContainer}>
-        {noteData?.backwardNotes?.length > 0 && (<div className={blocksBackwardNotesContainer}>
-          <h3 className={titleLinkedNote}>Notes liées :</h3>
-          {noteData?.backwardNotes?.map((note, i) => (
-            <NoteLink
-              key={i}
-              title={note.title}
-              noteId={note._id}
-              stylePage='forwardTitle'
-            />
-          ))}
-        </div>)}
-        {noteData?.forwardNotes?.length > 0 && (<div className={blocksForwardNotesContainer}>
-          <h3 className={titleLinkedNote}>Notes reférencées :</h3>
-          {noteData?.forwardNotes?.map((note, i) => (
-            <NoteLink
-              key={i}
-              title={note.title}
-              noteId={note._id}
-              stylePage='forwardTitle'
-            />
-          ))}
-        </div>)}
-      </div>
+
+        + Tag
+      </button>
     </div>
+    <div className={dates}>
+      <span>Créée le {noteData.createdAt}</span>
+      <span>Modifiée le {noteData.updatedAt}</span>
+    </div>
+  </div>
+  <div className={blocsContainer}>
+    {renderedBlocs}
+   
+    {noteData?.backwardNotes?.length > 0 && (
+      <div className={blocksBackwardNotesContainer}>
+        <h3 className={titleLinkedNote}>Notes liées :</h3>
+        {noteData?.backwardNotes?.map((note, i) => (
+          <NoteLink
+            key={i}
+            title={note.title}
+            noteId={note._id}
+            stylePage='forwardTitle'
+          />
+        ))}
+      </div>
+    )}
+    {noteData?.forwardNotes?.length > 0 && (
+      <div className={blocksForwardNotesContainer}>
+        <h3 className={titleLinkedNote}>Notes reférencées :</h3>
+        {noteData?.forwardNotes?.map((note, i) => (
+          <NoteLink
+            key={i}
+            title={note.title}
+            noteId={note._id}
+            stylePage='forwardTitle'
+          />
+        ))}
+      </div>
+    )}
+ 
+  </div>
+ 
+</div>
   );
 }

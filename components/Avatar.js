@@ -9,7 +9,7 @@ export default function Avatar(props) {
         onClick={props.onClick}
       >
         <Image
-          className='w-1/2 h-[70%] object-contain hover:border-2 hover:border-black hover:cursor-pointer'
+          className='w-1/2 h-[70%] object-contain hover:border-2 hover:border-black hover:cursor-pointer  rounded-full'
           src={props.src}
           alt={props.alt}
           width={100}

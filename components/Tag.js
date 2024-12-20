@@ -13,11 +13,12 @@ const Tag = ({children, deleteTag}) => {
             onMouseLeave={() => setIsHovered(false)}
         >
             <span>{children}</span>
-            <FontAwesomeIcon 
-                className={clsx(isHovered ? 'opacity-100' : 'opacity-50', 'ml-1 text-darkPurple')} 
+            {isHovered &&    <FontAwesomeIcon 
+                className={clsx('ml-1 text-darkPurple')} 
                 icon={faCircleXmark}
                 onClick={()=>deleteTag(children)} 
-            />
+            />}
+         
         </div>
     )
     
