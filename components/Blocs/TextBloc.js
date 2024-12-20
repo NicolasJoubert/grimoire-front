@@ -30,7 +30,7 @@ const TextBloc = ({
 
     const editorStyle = clsx(
         `h-[${blocHeight}px]`,
-        "flex-1 focus:outline-none focus:bg-backgroundColor hover:bg-backgroundColor rounded-md pt-0.5"
+        "flex-1 pl-2 focus:outline-none focus:bg-backgroundColor hover:bg-backgroundColor rounded-md pt-0.5"
     );
 
     const editor = useEditor({
