@@ -363,14 +363,10 @@ export default function Note() {
   const dates = 'flex flex-col justify-center items-end';
   const blocsContainer =
     'flex-1 flex-col justify-start items start py-3 overflow-y-auto max-h-[70vh] mb-2';
-  const blocksLinkedContainer = clsx(
-    'flex flex-row h-[15%]',
-    noteData?.backwardNotes?.length > 0 ? 'justify-between' : 'justify-end',
-  );
   const blocksBackwardNotesContainer =
-    'absolute left-5 bottom-5 w-[45%] p-3 mr-2 rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor';
+    'w-[45%] p-3 mr-2 rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor';
   const blocksForwardNotesContainer =
-    'absolute right-5 bottom-5 w-[45%] p-3 ml-2 rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor text-right';
+    'w-[45%] p-3 ml-2 rounded border-solid shadow-md shadow-lightPurple bg-backgroundColor text-right';
   const titleLinkedNote = ' text-xs font-bold text-black shadow-2xl';
 
   // ***   NOTE DISPLAY  ***
@@ -440,9 +436,16 @@ export default function Note() {
   <div className={blocsContainer}>
     {renderedBlocs}
    
+  </div>
+  {(noteData?.backwardNotes?.length > 0 || noteData?.forwardNotes?.length > 0) &&(
+  <div className={clsx(
+    'flex flex-row h-[15%]', 
+    noteData?.backwardNotes?.length > 0? 'justify-between' : 'justify-end'
+    )}>
     {noteData?.backwardNotes?.length > 0 && (
       <div className={blocksBackwardNotesContainer}>
         <h3 className={titleLinkedNote}>Notes liées :</h3>
+        <div className='max-h-[80%] overflow-y-scroll'>
         {noteData?.backwardNotes?.map((note, i) => (
           <NoteLink
             key={i}
@@ -452,10 +455,13 @@ export default function Note() {
           />
         ))}
       </div>
+      </div>
     )}
     {noteData?.forwardNotes?.length > 0 && (
       <div className={blocksForwardNotesContainer}>
         <h3 className={titleLinkedNote}>Notes reférencées :</h3>
+        <div className='max-h-[80%] overflow-y-scroll'>
+
         {noteData?.forwardNotes?.map((note, i) => (
           <NoteLink
             key={i}
@@ -465,10 +471,11 @@ export default function Note() {
           />
         ))}
       </div>
+      </div>
     )}
- 
+  
   </div>
- 
+  )}
 </div>
   );
 }
