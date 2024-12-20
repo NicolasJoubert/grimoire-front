@@ -443,7 +443,7 @@ export default function Note() {
             />
           ))}
         </div>)}
-        {noteData?.forwardNotes.length > 0 && (<div className={blocksForwardNotesContainer}>
+        {noteData?.forwardNotes?.length > 0 && (<div className={blocksForwardNotesContainer}>
           <h3 className={titleLinkedNote}>Notes reférencées :</h3>
           {noteData?.forwardNotes?.map((note, i) => (
             <NoteLink
