@@ -4,8 +4,6 @@ import { useDispatch } from 'react-redux';
 
 import { login } from '../reducers/user';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
 import { GoogleLogin } from '@react-oauth/google';
 

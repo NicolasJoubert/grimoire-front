@@ -7,7 +7,7 @@ import { login, logout } from '../reducers/user';
 //LOGIN WITH GOOGLE
 
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
+// import { jwtDecode } from 'jwt-decode';
 
 import { useRouter } from 'next/router';
 
@@ -19,7 +19,7 @@ function Signin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [wrongPassword, setWrongPassword] = useState(false);
-  const [userInfoGoogle, setUserInfoGoogle] = useState(null);
+  // const [userInfoGoogle, setUserInfoGoogle] = useState(null);
 
   //FUNCTIONS
   const handleSubmit = (googleToken) => {
