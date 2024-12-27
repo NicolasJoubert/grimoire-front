@@ -16,11 +16,12 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export default function Home() {
   const [isSidebarLeftVisible, setIsSidebarLeftVisible] = useState(true);
   const [isSidebarRightVisible, setIsSidebarRightVisible] = useState(true);
-  // const [isNoteVisible, setIsNoteVisible] = useState(true)
 
   const user = useSelector((state) => state.user.value);
   const noteId = useSelector((state) => state.currentNote.value);
+
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const toggleSidebarLeft = () => {
     setIsSidebarLeftVisible(!isSidebarLeftVisible);
@@ -30,7 +31,6 @@ export default function Home() {
     setIsSidebarRightVisible(!isSidebarRightVisible);
   };
 
-  const router = useRouter();
 
   // REDIRECTION UTILISATEUR SI NON SIGNE SUR LE PAGE DE CONNEXION
   useEffect(() => {

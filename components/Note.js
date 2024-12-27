@@ -21,16 +21,12 @@ export default function Note() {
   const [tags, setTags] = useState([]);
   const [tagCount, setTagCount] = useState(1);
   const [isTagInputVisible, setIsTagInputVisible] = useState(false);
-  const [isSearchInternalModalOpen, setIsSearchInternalModalOpen] =
-    useState(false);
-  const [titleForwardNotes, setTitleForwardNotes] = useState([]);
-  const [titleBackwaardNotes, setTitleBackwardNotes] = useState([]);
+  const [isSearchInternalModalOpen, setIsSearchInternalModalOpen] = useState(false);
+
 
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.value.token);
-  const defaultDevLanguage = useSelector(
-    (state) => state.user.value.defaultDevLanguage
-  );
+  const defaultDevLanguage = useSelector((state) => state.user.value.defaultDevLanguage);
   const noteId = useSelector((state) => state.currentNote.value);
 
   // ************ ALL FUNCTIONS *************

@@ -85,17 +85,12 @@ const Settings = () => {
 
   // LES ETATS
   const [username, setUsername] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState(
-    user.defaultDevLanguage
-  );
-  const [selectedEditorTheme, setSelectedEditorTheme] = useState(
-    user.defaultEditorTheme
-  );
-  const [selectedPictureProfil, setSelectedPictureProfil] = useState(
-    user.profilePic || '/images/HatSorcerer.png'
-  );
+  const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage);
+  const [selectedEditorTheme, setSelectedEditorTheme] = useState(user.defaultEditorTheme);
+  const [selectedPictureProfil, setSelectedPictureProfil] = useState(user.profilePic || '/images/HatSorcerer.png');
 
   // LES FONCTIONS
+
   /** Change username in database and updates reducer */
   const updateUsername = async () => {
     // Update user in database
@@ -136,7 +131,6 @@ const Settings = () => {
   };
 
   /** Change default editor theme in database and updates reducer */
-
   const updateDefaultEditorTheme = async () => {
     // Update user in database
     try {
@@ -186,11 +180,11 @@ const Settings = () => {
     }
   };
 
+  /** Activate relevant user change functions */
   const changeUserInfo = () => {
     username && username !== user.username && updateUsername();
-    selectedLanguage !== user.defaultDevLanguage && updateDefaultDevLang();
-    selectedEditorTheme !== user.defaultEditorTheme &&
-      updateDefaultEditorTheme();
+    selectedLanguage.displayValue !== user.defaultDevLanguage.displayValue && updateDefaultDevLang();
+    selectedEditorTheme.displayValue !== user.defaultEditorTheme.displayValue && updateDefaultEditorTheme();
     selectedPictureProfil !== user.profilePic && updateProfilePicture();
     router.push('/home');
   };
@@ -220,9 +214,7 @@ const Settings = () => {
 
   return (
     <div className={container}>
-      {/* Settings Container */}
       <div className={leftSideContainer}>
-        {/* Title */}
         <div className={headerContent}>
           <FontAwesomeIcon icon={faGear} size='3x' className={iconSettings} />
           <h1 className={settingsTitle}>Settings</h1>

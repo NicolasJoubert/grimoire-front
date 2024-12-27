@@ -67,9 +67,7 @@ const CodeBloc = ({
   const [blocHeight, setBlocHeight] = useState('80px'); // not linked to backend
   const [isBlocHovered, setIsBlocHovered] = useState(false);
 
-  const [selectedLanguage, setSelectedLanguage] = useState(
-    user.defaultDevLanguage
-  );
+  const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage);
 
   /** Manage bloc size depending on number of lines in ediotr */
   useEffect(() => {
@@ -84,7 +82,6 @@ const CodeBloc = ({
   /** Get bloc language and format it */
   const getLanguage = async (language) => {
     // fetch with bloc language id
-    console.log('lnaguag', language);
     const response = await fetch(
       `${backendUrl}/dev/languages/type/id/value/${language}`
     );
@@ -156,7 +153,6 @@ const CodeBloc = ({
           language: selectedLanguage._id,
         }),
       });
-      console.log('selectedLanguage', selectedLanguage);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -244,8 +240,8 @@ const CodeBloc = ({
             />
           </div>
           <AceEditor
-            mode={selectedLanguage.editorValue} // Language mode
-            theme={user.defaultEditorTheme.editorValue} // Theme
+            mode={selectedLanguage.editorValue || "javascript"} // Language mode, optionnal hardcoded to prevent client side exception if selectedLanguage is empty
+            theme={user.defaultEditorTheme.editorValue || "monokai"} // Theme
             value={code} // Current code
             onChange={handleCodeChange} // Update state on code change
             onLoad={handleEditorLoad}

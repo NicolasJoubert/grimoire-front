@@ -14,5 +14,5 @@ export const changeStatusSlice = createSlice({
   },
 });
 
-export const { toggleFavorite, updateSetSearch } = changeStatusSlice.actions;
+export const { toggleFavorite } = changeStatusSlice.actions;
 export default changeStatusSlice.reducer;
