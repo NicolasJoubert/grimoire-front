@@ -112,15 +112,8 @@ const InternalLinkBloc = ({
       // Addlink inside note
       saveBloc(refNoteId.toString(), refNoteIdTitle)
       setIsSearchInternalModalOpen(false);
-    //   setInternalLinkId(refNoteId.toString())
-    //   setInternalLinkTitle(refNoteIdTitle)
     }
 
-    // const handleDelete = () => {
-    //   deleteBloc(blocId)
-
-    // }
-  
     //noteLink creation liste
     let notes = [];
     if (searchedNotes.length > 0) {

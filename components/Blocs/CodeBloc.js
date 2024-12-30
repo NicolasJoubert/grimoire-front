@@ -231,6 +231,7 @@ const CodeBloc = ({
           +
         </div>
       </Popover>
+      
       <div className={codeblocContainer}>
         <div className={editorContainer}>
           <div className={containerInputChoice}>

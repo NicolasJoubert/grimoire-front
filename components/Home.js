@@ -31,15 +31,6 @@ export default function Home() {
     setIsSidebarRightVisible(!isSidebarRightVisible);
   };
 
-
-  // REDIRECTION UTILISATEUR SI NON SIGNE SUR LE PAGE DE CONNEXION
-  useEffect(() => {
-    if (!user || !user.token) {
-      router.push('/');
-    }
-    return (() => dispatch(removeCurrentNote()))
-  }, [user, router]);
-
   const createNote = async () => {
     /** Create note and add a single bloc to it */
     const token = user.token;
@@ -64,7 +55,15 @@ export default function Home() {
     }
   };
 
-  //Gestion Click Exterieur searchBar
+
+  // REDIRECTION UTILISATEUR SI NON SIGNE SUR LE PAGE DE CONNEXION
+  useEffect(() => {
+    if (!user || !user.token) {
+      router.push('/');
+    }
+    return (() => dispatch(removeCurrentNote()))
+  }, [user, router]);
+
 
   return (
     <div className='text-white flex flex-row space-x h-[100vh] w-screen p-0 m-0'>
@@ -81,7 +80,7 @@ export default function Home() {
           isSidebarLeftVisible={isSidebarLeftVisible}
           toggleSidebarRight={toggleSidebarRight}
           isSidebarRightVisible={isSidebarRightVisible}
-          onOutsideClick={false}
+          onOutsideClick={false}  //Gestion Click Exterieur searchBar
         />
         {noteId ? <Note /> : <Placeholder />}
       </div>
@@ -94,11 +93,3 @@ export default function Home() {
     </div>
   );
 }
-
-/*
-    <div className="bg-red-500 flex flex-row">
-            <div className="basis-1/5 bg-red-500"></div>
-            <div className="basis-11/20 bg-blue-500"></div>
-            <div className="basis-1/4 bg-blue-500"></div>
-    </div>
-*/

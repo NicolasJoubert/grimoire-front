@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 // import 'antd/dist/antd.css';
 import { Popover } from 'antd';
-import { useEffect, useState, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -18,8 +18,6 @@ const TextBloc = ({
             height, 
             deleteBloc,
             addBloc,
-            // blocRef,
-            // switchBlocs,
         }) => {
     
     const [editorInput, setEditorInput] = useState(content); // Initial content

@@ -1,6 +1,6 @@
 import moment from 'moment';
 import clsx from 'clsx';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeCurrentNote, updateTitleNote } from '../reducers/currentNote.js';
 import { toggleFavorite } from '../reducers/changeStatus.js';
@@ -51,7 +51,6 @@ export default function Note() {
           backwardNotes: data.note.backwardNotes,
           isBookmarded: data.note.isBookmarked,
           isPrivate: data.note.isPrivate,
-          //user => on l'inclue ?
         });
         setBlocCount(data.note.blocs.length);
       }
@@ -414,9 +413,6 @@ export default function Note() {
                 value={tagInput}
                 className={inputTag}
               />
-              {/* <button onClick={addTag} className="p-2 bg-darkPurple text-white rounded">
-                    <FontAwesomeIcon icon={faCircleCheck} />
-                  </button> */}
             </div>
           )}
           <button className={buttonTag} onClick={displayTagInput}>
