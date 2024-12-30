@@ -101,7 +101,6 @@ export default function Note() {
 
   /** Add a bloc below the one which created it */
   const addBloc = async (position, type, noteId) => {
-    console.log('click');
     // Get blocs in the note that have a position superior to the one creating it
     const response = await fetch(`${backendUrl}/blocs/${noteId}/${position}`);
     const data = await response.json();
@@ -249,7 +248,6 @@ export default function Note() {
   /** Delete tag in database and fetch tags  */
   const deleteTag = async (value) => {
     try {
-      console.log('click');
       const response = await fetch(`${backendUrl}/tags/`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
@@ -287,7 +285,7 @@ export default function Note() {
 
   // ***************   BLOCS RENDERER   ***********************
 
-  const renderedBlocs = noteData?.blocs?.map((bloc, i) => {
+  const renderedBlocs = noteData?.blocs?.map((bloc) => {
     let blocComponent = null;
 
     if (bloc.type === 'text') {
@@ -301,8 +299,6 @@ export default function Note() {
           height={bloc.height}
           addBloc={addBloc}
           deleteBloc={deleteBloc}
-          // switchBlocs={(e) => switchBlocs(e, i)}
-          // setBlocsValue={setBlocsValue}
         />
       );
     } else if (bloc.type === 'code') {
@@ -317,7 +313,6 @@ export default function Note() {
           content={bloc.content}
           addBloc={addBloc}
           deleteBloc={deleteBloc}
-          // setBlocsValue={setBlocsValue}
         />
       );
     } else if (bloc.type === 'internal link') {

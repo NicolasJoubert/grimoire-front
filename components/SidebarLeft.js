@@ -9,14 +9,11 @@ import { updateNoteSortingInStore } from '../reducers/user.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBookmark,
-  faFolderPlus,
   faFileCirclePlus,
   faSort,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { TbLayoutSidebarLeftCollapseFilled } from 'react-icons/tb';
-
-// Import du composant FooterSideBar
 import ConnectedUser from './ConnectedUser.js';
 
 export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
@@ -39,7 +36,6 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
       const response = await fetch(backendUrl + `/notes/user/${user.token}`);
 
       const data = await response.json();
-      console.log(data);
 
       if (data.result) {          
         setTitleNotes(data.notes);

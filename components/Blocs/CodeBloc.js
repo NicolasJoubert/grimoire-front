@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-// import 'antd/dist/antd.css';
 import { Popover } from 'antd';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/ext-language_tools';
 
 // Import a theme and a language mode from Ace
 import 'ace-builds/src-noconflict/theme-monokai';
@@ -191,7 +191,6 @@ const CodeBloc = ({
       </div>
     </div>
   );
-  //`h-[${blocHeight}px]`
   const container = 'flex flex-1 justify-between items-start mt-1 mb-4 mr-10px';
   const popoverStyle = '';
   const buttonStyle = clsx(
@@ -231,7 +230,7 @@ const CodeBloc = ({
           +
         </div>
       </Popover>
-      
+
       <div className={codeblocContainer}>
         <div className={editorContainer}>
           <div className={containerInputChoice}>
