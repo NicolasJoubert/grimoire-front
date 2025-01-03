@@ -14,8 +14,7 @@ import storage from 'redux-persist/lib/storage';
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-const clientId =
-  '713388606117-hcnrsufui8347oe75c0ejarar29eqpdb.apps.googleusercontent.com';
+const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
 const reducers = combineReducers({ currentNote, user, changeStatus });
 const persistConfig = {

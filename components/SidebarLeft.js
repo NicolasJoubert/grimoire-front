@@ -136,7 +136,7 @@ export default function SidebarLeft({ toggleSidebarLeft, createNote }) {
         </button>
       </div>
       <div className={logoContainer}>
-        <img src='logofinal.png' alt='logo' className={logoImage}></img>
+        <img src='images/logofinal.png' alt='logo' className={logoImage}></img>
       </div>
 
       {/* FAVORIS */}

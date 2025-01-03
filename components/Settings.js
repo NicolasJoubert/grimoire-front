@@ -23,36 +23,46 @@ const Settings = () => {
   // GESTION DE LA REDIRECTION
   const router = useRouter();
 
+    // REDUCERS
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.value);
+  
+    // LES ETATS
+    const [username, setUsername] = useState('');
+    const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage);
+    const [selectedEditorTheme, setSelectedEditorTheme] = useState(user.defaultEditorTheme);
+    const [selectedPictureProfil, setSelectedPictureProfil] = useState(user.profilePic || '/images/avatars/HatSorcerer.png');
+
   // GESTION DE LA MODAL ET DES AVATARS
   const [isModalOpen, setIsModalOpen] = useState(false);
   const avatarsData = [
     {
-      src: '/images/mickey.jpg',
+      src: '/images/avatars/mickey.jpg',
       name: "L'Empire",
       alt: 'Joachim',
     },
     {
-      src: '/images/kiki.png',
+      src: '/images/avatars/kiki.png',
       name: 'Kiki',
       alt: 'kiki',
     },
     {
-      src: '/images/joa.jpg',
+      src: '/images/avatars/joa.jpg',
       name: 'Joachim le puissant',
       alt: 'Joachim',
     },
     {
-      src: '/images/rick.png',
+      src: '/images/avatars/rick.png',
       name: 'Rick',
       alt: 'Rick',
     },
     {
-      src: '/images/voldyy.png',
+      src: '/images/avatars/voldyy.png',
       name: 'Voldemort',
       alt: 'Voldemort',
     },
     {
-      src: '/images/gandalf.png',
+      src: '/images/avatars/gandalf.png',
       name: 'Gandalf',
       alt: 'Gandalf',
     },
@@ -79,15 +89,7 @@ const Settings = () => {
     setIsModalOpen(false);
   };
 
-  // REDUCERS
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.value);
 
-  // LES ETATS
-  const [username, setUsername] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState(user.defaultDevLanguage);
-  const [selectedEditorTheme, setSelectedEditorTheme] = useState(user.defaultEditorTheme);
-  const [selectedPictureProfil, setSelectedPictureProfil] = useState(user.profilePic || '/images/HatSorcerer.png');
 
   // LES FONCTIONS
 

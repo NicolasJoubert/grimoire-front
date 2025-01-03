@@ -134,7 +134,7 @@ function Signup() {
       <div className={signupImageLeftSide}> {/* image de fond */}</div>
       <div className={signupImageRightSide}>
         {/*div qui contient tout l'élément de droite */}
-        <img src='/assets/logofinal.png' alt='logo' />
+        <img src='images/logofinal.png' alt='logo' />
 
         <div className={signupInputFieldsContainer}>
           {/*div qui contient tout les input et bouttons*/}

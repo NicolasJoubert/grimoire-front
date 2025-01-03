@@ -80,7 +80,7 @@ function Signin() {
       <div className={signinImageLeftSide}> {/*image de fond */}</div>
       <div className={signinImageRightSide}>
         {/*div qui contient tout l'élément de droite */}
-        <img src='/assets/logofinal.png' alt='logo' />
+        <img src='images/logofinal.png' alt='logo' />
         <div className={connexionContainer}>
           <div className={googleConnect}>
             <GoogleLogin

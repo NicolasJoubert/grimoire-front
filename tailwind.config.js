@@ -12,9 +12,9 @@ module.exports = {
             /'/g,
             '%27'
           ),
-        'backImg-signup': "url('/assets/backimage-signup.png')",
-        'backImg-signin': "url('/assets/backimage-signin.png')",
-        'backImg-settings': "url('/assets/backimage-settings.png')",
+        'backImg-signup': "url('/images/screens/backimage-signup.png')",
+        'backImg-signin': "url('/images/screens/backimage-signin.png')",
+        'backImg-settings': "url('/images/screens/backimage-settings.png')",
       },
       colors: {
         tagColor: '#E2EAED',
