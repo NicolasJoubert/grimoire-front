@@ -1,6 +1,6 @@
 # Grimoire
 
-Journal interactif de développeur, inspiré de [Notion](https://www.notion.com/fr) et d'[Obsidian](https://obsidian.md/).
+Journal interactif pour développeur, inspiré de [Notion](https://www.notion.com/fr) et d'[Obsidian](https://obsidian.md/).
 
 Permet de prendre des notes, les liers entre elles, écrire du code, l'exécuter.
 
@@ -11,7 +11,7 @@ Permet de prendre des notes, les liers entre elles, écrire du code, l'exécuter
 
 > **Projet encore au stade expérimental**
 >
-> Grimoire est un projet que j'ai conçu pour la fin de ma formation de développeur Fullstack au sein du bootcamp [La Capsule](https://www.lacapsule.academy/) en 2024. Je l'ai développé sur une période de 9 jours pleins avec 4 développeurs de mon batch.
+> Grimoire est un projet que j'ai conçu avec une équipe de 4 développeurs lors de la fin de ma formation de Développement Web Fullstack au sein du bootcamp [La Capsule](https://www.lacapsule.academy/) en 2024. Nous l'avons développé sur une période de 9 jours pleins.
 > 
 > C'est un projet dont nous sommes très fiers étant donné l'ambition de départ et les contraintes qui étaient fixés, mais qui en l'état représente davantage une version alpha qu'une application utilisable en production :
 > - Le site n'est pas responsive,
