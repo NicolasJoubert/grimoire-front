@@ -21,7 +21,7 @@ const reducers = combineReducers({ currentNote, user, changeStatus });
 const persistConfig = {
   key: 'grimoire',
   storage,
-  blacklist: [], 
+  blacklist: [],
 };
 
 const store = configureStore({
@@ -38,6 +38,19 @@ function App({ Component, pageProps }) {
       <PersistGate persistor={persistor}>
         <Head>
           <title>Grimoire</title>
+          <meta
+            name='description'
+            content='Grimoire est une application de gestion de notes et de favoris conçue pour les développeurs. Créez, organisez et accédez rapidement à vos notes en toute simplicité.'
+          />
+          <meta charSet='UTF-8' />
+          <meta
+            name='viewport'
+            content='width=device-width, initial-scale=1.0'
+          />
+          <meta
+            name='keywords'
+            content='notes, exécuter du code, développeur, gestion de notes, grimoire'
+          />
         </Head>
         <GoogleOAuthProvider clientId={clientId}>
           <Component {...pageProps} />
