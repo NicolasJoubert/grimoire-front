@@ -52,7 +52,7 @@ L’application se veut être le deuxième cerveau du développeur et lui permet
 ### Contraintes imposées
 
 - 9 jours de développement
-- Un développement en équipe de 5 personnes  
+- Un développement en équipe de **5 personnes**  
 - L’utilisation des stacks découvertes pendant le bootcamp La Capsule (10 semaines):   
   - NodeJS et ExpressJS pour le backend  
   - NodeJS et ReactJS pour le frontend  
