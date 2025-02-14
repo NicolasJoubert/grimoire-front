@@ -5,7 +5,7 @@ Journal interactif pour développeur, inspiré de [Notion](https://www.notion.co
 Permet de prendre des notes, les liers entre elles, écrire du code, l'exécuter.
 
 - [mongrimoire.dev](https://www.mongrimoire.dev/) (site déployé)
-- [Repository backend](https://github.com/benKapl/grimoire-backend)
+- [Repository backend](https://github.com/NicolasJoubert/grimoire-back)
 
 ![Demo Grimoire](./public/demo/demo.gif?raw=true "Demo Grimoire")
 
